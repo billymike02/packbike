@@ -1,0 +1,46 @@
+.gear {
+  background-color: black;
+  color: white;
+  overflow: hidden;
+  transform-origin: center;
+  z-index: 1;
+  border-radius: 0.8rem;
+  border: 0.2rem solid black;
+}
+
+.moveIcon {
+  cursor: grab;
+  transition: all 0.2s;
+  height: 2.5vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.moveIcon:active {
+  scale: 1.2;
+}
+
+.title {
+  padding: 10px;
+  text-transform: uppercase;
+}
+
+.dropdownContainer {
+  display: flex;
+  /* border: 0.1rem solid black; */
+}
+
+.dropdown {
+  flex: 1;
+  font-size: 1rem;
+  padding: 1rem;
+  background-color: white; /* Makes it black */
+  color: black; /* Sets text color to white for contrast */
+  border-radius: 0; /* Removes rounded corners to make it square */
+  border: none;
+  box-shadow: none; /* Removes any box shadow */
+  appearance: none; /* Removes default styling in some browsers */
+  -webkit-appearance: none; /* Removes default styling in WebKit browsers */
+  -moz-appearance: none; /* Removes default styling in Mozilla browsers */
+}

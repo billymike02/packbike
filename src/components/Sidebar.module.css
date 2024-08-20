@@ -1,0 +1,52 @@
+.Sidebar {
+  background-color: black;
+  color: white;
+  z-index: 1;
+  min-width: 20%;
+  width: 20%;
+  transition: all 0.4s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.Sidebar ul {
+  padding: 0px;
+  list-style: none;
+  list-style-type: none;
+  text-align: start;
+}
+
+.Sidebar li {
+  padding-block: 1rem;
+}
+
+.Sidebar a:hover {
+  padding: 10px;
+  background-color: rgb(255, 255, 255);
+  color: black;
+}
+
+.Sidebar a {
+  user-select: none;
+  cursor: pointer;
+  scale: 1.05;
+  transition: all 0.3s;
+  border-radius: 8px;
+}
+
+.Sidebar:hover {
+  width: 40%;
+}
+
+.Sidebar h1 {
+  user-select: none;
+  cursor: default;
+}
+
+.Sidebar h1,
+.Sidebar ul {
+  text-transform: uppercase;
+  margin-left: 3rem;
+}

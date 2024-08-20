@@ -1,38 +1,82 @@
 .App {
   text-align: center;
+  overflow: hidden;
+  display: flex;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  height: 100vmin;
+  position: absolute;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+h1 {
+  font-size: 3rem;
 }
 
-.App-header {
-  background-color: #282c34;
+a {
+  font-size: 1.5rem;
+}
+
+.Workspace {
+  background-color: white;
   min-height: 100vh;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.Manager {
+  max-height: 10%;
+  width: 100%;
+  display: flex;
+  flex: 1;
+  background-color: white;
+  border-bottom: 0.2rem solid black;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.Manager ul {
+  display: flex;
+  list-style: none;
+  list-style-type: none;
+
   color: white;
+  gap: 16px;
+}
+
+.Manager li {
+  padding: 0.7rem;
+  border-radius: 0.8rem;
+  background-color: black;
+  transition: all 0.3s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.Manager li:hover {
+  color: black;
+  background-color: white;
+  scale: 1.05;
+
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.549);
+}
+
+.Display {
+  background-color: white;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
 }
 
 .App-link {
   color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
