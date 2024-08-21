@@ -4,6 +4,7 @@
   z-index: 1;
   min-width: 20%;
   width: 20%;
+  height: 100vh;
   transition: all 0.4s;
   display: flex;
   flex-direction: column;

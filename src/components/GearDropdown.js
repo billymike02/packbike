@@ -8,7 +8,11 @@ const GearDropdown = () => {
   };
 
   return (
-    <Draggable handle={`.${styles.moveIcon}`} onStart={handleStart}>
+    <Draggable
+      handle={`.${styles.moveIcon}`}
+      onStart={handleStart}
+      bounds="parent"
+    >
       <div className={styles.gear}>
         <div className={styles.moveIcon}>⋯</div>
         <div className={styles.title}>Gear #1</div>
