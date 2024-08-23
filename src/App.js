@@ -2,10 +2,11 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import Home from "./components/Home";
 import "./App.css";
 import Login from "./components/Login";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
+import Sidebar from "./components/Sidebar";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -24,6 +25,20 @@ export const getCurrentUser = () => {
     );
   });
 };
+
+function Layout() {
+  return (
+    <div style={{ display: "flex" }}>
+      {/* Left Side - Static Links */}
+      <Sidebar />
+
+      {/* Right Side - Content that changes with routes */}
+      <div style={{ width: "100%" }}>
+        <Outlet />
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [user, setUser] = useState(null);
@@ -55,8 +70,9 @@ function App() {
     <AuthContext.Provider value={{ user }}>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Layout />}>
+            <Route path="/login" element={<Login />} />
+          </Route>
         </Routes>
       </HashRouter>
     </AuthContext.Provider>
