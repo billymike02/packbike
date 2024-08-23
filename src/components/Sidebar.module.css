@@ -28,7 +28,10 @@
   color: black;
 }
 
-
+.subitem {
+  text-decoration: none;
+  color: white;
+}
 
 .Sidebar a {
   user-select: none;

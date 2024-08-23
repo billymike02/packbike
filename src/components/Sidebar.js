@@ -66,7 +66,9 @@ const Sidebar = () => {
             <ul>
               {items[expandedIndex].subItems.map((subItem, subIndex) => (
                 <li key={subIndex}>
-                  <Link to={subItem.link}>{subItem.label}</Link>
+                  <Link to={subItem.link} className={styles.subitem}>
+                    {subItem.label}
+                  </Link>
                 </li>
               ))}
             </ul>

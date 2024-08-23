@@ -6,6 +6,11 @@
   text-align: center;
 }
 
+h1 {
+  margin: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
 input {
   font-size: 1.1rem;
   width: 60%;
@@ -32,21 +37,55 @@ input:invalid {
   border-radius: 2rem;
   display: flex;
   flex-direction: column;
-  height: 50vh;
   width: 22vw;
   justify-content: center;
   align-items: center;
 }
 
-button {
-  background-color: black;
-  color: white;
+.login,
+.register {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  /* this is to get rid of the underline */
+  text-decoration: none;
+  cursor: pointer;
+  width: 70%;
+  height: 5.5vh;
   border-style: none;
-  font-size: 1.6rem;
-  border-radius: 0.3rem;
+  font-size: 1.4rem;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  margin-bottom: 5px;
 }
 
-button:hover {
-  background-color: rgb(202, 202, 202);
+.login {
+  margin-top: 2vh;
+  background-color: rgb(0, 0, 0);
+  color: white;
+}
+
+.register {
+  background-color: white;
   color: black;
+  border: 0.15rem solid black;
+  margin-bottom: 2vh;
+}
+
+.login:hover,
+.register:hover {
+  scale: 1.03;
+  color: rgb(0, 115, 255);
+}
+
+h3 {
+  cursor: pointer;
+  font-weight: 400;
+  transition: all 0.3s;
+}
+
+h3:hover {
+  scale: 1.02;
+  color: rgb(0, 119, 255);
 }

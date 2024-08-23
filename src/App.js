@@ -1,32 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Home from "./components/Home";
 import "./App.css";
 import Login from "./components/Login";
 import { HashRouter, Routes, Route } from "react-router-dom";
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCycp0dSrXwTdE91fhiFB8ugQKvfVgdcQ8",
-  authDomain: "packbike-61ddf.firebaseapp.com",
-  projectId: "packbike-61ddf",
-  storageBucket: "packbike-61ddf.appspot.com",
-  messagingSenderId: "787405879007",
-  appId: "1:787405879007:web:89c92ed1142f26b0dc9b6a",
-  measurementId: "G-D9GK0ZS2NZ",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./components/firebase";
 
 function App() {
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
+        console.log("uid", uid);
+      } else {
+        // User is signed out
+        // ...
+        console.log("user is logged out");
+      }
+    });
+  }, []);
+
   return (
     <HashRouter>
       <Routes>
