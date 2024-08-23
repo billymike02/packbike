@@ -1,24 +1,55 @@
 import styles from "./Sidebar.module.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { useAuth } from "../App";
+import { firestore as db } from "./firebase";
 
 const Sidebar = () => {
+  const { user } = useAuth();
+  const [bicycles, setBicycles] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [sidebarWidth, setSidebarWidth] = useState("20%"); // Initialize with a default value
 
+  useEffect(() => {
+    const fetchBicycles = async () => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+
+        try {
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setBicycles(userData.bicycles || []); // Default to empty array if bicycles field doesn't exist
+          } else {
+            console.log("User document does not exist");
+          }
+        } catch (error) {
+          console.error("Error fetching bicycles: ", error);
+        }
+      } else {
+        console.log("User not authenticated");
+      }
+    };
+
+    fetchBicycles();
+  }, [user]);
+
   const handleClick = (index) => {
     const newExpandedIndex = expandedIndex === index ? null : index;
-
     setExpandedIndex(newExpandedIndex);
     setSidebarWidth(newExpandedIndex !== null ? "40%" : "20%");
   };
 
+  // Update the "Garage" item to include bicycles dynamically
   const items = [
     {
       title: "Garage",
       subItems: [
-        { label: "Sub 1", link: "/page1" },
-        { label: "Sub 2", link: "/page2" },
+        ...bicycles.map((bicycle, index) => ({
+          label: bicycle,
+          link: `/bicycle/${index}`, // Adjust the link as needed
+        })),
       ],
     },
     {
@@ -31,7 +62,9 @@ const Sidebar = () => {
     {
       title: "Account",
       subItems: [
+        { label: `About ${user?.displayName}`, link: "/Login" },
         { label: "Login", link: "/Login" },
+
         { label: "Sub 6", link: "/page3" },
       ],
     },
