@@ -1,17 +1,24 @@
 import styles from "./GearDropdown.module.css";
 import Draggable from "react-draggable";
 
-const GearDropdown = () => {
+const GearDropdown = ({ position, onPositionChange }) => {
   const handleStart = (event) => {
     console.log("Drag started", event);
     // You can also manipulate state or perform actions here
+  };
+
+  const handleStop = (e, data) => {
+    const { x, y } = data;
+    onPositionChange({ x, y });
   };
 
   return (
     <Draggable
       handle={`.${styles.moveIcon}`}
       onStart={handleStart}
+      onStop={handleStop}
       bounds="parent"
+      defaultPosition={{ x: position.x, y: position.y }}
     >
       <div className={styles.gear}>
         <div className={styles.moveIcon}>⋯</div>

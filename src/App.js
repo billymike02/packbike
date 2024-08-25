@@ -7,6 +7,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import Sidebar from "./components/Sidebar";
+import Workspace from "./components/Workspace";
+import Profile from "./components/Profile";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -27,14 +29,16 @@ export const getCurrentUser = () => {
 };
 
 function Layout() {
+  const [selectedBike, setSelectedBike] = useState(null);
+
   return (
     <div style={{ display: "flex" }}>
       {/* Left Side - Static Links */}
-      <Sidebar />
+      <Sidebar selectedBike={selectedBike} setSelectedBike={setSelectedBike} />
 
       {/* Right Side - Content that changes with routes */}
-      <div style={{ width: "100%" }}>
-        <Outlet />
+      <div style={{ width: "100%", height: "100vh", display: "flex" }}>
+        <Outlet context={{ selectedBike }} />
       </div>
     </div>
   );
@@ -71,8 +75,10 @@ function App() {
       <HashRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="/login" element={<Login />} />
+            <Route path="/workspace" element={<Workspace />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
+          <Route path="/login" element={<Login />} />
         </Routes>
       </HashRouter>
     </AuthContext.Provider>

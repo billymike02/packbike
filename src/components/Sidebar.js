@@ -5,7 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
 
-const Sidebar = () => {
+const Sidebar = ({ selectedBike, setSelectedBike }) => {
   const { user } = useAuth();
   const [bicycles, setBicycles] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -46,9 +46,9 @@ const Sidebar = () => {
     {
       title: "Garage",
       subItems: [
-        ...bicycles.map((bicycle, index) => ({
+        ...bicycles.map((bicycle) => ({
           label: bicycle,
-          link: `/bicycle/${index}`, // Adjust the link as needed
+          link: `/workspace`, // Adjust the link as needed
         })),
       ],
     },
@@ -62,10 +62,8 @@ const Sidebar = () => {
     {
       title: "Account",
       subItems: [
-        { label: `About ${user?.displayName}`, link: "/Login" },
+        { label: `About ${user?.displayName}`, link: "/Profile" },
         { label: "Login", link: "/Login" },
-
-        { label: "Sub 6", link: "/page3" },
       ],
     },
   ];
@@ -99,7 +97,17 @@ const Sidebar = () => {
             <ul>
               {items[expandedIndex].subItems.map((subItem, subIndex) => (
                 <li key={subIndex}>
-                  <Link to={subItem.link} className={styles.subitem}>
+                  <Link
+                    to={subItem.link}
+                    className={styles.subitem}
+                    onClick={() => {
+                      // Only set the selected bike if we're under the "Garage" section
+                      if (items[expandedIndex].title === "Garage") {
+                        console.log(subItem.label);
+                        setSelectedBike(subItem.label);
+                      }
+                    }}
+                  >
                     {subItem.label}
                   </Link>
                 </li>

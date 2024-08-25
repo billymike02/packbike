@@ -47,7 +47,6 @@ const Home = () => {
 
   return (
     <div className="App">
-      <Sidebar />
       <div className="Workspace">
         <div className="Manager">
           <nav>
