@@ -1,7 +1,10 @@
 import styles from "./GearDropdown.module.css";
 import Draggable from "react-draggable";
+import { useState } from "react";
 
 const GearDropdown = ({ position, onPositionChange }) => {
+  const [showDelete, setShowDelete] = useState(false);
+
   const handleStart = (event) => {
     console.log("Drag started", event);
     // You can also manipulate state or perform actions here
@@ -21,6 +24,7 @@ const GearDropdown = ({ position, onPositionChange }) => {
       defaultPosition={{ x: position.x, y: position.y }}
     >
       <div className={styles.gear}>
+        {showDelete && <div className={styles.deleteButton}>✗</div>}
         <div className={styles.moveIcon}>⋯</div>
         <div className={styles.title}>Gear #1</div>
         <div className={styles.dropdownContainer}>

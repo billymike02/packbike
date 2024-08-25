@@ -1,0 +1,103 @@
+.gearManager {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gearContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 1rem;
+  background-color: rgb(255 255 255);
+  color: rgb(44 70 35);
+  overflow: hidden;
+  position: relative;
+}
+
+.deleteOverlay {
+  justify-content: space-evenly;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.172);
+}
+
+.deleteOverlay button {
+  width: 20%;
+  height: 36%;
+  border-style: none;
+  background-color: white;
+  z-index: 1;
+  border-radius: 1rem;
+  transition: all 0.3s;
+}
+
+.deleteOverlay button:hover {
+  scale: 1.1;
+}
+
+.deleteOverlay button .deleteIcons {
+  scale: 3;
+}
+
+.deleteOverlay .continue:hover {
+  background-color: rgb(255, 0, 0);
+  font-weight: 500;
+}
+
+.gearContainerHeader {
+  display: flex;
+  background-color: rgb(215 223 200);
+  padding: 1rem;
+}
+
+.gearContainerHeader .deleteButton {
+  height: 100%;
+  width: auto;
+}
+
+.gearContainerBody {
+  display: flex;
+}
+
+.gearContainerBody ul {
+  padding: 0px;
+  list-style: none;
+  list-style-type: none;
+  text-align: start;
+}
+
+.addButton {
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+  background-color: rgb(44 70 39);
+  border-radius: 100%;
+  color: rgb(231 254 199);
+  font-size: 5rem;
+  transition: scale 0.2s;
+}
+
+.addButton:hover {
+}
+
+.addButton:active {
+  opacity: 50%;
+  scale: 0.9;
+}

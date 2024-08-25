@@ -38,7 +38,7 @@ const Sidebar = ({ selectedBike, setSelectedBike }) => {
   const handleClick = (index) => {
     const newExpandedIndex = expandedIndex === index ? null : index;
     setExpandedIndex(newExpandedIndex);
-    setSidebarWidth(newExpandedIndex !== null ? "40%" : "20%");
+    setSidebarWidth(newExpandedIndex !== null ? "55%" : "20%");
   };
 
   // Update the "Garage" item to include bicycles dynamically
@@ -55,7 +55,7 @@ const Sidebar = ({ selectedBike, setSelectedBike }) => {
     {
       title: "Inventory",
       subItems: [
-        { label: "Sub 3", link: "/page2" },
+        { label: "Manage gear", link: "/gear-manager" },
         { label: "Sub 4", link: "/page3" },
       ],
     },

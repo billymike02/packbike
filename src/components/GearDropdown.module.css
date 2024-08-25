@@ -18,6 +18,18 @@
   display: flex;
 }
 
+.deleteButton {
+  display: flex;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 8rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: rgb(255, 0, 0);
+}
+
 .moveIcon:active {
   scale: 1.2;
 }

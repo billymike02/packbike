@@ -9,6 +9,7 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import Sidebar from "./components/Sidebar";
 import Workspace from "./components/Workspace";
 import Profile from "./components/Profile";
+import GearManager from "./components/GearManager";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -76,6 +77,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="/workspace" element={<Workspace />} />
+            <Route path="/gear-manager" element={<GearManager />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/login" element={<Login />} />

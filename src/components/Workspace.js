@@ -172,14 +172,14 @@ const Workspace = () => {
           <nav>
             <h2>{selectedBike}</h2>
             <ul>
-              <li>
-                <a onClick={openModal}>Add Bicycle</a>
+              <li onClick={openModal}>
+                <a>Add Bicycle</a>
               </li>
-              <li>
-                <a onClick={handleAddContainer}>Add container</a>
+              <li onClick={handleAddContainer}>
+                <a>Add container</a>
               </li>
-              <li>
-                <a onClick={handleSaveContainers}>Save containers</a>
+              <li onClick={handleSaveContainers}>
+                <a>Save containers</a>
               </li>
             </ul>
           </nav>
