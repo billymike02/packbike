@@ -70,8 +70,8 @@ const Sidebar = ({ selectedBike, setSelectedBike }) => {
 
   const divStyle = {
     padding: "10px",
-    backgroundColor: "rgb(255, 255, 255)",
-    color: "black",
+    backgroundColor: "rgb(228	237	214	)",
+    color: "rgb(44	70	38	)",
   };
 
   return (

@@ -10,8 +10,7 @@
 
 .Manager {
   height: auto;
-  background-color: white;
-  border-bottom: 0.2rem solid black;
+  background-color: rgb(232 237 224);
   align-items: center;
   display: flex;
   flex-direction: row;
@@ -23,7 +22,7 @@
   list-style-type: none;
   margin: 0.5rem;
   padding: 0px;
-  color: white;
+  color: rgb(232 254 196);
   gap: 4px;
 
   justify-content: center;
@@ -34,10 +33,11 @@
   margin-left: 1rem;
   font-size: 2rem;
   text-transform: none;
+  color: rgb(44 70 38);
 }
 
 .Manager li {
-  background-color: black;
+  background-color: rgb(44 70 39);
   padding: 0.7rem;
   padding-block: 0.3rem;
   border-radius: 0.4rem;
