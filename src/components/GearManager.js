@@ -32,8 +32,26 @@ const GearManager = () => {
     }
   }, [user]);
 
-  const handleContainerDelete = (id) => {
-    setContainers((prevItems) => prevItems.filter((item) => item.id !== id));
+  const handleContainerDelete = async (id) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const updatedContainers = containers.filter((item) => item.id !== id);
+
+          await updateDoc(userDocRef, { containers: updatedContainers });
+
+          console.log("Updated containers");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error removing container: ", error);
+      }
+    }
   };
 
   const addContainer = async () => {

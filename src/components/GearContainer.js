@@ -8,6 +8,12 @@ import { IoIosAdd } from "react-icons/io";
 import modalStyles from "./ModalComponent.module.css";
 import { createPortal } from "react-dom";
 import { FaPencil } from "react-icons/fa6";
+import { useAuth } from "../App";
+
+// firestore stuffs
+import { firestore } from "./firebase";
+import { doc } from "firebase/firestore";
+import { updateDoc, onSnapshot } from "firebase/firestore";
 
 const Modal = ({
   onClose,
@@ -97,12 +103,36 @@ const Modal = ({
   );
 };
 
-const GearContainer = ({ onRemove }) => {
+const GearContainer = ({ id, onRemove }) => {
   const [showDelete, setShowDelete] = useState(false);
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [itemEditIndex, setItemEditIndex] = useState(null);
   const [showEditItemModal, setShowEditItemModal] = useState(false);
   const [tableItems, setTableItems] = useState([]);
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      // Reference to the 'users' collection and the specific user document
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      // Listen for changes in the user's document
+      const unsubscribe = onSnapshot(userDocRef, (doc) => {
+        if (doc.exists()) {
+          const userData = doc.data();
+          const newTableItems = userData.containers[id] || [];
+
+          console.log(newTableItems);
+
+          setTableItems(newTableItems);
+        }
+      });
+
+      // Cleanup the subscription on unmount
+      return () => unsubscribe();
+    }
+  }, [user]);
 
   const handleAddOrUpdateItem = (itemName, itemWeight, itemVolume, itemID) => {
     if (tableItems.find((item) => item.id === itemID)) {
