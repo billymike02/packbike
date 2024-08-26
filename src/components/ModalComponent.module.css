@@ -29,7 +29,9 @@
   align-items: center;
   width: 100%;
   box-sizing: border-box; /* Include padding and border in width */
-  padding-inline: 1rem; /* Adjust padding if needed */
+  padding-inline: 2rem; /* Adjust padding if needed */
+  flex-direction: column;
+  gap: 8px;
 }
 
 h2 {
@@ -50,11 +52,12 @@ h2 {
   justify-content: space-between;
   box-sizing: border-box; /* Include padding and border in width */
   padding: 1rem; /* Adjust padding if needed */
+  gap: 8px;
 }
 
-.buttons button {
+.modalContent button {
   border-style: none;
-  width: 48%;
+  width: 100%;
   font-size: 1rem;
   border-radius: 0.5rem;
   text-transform: uppercase;
@@ -75,4 +78,8 @@ h2 {
 .buttons .submit {
   background-color: black;
   color: white;
+}
+
+.buttons .destroy {
+  background-color: rgb(255, 0, 0);
 }
