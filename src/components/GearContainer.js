@@ -14,6 +14,7 @@ import { useAuth } from "../App";
 import { firestore } from "./firebase";
 import { doc } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
+import { getDoc } from "firebase/firestore";
 
 const Modal = ({
   onClose,
@@ -134,23 +135,55 @@ const GearContainer = ({ id, onRemove }) => {
     }
   }, [user]);
 
-  const handleAddOrUpdateItem = (itemName, itemWeight, itemVolume, itemID) => {
-    if (tableItems.find((item) => item.id === itemID)) {
-      // Update existing item
-      setTableItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === itemID
-            ? { ...item, itemName, itemWeight, itemVolume }
-            : item
-        )
-      );
-    } else {
-      // Add new item
-      setTableItems((prevItems) => [
-        ...prevItems,
-        { itemName, itemWeight, itemVolume, id: itemID },
-      ]);
-    }
+  const handleAddOrUpdateItem = async (
+    itemName,
+    itemWeight,
+    itemVolume,
+    itemID
+  ) => {
+    // if (user) {
+    //   const userDocRef = doc(firestore, "users", user.uid);
+    //   try {
+    //     const userDoc = await getDoc(userDocRef);
+    //     if (userDoc.exists()) {
+    //       const userData = userDoc.data();
+    //       const containers = userData.containers || {};
+    //       // Merge or update the container data
+    //       const updatedContainers = {
+    //         ...containers,
+    //         [id]: {
+    //           name: itemName,
+    //           weight: itemWeight,
+    //           volume: itemVolume,
+    //           id: itemID,
+    //         },
+    //       };
+    //       // Update the document with the new container data
+    //       await updateDoc(userDocRef, { containers: updatedContainers });
+    //       console.log("Updated container items");
+    //     } else {
+    //       console.log("User document does not exist");
+    //     }
+    //   } catch (error) {
+    //     console.log("Error updating container: ", error);
+    //   }
+    // }
+    // if (tableItems.find((item) => item.id === itemID)) {
+    //   // Update existing item
+    //   setTableItems((prevItems) =>
+    //     prevItems.map((item) =>
+    //       item.id === itemID
+    //         ? { ...item, itemName, itemWeight, itemVolume }
+    //         : item
+    //     )
+    //   );
+    // } else {
+    //   // Add new item
+    //   setTableItems((prevItems) => [
+    //     ...prevItems,
+    //     { itemName, itemWeight, itemVolume, id: itemID },
+    //   ]);
+    // }
   };
 
   const handleRemoveItem = (itemID) => {
@@ -195,7 +228,7 @@ const GearContainer = ({ id, onRemove }) => {
           />
         </div>
         <div className={styles.gearContainerBody}>
-          <ul>
+          {/* <ul>
             {tableItems.map((item) => (
               <li key={item.id}>
                 <div
@@ -219,7 +252,7 @@ const GearContainer = ({ id, onRemove }) => {
                 </div>
               </li>
             ))}
-          </ul>
+          </ul> */}
 
           <div
             className={styles.addButton}

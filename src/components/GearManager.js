@@ -8,29 +8,41 @@ import { updateDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "./firebase";
 import { getDoc } from "firebase/firestore";
 import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid"; // Import uuid
 
 const GearManager = () => {
   const { user } = useAuth();
   const [containers, setContainers] = useState([]);
 
   useEffect(() => {
-    if (user) {
-      // Reference to the 'users' collection and the specific user document
-      const userDocRef = doc(firestore, "users", user.uid);
+    if (!user) return; // Exit if no user
 
-      // Listen for changes in the user's document
-      const unsubscribe = onSnapshot(userDocRef, (doc) => {
-        if (doc.exists()) {
-          const userData = doc.data();
-          const newContainers = userData.containers || [];
-          setContainers(newContainers);
-        }
-      });
+    const docRef = doc(firestore, "users", user.uid);
 
-      // Cleanup the subscription on unmount
-      return () => unsubscribe();
-    }
-  }, [user]);
+    // Set up real-time listener
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        // Convert containers map to an array
+        const containersArray = Object.entries(data.containers || {}).map(
+          ([id, container]) => ({
+            id, // Add the key as an ID field
+            ...container, // Spread the container data
+          })
+        );
+
+        console.log(containersArray);
+        setContainers(containersArray); // Set the array in state
+      } else {
+        console.log("No such document!");
+        setContainers([]); // Clear state if document does not exist
+      }
+    });
+
+    // Clean up subscription on component unmount
+    return () => unsubscribe();
+  }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
 
   const handleContainerDelete = async (id) => {
     if (user) {
@@ -62,17 +74,16 @@ const GearManager = () => {
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
-          const userData = userDoc.data();
-          const existingContainers = userData.containers || [];
+          const unique_id = uuidv4();
 
           const newContainer = {
-            id: Date.now(),
-            name: "default-name",
+            displayName: "default-name",
+            items: [],
           };
 
-          const updatedContainers = [...existingContainers, newContainer];
-
-          await updateDoc(userDocRef, { containers: updatedContainers });
+          await updateDoc(userDocRef, {
+            [`containers.${unique_id}`]: newContainer,
+          });
 
           console.log("Updated containers");
         } else {
