@@ -88,7 +88,7 @@ const Workspace = () => {
     return () => unsubscribe();
   }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
 
-  const addVisualContainer = async () => {
+  const addVisualContainer = async (type) => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
 
@@ -101,8 +101,8 @@ const Workspace = () => {
           const newContainer = {
             id: unique_id,
             container_id: "", // this will be set when you decide which backend container to use with it
-            // position: { x: 0, y: 0 },
-            // size: { width: "0px", height: "0px" },
+            position: { x: 0, y: 0 },
+            type: type,
           };
 
           await updateDoc(userDocRef, {
@@ -151,14 +151,38 @@ const Workspace = () => {
     }
   };
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <>
       <div className={styles.Workspace}>
         <div className={styles.Manager}>
           <nav>
             <ul>
-              <li onClick={addVisualContainer}>
+              <li
+                onClick={() => {
+                  setDropdownOpen(!dropdownOpen);
+                }}
+              >
                 <a>Add</a>
+                {dropdownOpen && (
+                  <div className={styles.dropdown}>
+                    <button
+                      onClick={() => {
+                        addVisualContainer("pannier");
+                      }}
+                    >
+                      Pannier
+                    </button>
+                    <button
+                      onClick={() => {
+                        addVisualContainer("roll");
+                      }}
+                    >
+                      Roll
+                    </button>
+                  </div>
+                )}
               </li>
               <li>
                 <a>View Info</a>
@@ -183,6 +207,7 @@ const Workspace = () => {
               key={container.id}
               id={container.id}
               containerID={container.id}
+              type={container.type}
             />
           ))}
 

@@ -11,7 +11,7 @@ import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 
-const GearDropdown = ({ id }) => {
+const GearDropdown = ({ id, type }) => {
   const { user } = useAuth();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "200px", height: "200px" });
@@ -36,8 +36,9 @@ const GearDropdown = ({ id }) => {
         const containerPosX = containerPos?.x;
         const containerPosY = containerPos?.y;
 
-        setPosition({ x: containerPosX, y: containerPosY });
         setSize({ width: containerWidth, height: containerHeight });
+
+        setPosition({ x: containerPosX, y: containerPosY });
       } else {
         console.log("No such document!");
       }
@@ -115,9 +116,12 @@ const GearDropdown = ({ id }) => {
       minWidth={100}
       minHeight={100}
       bounds="parent"
-      className={styles.clickable}
+      className={`${styles.clickable} ${styles[type]}`}
       onResizeStop={onResizeStop}
       onDragStop={onDragStop}
+      enableResizing="false"
+      // size={size}
+      position={position}
     >
       <div className={styles.clickableOverlay}>
         <FaPencil />

@@ -1,6 +1,13 @@
+.roll {
+  border-radius: 50%;
+}
+
+.pannier {
+  border-radius: 1rem;
+}
+
 .clickable {
   border: 0.4rem solid rgba(0, 0, 0, 0.505);
-  border-radius: 1rem;
   text-transform: uppercase;
   display: flex;
   justify-content: center;

@@ -43,6 +43,7 @@
   transition: scale 0.1s;
   cursor: pointer;
   user-select: none;
+  position: relative;
 }
 
 .Manager li:active {
@@ -62,10 +63,42 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  user-select: none;
 }
 
 .Manager nav {
   display: flex;
+}
+
+.Manager .dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: rgb(234 237 226);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.176);
+  left: 0px;
+  top: 120%;
+  width: 15vw;
+  height: 40vh;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  gap: 4px;
+  align-items: center;
+  padding: 0.3rem;
+  cursor: default;
+}
+
+.Manager .dropdown button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+  width: 95%;
+  border-style: none;
+  height: 5vh;
+  background-color: white;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
 .BicycleVector {
