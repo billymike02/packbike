@@ -8,11 +8,43 @@ import Modal from "./ModalComponent";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
 import { createPortal } from "react-dom";
+import { FaPencil } from "react-icons/fa6";
+import modalStyles from "./ModalComponent.module.css";
+
+const GearModal = ({ onClose, onSubmit }) => {
+  return createPortal(
+    <div className={modalStyles.modalOverlay}>
+      <div className={modalStyles.modalContent}>
+        <h2>{"Assign a gear container"}</h2>
+        <div className={modalStyles.modalBody}>
+          <select name="gearContainer" id="selector">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
+
+        <div className={modalStyles.buttons}>
+          <button onClick={onClose} className={modalStyles.abort}>
+            Cancel
+          </button>
+
+          <button onClick={onSubmit} className={modalStyles.submit}>
+            Done
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.getElementById("modal-root")
+  );
+};
 
 const Workspace = () => {
   const { selectedBike } = useOutletContext();
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGearModalOpen, setIsGearModalOpen] = useState(false);
 
   const [containerElements, setContainerElements] = useState([]);
 
@@ -57,6 +89,9 @@ const Workspace = () => {
           <nav>
             <ul>
               <li>
+                <a>Add</a>
+              </li>
+              <li>
                 <a>View Info</a>
               </li>
               <li>
@@ -66,7 +101,15 @@ const Workspace = () => {
           </nav>
         </div>
         <div className={styles.Display} id="display">
-          <img src={bike} className={styles.BicycleVector} alt="logo" />
+          <GearDropdown></GearDropdown>
+          <div className={styles.figure}>
+            <img
+              src={bike}
+              className={styles.BicycleVector}
+              alt="bicycle-image"
+            />
+          </div>
+
           {containerElements.map((element) =>
             createPortal(element, document.getElementById("display"))
           )}
@@ -81,6 +124,10 @@ const Workspace = () => {
             closeModal();
           }}
         />
+      )}
+
+      {isGearModalOpen && (
+        <GearModal onClose={closeModal} onSubmit={closeModal} />
       )}
     </>
   );

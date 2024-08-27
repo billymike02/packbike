@@ -72,16 +72,18 @@ const Modal = ({
             required
           />
           <input
-            type="text"
+            type="number"
             value={itemWeight}
             onChange={(e) => setItemWeight(e.target.value)}
             placeholder="Enter item weight"
+            step="any"
           />
           <input
-            type="text"
+            type="number"
             value={itemVolume}
             onChange={(e) => setItemVolume(e.target.value)}
             placeholder="Enter item volume"
+            step="any"
           />
         </div>
 

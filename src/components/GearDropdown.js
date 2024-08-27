@@ -1,43 +1,26 @@
+import React from "react";
+import { Rnd } from "react-rnd";
 import styles from "./GearDropdown.module.css";
-import Draggable from "react-draggable";
-import { useState } from "react";
+import { FaPencil } from "react-icons/fa6";
 
-const GearDropdown = ({ position, onPositionChange }) => {
-  const [showDelete, setShowDelete] = useState(false);
-
-  const handleStart = (event) => {
-    console.log("Drag started", event);
-    // You can also manipulate state or perform actions here
-  };
-
-  const handleStop = (e, data) => {
-    const { x, y } = data;
-    onPositionChange({ x, y });
-  };
-
+const GearDropdown = () => {
   return (
-    <Draggable
-      handle={`.${styles.moveIcon}`}
-      onStart={handleStart}
-      onStop={handleStop}
-      bounds="parent"
-      defaultPosition={{ x: position.x, y: position.y }}
+    <Rnd
+      default={{
+        x: 100,
+        y: 100,
+        width: 200,
+        height: 200,
+      }}
+      minWidth={100}
+      minHeight={100}
+      bounds="parent" // Optional: Restricts movement within the parent container
+      className={styles.clickable}
     >
-      <div className={styles.gear}>
-        {showDelete && <div className={styles.deleteButton}>✗</div>}
-        <div className={styles.moveIcon}>⋯</div>
-        <div className={styles.title}>Gear #1</div>
-        <div className={styles.dropdownContainer}>
-          <select className={styles.dropdown}>
-            <option value="1">Pannier</option>
-
-            <option value="2">Roll</option>
-
-            <option value="3">Cage</option>
-          </select>
-        </div>
+      <div className={styles.clickableOverlay}>
+        <FaPencil></FaPencil>
       </div>
-    </Draggable>
+    </Rnd>
   );
 };
 

@@ -68,8 +68,15 @@
   display: flex;
 }
 
+.Display .figure {
+}
+
 .BicycleVector {
-  height: 100vmin;
-  z-index: 0;
   position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 150%;
+  transform: translate(15%, -12%);
+
+  /* background-color: black; */
 }

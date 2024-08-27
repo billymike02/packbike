@@ -83,3 +83,7 @@ h2 {
 .buttons .destroy {
   background-color: rgb(255, 0, 0);
 }
+
+.modalContent select {
+  height: 100px;
+}

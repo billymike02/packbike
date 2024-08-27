@@ -1,59 +1,30 @@
-.gear {
-  position: absolute;
-  background-color: black;
-  color: white;
-  overflow: hidden;
-  transform-origin: center;
-  z-index: 1;
-  border-radius: 0.8rem;
-  border: 0.2rem solid black;
-}
-
-.moveIcon {
-  cursor: grab;
-  transition: all 0.2s;
-  height: 2.5vh;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-
-.deleteButton {
-  display: flex;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  font-size: 8rem;
-  background-color: rgba(0, 0, 0, 0.2);
-  color: rgb(255, 0, 0);
-}
-
-.moveIcon:active {
-  scale: 1.2;
-}
-
-.title {
-  padding: 10px;
+.clickable {
+  border: 0.4rem solid rgba(0, 0, 0, 0.505);
+  border-radius: 1rem;
   text-transform: uppercase;
-}
-
-.dropdownContainer {
   display: flex;
-  /* border: 0.1rem solid black; */
+  justify-content: center;
+  align-items: center;
+  color: transparent;
+  user-select: none;
+  z-index: 1;
+  position: absolute;
 }
 
-.dropdown {
-  flex: 1;
-  font-size: 1rem;
-  padding: 1rem;
-  background-color: white; /* Makes it black */
-  color: black; /* Sets text color to white for contrast */
-  border-radius: 0; /* Removes rounded corners to make it square */
-  border: none;
-  box-shadow: none; /* Removes any box shadow */
-  appearance: none; /* Removes default styling in some browsers */
-  -webkit-appearance: none; /* Removes default styling in WebKit browsers */
-  -moz-appearance: none; /* Removes default styling in Mozilla browsers */
+.clickable:hover {
+  background-color: rgba(0, 0, 0, 0.545);
+  color: white;
+}
+
+.clickableOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.clickable:active {
+  background-color: black;
 }
