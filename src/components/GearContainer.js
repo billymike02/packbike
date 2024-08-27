@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid"; // Import uuid
 import styles from "./GearManager.module.css";
 import { MdDelete } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import { IoCheckmark } from "react-icons/io5";
+import { RxCheck } from "react-icons/rx";
 import { useEffect, useState } from "react";
 import { IoIosAdd } from "react-icons/io";
 import modalStyles from "./ModalComponent.module.css";
@@ -267,7 +267,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
                 onRemove();
               }}
             >
-              <IoCheckmark className={styles.deleteIcons}></IoCheckmark>
+              <RxCheck className={styles.deleteIcons}></RxCheck>
             </button>
           </div>
         )}

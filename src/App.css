@@ -5,10 +5,7 @@
   flex-direction: row;
 }
 
-.App-logo {
-  height: 100vmin;
-  position: absolute;
-}
+
 
 h1 {
   font-size: 3rem;
@@ -17,7 +14,6 @@ h1 {
 a {
   font-size: 1.5rem;
 }
-
 
 .App-link {
   color: #61dafb;
