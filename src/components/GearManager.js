@@ -78,7 +78,7 @@ const GearManager = () => {
 
           const newContainer = {
             id: unique_id,
-            displayName: "default-name",
+            displayName: "",
             items: {},
           };
 
@@ -96,13 +96,31 @@ const GearManager = () => {
     }
   };
 
+  const updateContainerDisplayName = async (id, newDisplayName) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        await updateDoc(userDocRef, {
+          [`containers.${id}.displayName`]: newDisplayName,
+        });
+
+        console.log("Updated display name");
+      } catch (error) {
+        console.log("Error updating display name: ", error);
+      }
+    }
+  };
+
   return (
     <div className={styles.gearManager}>
       {containers.map((container) => (
         <GearContainer
           key={container.id}
           id={container.id}
+          displayName={container.displayName} // Pass displayName
           onRemove={() => handleContainerDelete(container.id)}
+          onDisplayNameChange={updateContainerDisplayName} // Pass the callback
         />
       ))}
       <div className={styles.addButton} onClick={addContainer}>

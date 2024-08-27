@@ -12,7 +12,7 @@ import { useAuth } from "../App";
 
 // firestore stuffs
 import { firestore } from "./firebase";
-import { arrayUnion, doc } from "firebase/firestore";
+import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 
@@ -44,8 +44,8 @@ const Modal = ({
     if (bEdit) {
       onSubmit(itemName, itemWeight, itemVolume, itemID);
     } else {
-      const newItemID = uuidv4(); // Generate a new unique ID
-      onSubmit(itemName, itemWeight, itemVolume, newItemID);
+      // don't pass in the item ID if it's new
+      onSubmit(itemName, itemWeight, itemVolume);
     }
 
     setItemName("");
@@ -104,7 +104,8 @@ const Modal = ({
   );
 };
 
-const GearContainer = ({ id, onRemove }) => {
+const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
+  const [name, setName] = useState(displayName);
   const [showDelete, setShowDelete] = useState(false);
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [itemEditIndex, setItemEditIndex] = useState(null);
@@ -139,7 +140,13 @@ const GearContainer = ({ id, onRemove }) => {
     }
   }, [user]);
 
-  const handleAddOrUpdateItem = async (
+  const handleBlur = () => {
+    if (name !== displayName) {
+      onDisplayNameChange(id, name);
+    }
+  };
+
+  const handleAddOrEditItem = async (
     itemName,
     itemWeight,
     itemVolume,
@@ -152,18 +159,57 @@ const GearContainer = ({ id, onRemove }) => {
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
-          const unique_id = uuidv4();
+          const data = userDoc.data();
+          // create a new item
+          if (itemID == null) {
+            const unique_id = uuidv4();
 
-          const newItem = {
-            displayName: itemName,
-            weight: itemWeight,
-            volume: itemVolume,
-            id: unique_id,
-          };
+            const newItem = {
+              displayName: itemName,
+              weight: itemWeight,
+              volume: itemVolume,
+              id: unique_id,
+            };
 
-          await updateDoc(userDocRef, {
-            [`containers.${id}.items`]: arrayUnion(newItem),
-          });
+            await updateDoc(userDocRef, {
+              [`containers.${id}.items`]: arrayUnion(newItem),
+            });
+            // edit the item
+          } else {
+            // Edit the item
+            const container = data.containers[id];
+            if (container) {
+              const items = container.items;
+              const oldItemIndex = items.findIndex(
+                (item) => item.id === itemID
+              );
+
+              if (oldItemIndex !== -1) {
+                // Modify the old item
+                const updatedItem = {
+                  ...items[oldItemIndex],
+                  displayName: itemName, // Replace with the new value
+                  weight: itemWeight, // Replace with the new value
+                  volume: itemVolume, // Replace with the new value
+                };
+
+                // Remove the old item and add the updated item
+                await updateDoc(userDocRef, {
+                  [`containers.${id}.items`]: arrayRemove(items[oldItemIndex]),
+                });
+
+                await updateDoc(userDocRef, {
+                  [`containers.${id}.items`]: arrayUnion(updatedItem),
+                });
+
+                console.log("Item updated successfully.");
+              } else {
+                console.error("Item not found.");
+              }
+            } else {
+              console.error("Container not found.");
+            }
+          }
 
           console.log("Updated items");
         } else {
@@ -227,7 +273,12 @@ const GearContainer = ({ id, onRemove }) => {
         )}
         <div className={styles.gearContainerHeader}>
           <form>
-            <input placeholder="Container name" required />
+            <input
+              placeholder="Container name"
+              onChange={(e) => setName(e.target.value)}
+              onBlur={handleBlur}
+              required
+            />
           </form>
           <MdDelete
             className={styles.deleteButton}
@@ -256,12 +307,8 @@ const GearContainer = ({ id, onRemove }) => {
                     </div>
 
                     <div style={{ textAlign: "left" }}>{item.displayName}</div>
-                    <div style={{ textAlign: "center" }}>
-                      {item.itemWeight === null ? item.weight : "N/A"}
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      {item.itemVolume === null ? item.volume : "N/A"}
-                    </div>
+                    <div style={{ textAlign: "center" }}>{item.weight}</div>
+                    <div style={{ textAlign: "right" }}>{item.volume}</div>
                   </li>
                 )
               )
@@ -283,7 +330,7 @@ const GearContainer = ({ id, onRemove }) => {
           onClose={() => {
             setShowAddItemModal(false);
           }}
-          onSubmit={handleAddOrUpdateItem}
+          onSubmit={handleAddOrEditItem}
         />
       )}
       {showEditItemModal && (
@@ -291,13 +338,13 @@ const GearContainer = ({ id, onRemove }) => {
           onClose={() => {
             setShowEditItemModal(false);
           }}
-          onSubmit={handleAddOrUpdateItem}
+          onSubmit={handleAddOrEditItem}
           bEdit={true}
           onDelete={handleRemoveItem}
           itemID={tableItems[itemEditIndex].id}
-          prevName={tableItems[itemEditIndex].itemName}
-          prevWeight={tableItems[itemEditIndex].itemWeight}
-          prevVolume={tableItems[itemEditIndex].itemVolume}
+          prevName={tableItems[itemEditIndex].displayName}
+          prevWeight={tableItems[itemEditIndex].weight}
+          prevVolume={tableItems[itemEditIndex].volume}
         />
       )}
     </>
