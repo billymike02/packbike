@@ -77,8 +77,9 @@ const GearManager = () => {
           const unique_id = uuidv4();
 
           const newContainer = {
+            id: unique_id,
             displayName: "default-name",
-            items: [],
+            items: {},
           };
 
           await updateDoc(userDocRef, {

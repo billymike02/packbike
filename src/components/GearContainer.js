@@ -12,7 +12,7 @@ import { useAuth } from "../App";
 
 // firestore stuffs
 import { firestore } from "./firebase";
-import { doc } from "firebase/firestore";
+import { arrayUnion, doc } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 
@@ -122,11 +122,15 @@ const GearContainer = ({ id, onRemove }) => {
       const unsubscribe = onSnapshot(userDocRef, (doc) => {
         if (doc.exists()) {
           const userData = doc.data();
-          const newTableItems = userData.containers[id] || [];
 
-          console.log(newTableItems);
+          if (!userData.containers[id]) {
+            return;
+          }
 
-          setTableItems(newTableItems);
+          const newItems = userData.containers[id].items;
+          const arrayFromObject = Object.values(newItems) || [];
+          console.log(arrayFromObject);
+          setTableItems(arrayFromObject);
         }
       });
 
@@ -141,55 +145,60 @@ const GearContainer = ({ id, onRemove }) => {
     itemVolume,
     itemID
   ) => {
-    // if (user) {
-    //   const userDocRef = doc(firestore, "users", user.uid);
-    //   try {
-    //     const userDoc = await getDoc(userDocRef);
-    //     if (userDoc.exists()) {
-    //       const userData = userDoc.data();
-    //       const containers = userData.containers || {};
-    //       // Merge or update the container data
-    //       const updatedContainers = {
-    //         ...containers,
-    //         [id]: {
-    //           name: itemName,
-    //           weight: itemWeight,
-    //           volume: itemVolume,
-    //           id: itemID,
-    //         },
-    //       };
-    //       // Update the document with the new container data
-    //       await updateDoc(userDocRef, { containers: updatedContainers });
-    //       console.log("Updated container items");
-    //     } else {
-    //       console.log("User document does not exist");
-    //     }
-    //   } catch (error) {
-    //     console.log("Error updating container: ", error);
-    //   }
-    // }
-    // if (tableItems.find((item) => item.id === itemID)) {
-    //   // Update existing item
-    //   setTableItems((prevItems) =>
-    //     prevItems.map((item) =>
-    //       item.id === itemID
-    //         ? { ...item, itemName, itemWeight, itemVolume }
-    //         : item
-    //     )
-    //   );
-    // } else {
-    //   // Add new item
-    //   setTableItems((prevItems) => [
-    //     ...prevItems,
-    //     { itemName, itemWeight, itemVolume, id: itemID },
-    //   ]);
-    // }
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const unique_id = uuidv4();
+
+          const newItem = {
+            displayName: itemName,
+            weight: itemWeight,
+            volume: itemVolume,
+            id: unique_id,
+          };
+
+          await updateDoc(userDocRef, {
+            [`containers.${id}.items`]: arrayUnion(newItem),
+          });
+
+          console.log("Updated items");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error adding item: ", error);
+      }
+    }
   };
 
-  const handleRemoveItem = (itemID) => {
-    setTableItems((prevItems) =>
-      prevItems.filter((item) => item.id !== itemID)
-    );
+  const handleRemoveItem = async (itemID) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const updatedItems = tableItems.filter((item) => item.id !== itemID);
+
+          console.log("new", updatedItems);
+
+          await updateDoc(userDocRef, {
+            [`containers.${id}.items`]: updatedItems,
+          });
+
+          console.log("Updated items");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error removing item: ", error);
+      }
+    }
   };
 
   return (
@@ -228,31 +237,36 @@ const GearContainer = ({ id, onRemove }) => {
           />
         </div>
         <div className={styles.gearContainerBody}>
-          {/* <ul>
-            {tableItems.map((item) => (
-              <li key={item.id}>
-                <div
-                  className={styles.editOverlay}
-                  onClick={() => {
-                    setItemEditIndex(
-                      tableItems.findIndex((i) => i.id === item.id)
-                    );
-                    setShowEditItemModal(true);
-                  }}
-                >
-                  <FaPencil className={styles.editIcon} />
-                </div>
+          <ul>
+            {tableItems.map(
+              (item) => (
+                console.log(item),
+                (
+                  <li key={item.id}>
+                    <div
+                      className={styles.editOverlay}
+                      onClick={() => {
+                        setItemEditIndex(
+                          tableItems.findIndex((i) => i.id === item.id)
+                        );
+                        setShowEditItemModal(true);
+                      }}
+                    >
+                      <FaPencil className={styles.editIcon} />
+                    </div>
 
-                <div style={{ textAlign: "left" }}>{item.itemName}</div>
-                <div style={{ textAlign: "center" }}>
-                  {item.itemWeight === null ? "N/A" : item.itemWeight}
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  {item.itemVolume === null ? "N/A" : item.itemVolume}
-                </div>
-              </li>
-            ))}
-          </ul> */}
+                    <div style={{ textAlign: "left" }}>{item.displayName}</div>
+                    <div style={{ textAlign: "center" }}>
+                      {item.itemWeight === null ? item.weight : "N/A"}
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      {item.itemVolume === null ? item.volume : "N/A"}
+                    </div>
+                  </li>
+                )
+              )
+            )}
+          </ul>
 
           <div
             className={styles.addButton}
