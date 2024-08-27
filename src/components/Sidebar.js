@@ -46,10 +46,11 @@ const Sidebar = ({ selectedBike, setSelectedBike }) => {
     {
       title: "Garage",
       subItems: [
-        ...bicycles.map((bicycle) => ({
-          label: bicycle,
-          link: `/workspace`, // Adjust the link as needed
-        })),
+        // ...bicycles.map((bicycle) => ({
+        //   label: bicycle,
+        //   link: `/workspace`, // Adjust the link as needed
+        // })),
+        { label: "test bike", link: "/Workspace" },
       ],
     },
     {

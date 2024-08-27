@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../App";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore as db } from "./firebase";
 import bike from "../assets/images/bike.svg";
 import { useOutletContext } from "react-router-dom";
@@ -10,6 +9,13 @@ import GearDropdown from "./GearDropdown";
 import { createPortal } from "react-dom";
 import { FaPencil } from "react-icons/fa6";
 import modalStyles from "./ModalComponent.module.css";
+
+// firestore stuffs
+import { firestore } from "./firebase";
+import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
+import { updateDoc, onSnapshot } from "firebase/firestore";
+import { getDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid"; // Import uuid
 
 const GearModal = ({ onClose, onSubmit }) => {
   return createPortal(
@@ -42,6 +48,7 @@ const GearModal = ({ onClose, onSubmit }) => {
 
 const Workspace = () => {
   const { selectedBike } = useOutletContext();
+
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGearModalOpen, setIsGearModalOpen] = useState(false);
@@ -50,6 +57,68 @@ const Workspace = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  useEffect(() => {
+    if (!user) return; // Exit if no user
+
+    const docRef = doc(firestore, "users", user.uid);
+
+    // Set up real-time listener
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        // Convert containers map to an array
+        const containersArray = Object.entries(
+          data.bicycles.null.visualContainers || {}
+        ).map(([id, container]) => ({
+          id, // Add the key as an ID field
+          ...container, // Spread the container data
+        }));
+
+        console.log("Visual containers:", containersArray);
+        setContainerElements(containersArray); // Set the array in state
+      } else {
+        console.log("No such document!");
+        setContainerElements([]); // Clear state if document does not exist
+      }
+    });
+
+    // Clean up subscription on component unmount
+    return () => unsubscribe();
+  }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
+
+  const addVisualContainer = async () => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const unique_id = uuidv4();
+
+          const newContainer = {
+            id: unique_id,
+            container_id: "", // this will be set when you decide which backend container to use with it
+            // position: { x: 0, y: 0 },
+            // size: { width: "0px", height: "0px" },
+          };
+
+          await updateDoc(userDocRef, {
+            [`bicycles.${selectedBike}.visualContainers.${unique_id}`]:
+              newContainer,
+          });
+
+          console.log("Updated visual containers");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error adding visual container: ", error);
+      }
+    }
+  };
 
   const handleAddBicycle = async (bikeName) => {
     if (user) {
@@ -88,7 +157,7 @@ const Workspace = () => {
         <div className={styles.Manager}>
           <nav>
             <ul>
-              <li>
+              <li onClick={addVisualContainer}>
                 <a>Add</a>
               </li>
               <li>
@@ -101,7 +170,6 @@ const Workspace = () => {
           </nav>
         </div>
         <div className={styles.Display} id="display">
-          <GearDropdown></GearDropdown>
           <div className={styles.figure}>
             <img
               src={bike}
@@ -110,9 +178,18 @@ const Workspace = () => {
             />
           </div>
 
-          {containerElements.map((element) =>
-            createPortal(element, document.getElementById("display"))
-          )}
+          {containerElements.map((container) => (
+            <GearDropdown
+              key={container.id}
+              id={container.id}
+              containerID={container.id}
+            />
+          ))}
+
+          {/* {containerElements.map((element) =>
+            createPortal(element, doc
+            ument.getElementById("display"))
+          )} */}
         </div>
       </div>
 

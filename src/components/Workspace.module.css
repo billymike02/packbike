@@ -68,9 +68,6 @@
   display: flex;
 }
 
-.Display .figure {
-}
-
 .BicycleVector {
   position: absolute;
   top: 0px;
@@ -78,5 +75,5 @@
   height: 150%;
   transform: translate(15%, -12%);
 
-  /* background-color: black; */
+  user-select: none;
 }
