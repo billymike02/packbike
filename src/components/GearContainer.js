@@ -278,6 +278,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
             <input
               placeholder="Container name"
               onChange={(e) => setName(e.target.value)}
+              value={name}
               onBlur={handleBlur}
               required
             />
