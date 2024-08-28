@@ -18,6 +18,11 @@
   position: absolute;
 }
 
+.filled {
+  border-width: 0.8rem;
+  background-color: rgba(0, 0, 0, 0.586);
+}
+
 .clickable:hover {
   background-color: rgba(0, 0, 0, 0.545);
   color: white;

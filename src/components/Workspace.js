@@ -6,9 +6,6 @@ import { useOutletContext } from "react-router-dom";
 import Modal from "./ModalComponent";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
-import { createPortal } from "react-dom";
-import { FaPencil } from "react-icons/fa6";
-import modalStyles from "./ModalComponent.module.css";
 
 // firestore stuffs
 import { firestore } from "./firebase";
@@ -17,46 +14,13 @@ import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
 
-const GearModal = ({ onClose, onSubmit }) => {
-  return createPortal(
-    <div className={modalStyles.modalOverlay}>
-      <div className={modalStyles.modalContent}>
-        <h2>{"Assign a gear container"}</h2>
-        <div className={modalStyles.modalBody}>
-          <select name="gearContainer" id="selector">
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="audi">Audi</option>
-          </select>
-        </div>
-
-        <div className={modalStyles.buttons}>
-          <button onClick={onClose} className={modalStyles.abort}>
-            Cancel
-          </button>
-
-          <button onClick={onSubmit} className={modalStyles.submit}>
-            Done
-          </button>
-        </div>
-      </div>
-    </div>,
-    document.getElementById("modal-root")
-  );
-};
-
 const Workspace = () => {
   const { selectedBike } = useOutletContext();
 
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isGearModalOpen, setIsGearModalOpen] = useState(false);
 
   const [containerElements, setContainerElements] = useState([]);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -218,7 +182,7 @@ const Workspace = () => {
         </div>
       </div>
 
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <Modal
           onClose={closeModal}
           onSubmit={(bikeName) => {
@@ -226,11 +190,7 @@ const Workspace = () => {
             closeModal();
           }}
         />
-      )}
-
-      {isGearModalOpen && (
-        <GearModal onClose={closeModal} onSubmit={closeModal} />
-      )}
+      )} */}
     </>
   );
 };
