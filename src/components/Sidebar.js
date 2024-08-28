@@ -5,7 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
 
-const Sidebar = ({ selectedBike, setSelectedBike }) => {
+const Sidebar = ({ setBicycleSelection }) => {
   const { user } = useAuth();
   const [bicycles, setBicycles] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -20,7 +20,9 @@ const Sidebar = ({ selectedBike, setSelectedBike }) => {
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            setBicycles(userData.bicycles || []); // Default to empty array if bicycles field doesn't exist
+            setBicycles(Object.keys(userData.bicycles) || []); // Default to empty array if bicycles field doesn't exist
+            console.log(userData.bicycles);
+            // bikesToMenu(userData.bicycles);
           } else {
             console.log("User document does not exist");
           }
@@ -46,11 +48,10 @@ const Sidebar = ({ selectedBike, setSelectedBike }) => {
     {
       title: "Garage",
       subItems: [
-        // ...bicycles.map((bicycle) => ({
-        //   label: bicycle,
-        //   link: `/workspace`, // Adjust the link as needed
-        // })),
-        { label: "test bike", link: "/Workspace" },
+        ...bicycles.map((bicycle) => ({
+          label: bicycle,
+          link: `/workspace`, // Adjust the link as needed
+        })),
       ],
     },
     {
@@ -105,7 +106,7 @@ const Sidebar = ({ selectedBike, setSelectedBike }) => {
                       // Only set the selected bike if we're under the "Garage" section
                       if (items[expandedIndex].title === "Garage") {
                         console.log(subItem.label);
-                        setSelectedBike(subItem.label);
+                        setBicycleSelection(subItem.label);
                       }
                     }}
                   >

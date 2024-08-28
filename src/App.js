@@ -35,7 +35,12 @@ function Layout() {
   return (
     <div style={{ display: "flex" }}>
       {/* Left Side - Static Links */}
-      <Sidebar selectedBike={selectedBike} setSelectedBike={setSelectedBike} />
+      <Sidebar
+        setBicycleSelection={(newBike) => {
+          console.log("new bike", newBike);
+          setSelectedBike(newBike);
+        }}
+      />
 
       {/* Right Side - Content that changes with routes */}
       <div style={{ width: "100%", height: "100vh", display: "flex" }}>

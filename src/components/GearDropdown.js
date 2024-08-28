@@ -19,6 +19,7 @@ const GearModal = ({
   onSubmit,
   onDelete,
   currentBackendContainer,
+  selectedBike,
 }) => {
   const { user } = useAuth();
   const [containers, setContainers] = useState([]);
@@ -109,7 +110,7 @@ const GearModal = ({
   );
 };
 
-const GearDropdown = ({ id, type, onDelete }) => {
+const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
   const { user } = useAuth();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "200px", height: "200px" });
@@ -128,7 +129,7 @@ const GearDropdown = ({ id, type, onDelete }) => {
         const data = docSnap.data();
 
         // Access the nested fields
-        const visualContainers = data?.bicycles?.null?.visualContainers;
+        const visualContainers = data?.bicycles[selectedBike].visualContainers;
         const container = visualContainers?.[id];
 
         setBackendContainer(container?.container_id);
@@ -175,8 +176,10 @@ const GearDropdown = ({ id, type, onDelete }) => {
 
         if (userDoc.exists()) {
           await updateDoc(userDocRef, {
-            [`bicycles.null.visualContainers.${id}.size.width`]: newWidth,
-            [`bicycles.null.visualContainers.${id}.size.height`]: newHeight,
+            [`bicycles.${selectedBike}.visualContainers.${id}.size.width`]:
+              newWidth,
+            [`bicycles.${selectedBike}.visualContainers.${id}.size.height`]:
+              newHeight,
           });
         } else {
         }
@@ -200,8 +203,8 @@ const GearDropdown = ({ id, type, onDelete }) => {
 
         if (userDoc.exists()) {
           await updateDoc(userDocRef, {
-            [`bicycles.null.visualContainers.${id}.position.x`]: x,
-            [`bicycles.null.visualContainers.${id}.position.y`]: y,
+            [`bicycles.${selectedBike}.visualContainers.${id}.position.x`]: x,
+            [`bicycles.${selectedBike}.visualContainers.${id}.position.y`]: y,
           });
         } else {
         }
@@ -224,7 +227,8 @@ const GearDropdown = ({ id, type, onDelete }) => {
 
         if (userDoc.exists()) {
           await updateDoc(userDocRef, {
-            [`bicycles.null.visualContainers.${id}.container_id`]: newContainer,
+            [`bicycles.${selectedBike}.visualContainers.${id}.container_id`]:
+              newContainer,
           });
         } else {
         }

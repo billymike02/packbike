@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
 import bike from "../assets/images/bike.svg";
-import { useOutletContext } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import Modal from "./ModalComponent";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
@@ -21,26 +21,31 @@ import { getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
 
 const Workspace = () => {
-  const { selectedBike } = useOutletContext();
+  const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { selectedBike } = useOutletContext();
+
+  // you need to figure out THE RIGHT WAY TO DO THIS!
 
   const [containerElements, setContainerElements] = useState([]);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
 
+    setLoading(true);
+    console.log("loading");
     const docRef = doc(firestore, "users", user.uid);
 
     // Set up real-time listener
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists()) {
+      if (docSnap.exists() && selectedBike != null) {
         const data = docSnap.data();
 
         // Convert containers map to an array
         const containersArray = Object.entries(
-          data.bicycles.null.visualContainers || {}
+          data.bicycles[selectedBike].visualContainers || {}
         ).map(([id, container]) => ({
           id, // Add the key as an ID field
           ...container, // Spread the container data
@@ -54,9 +59,13 @@ const Workspace = () => {
       }
     });
 
+    setTimeout(() => {
+      setLoading(false);
+    }, 750);
+
     // Clean up subscription on component unmount
     return () => unsubscribe();
-  }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
+  }, [user, selectedBike]); // Depend on `user`, so it re-subscribes if `user` changes
 
   const addVisualContainer = async (type) => {
     if (user) {
@@ -129,10 +138,10 @@ const Workspace = () => {
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
-          console.log(`bicycles.null.visualContainers.${id}`);
+          console.log(`bicycles.${selectedBike}.visualContainers.${id}`);
 
           await updateDoc(userDocRef, {
-            [`bicycles.null.visualContainers.${id}`]: deleteField(),
+            [`bicycles.${selectedBike}.visualContainers.${id}`]: deleteField(),
           });
 
           console.log("Updated visual containers");
@@ -146,6 +155,22 @@ const Workspace = () => {
   };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  if (selectedBike == null) {
+    return (
+      <div className="loading-screen">
+        <h3>Please select a bicycle from the sidebar.</h3>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <h3>Preparing your workspace...</h3>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -184,6 +209,17 @@ const Workspace = () => {
               <li>
                 <a>Reset</a>
               </li>
+              <li
+                style={{
+                  display: "flex",
+                  position: "absolute",
+                  backgroundColor: "transparent",
+                  color: "black",
+                  right: "0px",
+                }}
+              >
+                <a>Editing: {selectedBike}</a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -203,20 +239,11 @@ const Workspace = () => {
               containerID={container.id}
               type={container.type}
               onDelete={handleVisualContainerDelete}
+              selectedBike={selectedBike}
             />
           ))}
         </div>
       </div>
-
-      {/* {isModalOpen && (
-        <Modal
-          onClose={closeModal}
-          onSubmit={(bikeName) => {
-            handleAddBicycle(bikeName);
-            closeModal();
-          }}
-        />
-      )} */}
     </>
   );
 };

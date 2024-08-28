@@ -131,7 +131,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
           }
 
           const newItems = userData.containers[id].items;
-          const arrayFromObject = Object.values(newItems) || [];
+          const arrayFromObject = Object.values(newItems || {}) || [];
           console.log(arrayFromObject);
           setTableItems(arrayFromObject);
         }
