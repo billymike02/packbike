@@ -9,7 +9,13 @@ import GearDropdown from "./GearDropdown";
 
 // firestore stuffs
 import { firestore } from "./firebase";
-import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  arrayRemove,
+  FieldValue,
+  deleteField,
+} from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
@@ -115,6 +121,30 @@ const Workspace = () => {
     }
   };
 
+  const handleVisualContainerDelete = async (id) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          console.log(`bicycles.null.visualContainers.${id}`);
+
+          await updateDoc(userDocRef, {
+            [`bicycles.null.visualContainers.${id}`]: deleteField(),
+          });
+
+          console.log("Updated visual containers");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error removing visual container: ", error);
+      }
+    }
+  };
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -172,13 +202,9 @@ const Workspace = () => {
               id={container.id}
               containerID={container.id}
               type={container.type}
+              onDelete={handleVisualContainerDelete}
             />
           ))}
-
-          {/* {containerElements.map((element) =>
-            createPortal(element, doc
-            ument.getElementById("display"))
-          )} */}
         </div>
       </div>
 

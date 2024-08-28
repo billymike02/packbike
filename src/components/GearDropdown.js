@@ -14,7 +14,12 @@ import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 
-const GearModal = ({ onClose, onSubmit, currentBackendContainer }) => {
+const GearModal = ({
+  onClose,
+  onSubmit,
+  onDelete,
+  currentBackendContainer,
+}) => {
   const { user } = useAuth();
   const [containers, setContainers] = useState([]);
   const [backendContainer, setBackendContainer] = useState(null);
@@ -79,9 +84,20 @@ const GearModal = ({ onClose, onSubmit, currentBackendContainer }) => {
           <button onClick={onClose} className={modalStyles.abort}>
             Cancel
           </button>
+          <button
+            className={modalStyles.destroy}
+            onClick={() => {
+              onDelete();
+              onClose();
+            }}
+          >
+            Delete
+          </button>
 
           <button
-            onClick={() => onSubmit(backendContainer)}
+            onClick={() => {
+              onSubmit(backendContainer);
+            }}
             className={modalStyles.submit}
           >
             Done
@@ -93,7 +109,7 @@ const GearModal = ({ onClose, onSubmit, currentBackendContainer }) => {
   );
 };
 
-const GearDropdown = ({ id, type }) => {
+const GearDropdown = ({ id, type, onDelete }) => {
   const { user } = useAuth();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "200px", height: "200px" });
@@ -199,7 +215,12 @@ const GearDropdown = ({ id, type }) => {
 
       try {
         const userDoc = await getDoc(userDocRef);
-        console.log(id);
+        console.log(
+          "setting container id:",
+          newContainer,
+          "for viscontainer",
+          id
+        );
 
         if (userDoc.exists()) {
           await updateDoc(userDocRef, {
@@ -247,10 +268,14 @@ const GearDropdown = ({ id, type }) => {
             setIsGearModalOpen(false);
           }}
           onSubmit={(newContainer) => {
+            console.log("new container", newContainer);
             onBackendContainerChange(newContainer);
             setIsGearModalOpen(false);
           }}
           currentBackendContainer={backendContainer}
+          onDelete={() => {
+            onDelete(id);
+          }}
         ></GearModal>
       )}
     </>
