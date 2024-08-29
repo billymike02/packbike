@@ -79,9 +79,10 @@ const Workspace = () => {
 
           const newContainer = {
             id: unique_id,
-            container_id: "", // this will be set when you decide which backend container to use with it
+            container_id: null, // this will be set when you decide which backend container to use with it
             position: { x: 0, y: 0 },
             type: type,
+            color: "yellow",
           };
 
           await updateDoc(userDocRef, {

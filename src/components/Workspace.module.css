@@ -4,6 +4,7 @@
   flex-direction: column;
   justify-content: flex-start;
   margin-left: 10vw;
+  user-select: none;
 }
 
 .Manager {
@@ -51,7 +52,7 @@
   padding: 1.3rem;
   padding-block: 0.5rem;
   border-radius: 1rem;
-  transition: all 0.3s;
+  transition: all 0.1s;
   cursor: pointer;
   user-select: none;
   position: relative;

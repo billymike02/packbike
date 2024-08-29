@@ -19,11 +19,24 @@ const GearModal = ({
   onSubmit,
   onDelete,
   currentBackendContainer,
-  selectedBike,
+  currentColor,
 }) => {
   const { user } = useAuth();
   const [containers, setContainers] = useState([]);
   const [backendContainer, setBackendContainer] = useState(null);
+
+  const [bgColor, setBgColor] = useState("");
+
+  const colors = [
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "purple",
+    "brown",
+    "black",
+  ];
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -59,12 +72,16 @@ const GearModal = ({
     setBackendContainer(event.target.value);
   };
 
+  const handleColorChange = (event) => {
+    setBgColor(event.target.value);
+  };
+
   return createPortal(
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
         <h2>{"Assign a gear container"}</h2>
         <div className={modalStyles.modalBody}>
-          <select name="gearContainer" id="selector" onChange={handleChange}>
+          <select name="gearContainer" onChange={handleChange}>
             <option value="" disabled selected>
               Select an option
             </option>
@@ -76,6 +93,18 @@ const GearModal = ({
                 selected={container.id === currentBackendContainer}
               >
                 {container.displayName}
+              </option>
+            ))}
+          </select>
+          <select name="containerColor" onChange={handleColorChange}>
+            {colors.map((color) => (
+              <option
+                key={color}
+                id={color}
+                value={color}
+                selected={color === currentColor}
+              >
+                {color}
               </option>
             ))}
           </select>
@@ -97,7 +126,7 @@ const GearModal = ({
 
           <button
             onClick={() => {
-              onSubmit(backendContainer);
+              onSubmit(backendContainer, bgColor);
             }}
             className={modalStyles.submit}
           >
@@ -115,6 +144,7 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "200px", height: "200px" });
   const [backendContainer, setBackendContainer] = useState("");
+  const [bgColor, setBgColor] = useState("");
 
   const [isGearModalOpen, setIsGearModalOpen] = useState(false);
 
@@ -133,6 +163,9 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
         const container = visualContainers?.[id];
 
         setBackendContainer(container?.container_id);
+        setBgColor(container?.color);
+
+        console.log("downloaded bg color: ", container?.color);
 
         const containerSize = container?.size;
         const containerWidth = containerSize?.width;
@@ -212,23 +245,18 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
     }
   };
 
-  const onBackendContainerChange = async (newContainer) => {
+  const onModalChange = async (newContainer, newColor) => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
 
       try {
         const userDoc = await getDoc(userDocRef);
-        console.log(
-          "setting container id:",
-          newContainer,
-          "for viscontainer",
-          id
-        );
 
         if (userDoc.exists()) {
           await updateDoc(userDocRef, {
             [`bicycles.${selectedBike}.visualContainers.${id}.container_id`]:
               newContainer,
+            [`bicycles.${selectedBike}.visualContainers.${id}.color`]: newColor,
           });
         } else {
         }
@@ -249,21 +277,21 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
         minHeight={100}
         bounds="parent"
         className={`${styles.clickable} ${styles[type]} ${
-          backendContainer == "" ? "" : styles.filled
+          backendContainer == null ? "" : styles.filled
         }`}
+        style={{ backgroundColor: bgColor }}
         onResizeStop={onResizeStop}
         onDragStop={onDragStop}
         enableResizing="false"
         // size={size}
         position={position}
       >
-        <div
-          className={styles.clickableOverlay}
-          onClick={() => {
-            setIsGearModalOpen(true);
-          }}
-        >
-          <FaPencil />
+        <div className={styles.clickableOverlay}>
+          <FaPencil
+            onClick={() => {
+              setIsGearModalOpen(true);
+            }}
+          />
         </div>
       </Rnd>
       {isGearModalOpen && (
@@ -271,12 +299,13 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
           onClose={() => {
             setIsGearModalOpen(false);
           }}
-          onSubmit={(newContainer) => {
+          onSubmit={(newContainer, newColor) => {
             console.log("new container", newContainer);
-            onBackendContainerChange(newContainer);
+            onModalChange(newContainer, newColor);
             setIsGearModalOpen(false);
           }}
           currentBackendContainer={backendContainer}
+          currentColor={bgColor}
           onDelete={() => {
             onDelete(id);
           }}

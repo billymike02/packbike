@@ -7,34 +7,35 @@
 }
 
 .clickable {
-  border: 0.4rem solid rgba(0, 0, 0, 0.505);
+  border: 0.4rem solid rgb(0, 0, 0);
   text-transform: uppercase;
   display: flex;
   justify-content: center;
   align-items: center;
   color: transparent;
   user-select: none;
-  z-index: 1;
-  position: absolute;
+
+  transition: color 0.2s, background-color 0.3s;
+  overflow: hidden;
 }
 
 .filled {
   border-width: 0.8rem;
-  background-color: rgba(0, 0, 0, 0.586);
 }
 
 .clickable:hover {
-  background-color: rgba(0, 0, 0, 0.545);
   color: white;
+  background-color: rgba(0, 0, 0, 0.545) !important;
+  z-index: 5;
 }
 
 .clickableOverlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  transition: all 0.1s;
+  transition: all 0.15s;
 }
 
 .clickable:active {

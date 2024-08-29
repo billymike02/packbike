@@ -4,6 +4,7 @@
   margin-left: 3vh;
   z-index: 2;
   height: 35%;
+  user-select: none;
 
   /* styling */
   background-color: rgb(0, 0, 0);
@@ -58,7 +59,7 @@
 
 .submenuItem {
   padding: 1rem;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   text-transform: uppercase;
   color: white;
   font-weight: 500;
