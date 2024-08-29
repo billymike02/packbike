@@ -209,19 +209,9 @@ const Workspace = () => {
               <li>
                 <a>Reset</a>
               </li>
-              <li
-                style={{
-                  display: "flex",
-                  position: "absolute",
-                  backgroundColor: "transparent",
-                  color: "black",
-                  right: "0px",
-                }}
-              >
-                <a>Editing: {selectedBike}</a>
-              </li>
             </ul>
           </nav>
+          <a className={styles.bikeName}>Selected Bike: {selectedBike}</a>
         </div>
         <div className={styles.Display} id="display">
           <div className={styles.figure}>

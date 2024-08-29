@@ -8,20 +8,30 @@
 
 .Manager {
   height: 10vh;
-  /* background-color: rgb(232 237 224); */
   align-items: center;
   display: flex;
   flex-direction: row;
   z-index: 1;
 }
 
+.Manager nav {
+  transition: all 0.3s;
+  overflow-x: hidden;
+  overflow-y: visible;
+  border: 0.2rem solid black;
+}
+
+.Manager nav:hover {
+  scale: 1.03;
+}
+
 .Manager ul {
   display: flex;
   list-style: none;
   list-style-type: none;
-  margin: 0.5rem;
+  margin: 0px;
   padding: 0px;
-  color: rgb(232 254 196);
+  color: white;
   gap: 4px;
 
   justify-content: center;
@@ -32,22 +42,27 @@
   margin-left: 1rem;
   font-size: 2rem;
   text-transform: none;
-  color: rgb(44 70 38);
 }
 
 .Manager li {
-  background-color: rgb(44 70 39);
-  padding: 1rem;
-  padding-block: 0.3rem;
-  border-radius: 0.4rem;
-  transition: scale 0.1s;
+  padding: 1.3rem;
+  padding-block: 0.5rem;
+  border-radius: 1rem;
+
+  transition: all 0.3s;
   cursor: pointer;
   user-select: none;
   position: relative;
 }
 
+.Manager li:hover {
+  color: aqua;
+}
+
 .Manager li:active {
-  scale: 1.05;
+  scale: 1.1;
+  background-color: white;
+  color: black;
 }
 
 .right-nav {
@@ -68,6 +83,8 @@
 
 .Manager nav {
   display: flex;
+  background-color: black;
+  border-radius: 3rem;
 }
 
 .Manager .dropdown {
@@ -109,4 +126,11 @@
   transform: translate(15%, -12%);
 
   user-select: none;
+}
+
+.bikeName {
+  text-transform: uppercase;
+  margin-left: auto;
+  margin-right: 3vw;
+  font-weight: 500;
 }
