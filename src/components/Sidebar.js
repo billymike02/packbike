@@ -112,13 +112,9 @@ const Sidebar = ({ setBicycleSelection }) => {
               to={`${item.link}`}
               className={styles.submenuItem}
               onClick={() => {
-                setBicycleSelection(null);
-
                 if (items[expandedIndex].title == "Garage") {
                   setBicycleSelection(item.label);
                 }
-
-                console.log("Selected bike:", item.label);
 
                 setSidebarExpanded(false);
               }}
