@@ -78,7 +78,7 @@ const GearManager = () => {
 
           const newContainer = {
             id: unique_id,
-            displayName: "",
+            displayName: "New Container",
             items: {},
           };
 
