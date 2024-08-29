@@ -168,6 +168,8 @@ const Workspace = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const containerTypes = ["pannier", "roll", "framebag"];
+
   if (selectedBike == null) {
     return (
       <div className="loading-screen">
@@ -208,22 +210,16 @@ const Workspace = () => {
             </div>
             {dropdownOpen && (
               <div className={styles.dropdown}>
-                <button
-                  onClick={() => {
-                    addVisualContainer("pannier");
-                    setDropdownOpen(false);
-                  }}
-                >
-                  Pannier
-                </button>
-                <button
-                  onClick={() => {
-                    addVisualContainer("roll");
-                    setDropdownOpen(false);
-                  }}
-                >
-                  Roll
-                </button>
+                {containerTypes.map((type, index) => (
+                  <button
+                    onClick={() => {
+                      addVisualContainer(type);
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    {type}
+                  </button>
+                ))}
               </div>
             )}
           </nav>
