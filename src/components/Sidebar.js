@@ -40,7 +40,6 @@ const Sidebar = ({ setBicycleSelection }) => {
     fetchBicycles();
   }, [user]);
 
-
   // Update the "Garage" item to include bicycles dynamically
   const items = [
     {
@@ -56,17 +55,16 @@ const Sidebar = ({ setBicycleSelection }) => {
     },
     {
       title: "Inventory",
-      subItems: [
-        { label: "Manage gear", link: "/gear-manager" },
-        { label: "Sub 4", link: "/page3" },
-      ],
+      subItems: [{ label: "Manage gear", link: "/gear-manager" }],
       icon: <PiShoppingBagOpenFill></PiShoppingBagOpenFill>,
     },
     {
       title: "Account",
       subItems: [
         { label: `About ${user?.displayName}`, link: "/Profile" },
-        { label: "Login", link: "/Login" },
+        user
+          ? { label: "Logout", link: "/Logout" }
+          : { label: "Login", link: "/Login" },
       ],
       icon: <RiAccountCircleFill></RiAccountCircleFill>,
     },
