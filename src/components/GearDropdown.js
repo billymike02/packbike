@@ -173,9 +173,8 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
 
         console.log("downloaded bg color: ", container?.color);
 
-        const containerSize = container?.size;
-        const containerWidth = containerSize?.width;
-        const containerHeight = containerSize?.height;
+        const containerWidth = container?.width;
+        const containerHeight = container?.height;
         const containerPos = container?.position;
         const containerPosX = containerPos?.x;
         const containerPosY = containerPos?.y;
@@ -230,6 +229,7 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
     // Get the current position
     const { x, y } = d;
 
+    console.log("size", size.width, size.height);
     // Update the state with the new position
     setPosition({ x, y });
 
@@ -276,11 +276,9 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
         default={{
           x: 0,
           y: 0,
-          width: 200,
-          height: 200,
+          width: 30,
+          height: 30,
         }}
-        minWidth={100}
-        minHeight={100}
         bounds="parent"
         className={`${styles.clickable} ${styles[type]} ${
           backendContainer != null && backendContainer != ""
@@ -292,6 +290,7 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
         onDragStop={onDragStop}
         enableResizing="false"
         position={position}
+        size={size}
       >
         <div className={styles.clickableOverlay}>
           <FaPencil

@@ -109,7 +109,7 @@ const Workspace = () => {
     }
   };
 
-  const addVisualContainer = async (type) => {
+  const addVisualContainer = async (type, width, height) => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
 
@@ -123,6 +123,8 @@ const Workspace = () => {
             id: unique_id,
             container_id: null, // this will be set when you decide which backend container to use with it
             position: { x: 0, y: 0 },
+            width: width,
+            height: height,
             type: type,
             color: "grey",
           };
@@ -168,7 +170,11 @@ const Workspace = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const containerTypes = ["pannier", "roll", "framebag"];
+  const containerTypes = [
+    { name: "pannier", width: "200px", height: "200px" },
+    { name: "roll", width: "100px", height: "100px" },
+    { name: "framebag", width: "500px", height: "500px" },
+  ];
 
   if (selectedBike == null) {
     return (
@@ -210,14 +216,19 @@ const Workspace = () => {
             </div>
             {dropdownOpen && (
               <div className={styles.dropdown}>
-                {containerTypes.map((type, index) => (
+                {containerTypes.map((container, index) => (
                   <button
+                    key={index}
                     onClick={() => {
-                      addVisualContainer(type);
+                      addVisualContainer(
+                        container.name,
+                        container.width,
+                        container.height
+                      );
                       setDropdownOpen(false);
                     }}
                   >
-                    {type}
+                    {container.name}
                   </button>
                 ))}
               </div>
