@@ -2,7 +2,14 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import Home from "./components/Home";
 import "./App.css";
 import Login from "./components/Login";
-import { HashRouter, Routes, Route, Link, Outlet } from "react-router-dom";
+import {
+  HashRouter,
+  Routes,
+  Route,
+  Link,
+  Outlet,
+  useNavigate,
+} from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -10,6 +17,7 @@ import Sidebar from "./components/Sidebar";
 import Workspace from "./components/Workspace";
 import Profile from "./components/Profile";
 import GearManager from "./components/GearManager";
+import Modal from "./components/ModalComponent";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -81,6 +89,10 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  const handleClose = () => {
+    // useNavigate().navigate("/workspace"); // Replace '/desired-path' with the route you want to navigate to
+  };
+
   return (
     <AuthContext.Provider value={{ user }}>
       <HashRouter>
@@ -89,6 +101,10 @@ function App() {
             <Route path="/workspace" element={<Workspace />} />
             <Route path="/gear-manager" element={<GearManager />} />
             <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/add-bicycle"
+              element={<Modal onClose={handleClose} onSubmit={handleClose} />}
+            />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

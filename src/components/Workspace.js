@@ -3,7 +3,7 @@ import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
 import bike from "../assets/images/bike.svg";
 import { useLocation, useOutletContext } from "react-router-dom";
-import Modal from "./ModalComponent";
+
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
 
@@ -27,7 +27,6 @@ const Workspace = () => {
 
   const { selectedBike } = useOutletContext();
 
-  // you need to figure out THE RIGHT WAY TO DO THIS!
 
   const [containerElements, setContainerElements] = useState([]);
 
@@ -100,36 +99,6 @@ const Workspace = () => {
     }
   };
 
-  const handleAddBicycle = async (bikeName) => {
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-
-      try {
-        // Fetch the current document
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          const existingBicycles = userData.bicycles || []; // Default to empty array if bicycles field doesn't exist
-
-          // Add the new bicycle item
-          const updatedBicycles = [...existingBicycles, bikeName];
-
-          // Update the document with the new array
-          await updateDoc(userDocRef, {
-            bicycles: updatedBicycles,
-          });
-
-          console.log("Bicycle added successfully!");
-        } else {
-          console.log("User document does not exist");
-        }
-      } catch (error) {
-        console.error("Error adding bicycle: ", error);
-      }
-    } else {
-      console.log("User not authenticated");
-    }
-  };
 
   const handleVisualContainerDelete = async (id) => {
     if (user) {

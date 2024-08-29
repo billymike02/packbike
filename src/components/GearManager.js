@@ -66,8 +66,6 @@ const GearManager = () => {
     }
   };
 
-  
-
   const addContainer = async () => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
