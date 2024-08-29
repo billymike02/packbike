@@ -1,84 +1,72 @@
 .Sidebar {
-  background-color: rgb(200 221 174);
-  color: rgb(121 146 106);
-  z-index: 1;
-  min-width: 20%;
-  height: 100vh;
-  transition: all 0.4s;
+  /* positioning */
+  position: absolute;
+  margin-left: 3vh;
+  z-index: 2;
+  height: 35%;
+
+  /* styling */
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  border-radius: 2.5rem;
+  padding: 1rem;
+
+  /* children */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.Menu {
+  display: flex;
+
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.menuIcon {
+  font-size: 3rem;
+  transition: all 0.3s;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.menuIcon:hover {
+  color: aqua;
+}
+
+.Submenu {
+  height: 100%;
+  transition: width 0.5s;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  overflow: hidden;
+  text-wrap: nowrap;
+  gap: 0.5rem;
 }
 
-.Sidebar ul {
-  padding: 0px;
-  list-style: none;
-  list-style-type: none;
-  text-align: start;
-}
-
-.Sidebar li {
-  padding-block: 1rem;
-}
-
-.Sidebar a:hover {
-  padding: 10px;
-  background-color: rgb(44 70 39);
-  color: rgb(232 254 200);
-}
-
-.subitem {
-  text-decoration: none;
-  color: white;
-}
-
-.Sidebar a {
-  user-select: none;
-  cursor: pointer;
-  scale: 1.05;
-  transition: all 0.3s;
-  border-radius: 8px;
-}
-
-.Sidebar h1 {
-  user-select: none;
-  cursor: default;
-  color: rgb(44 70 38);
-}
-
-.Sidebar h1,
-.Sidebar ul {
-  text-transform: uppercase;
-  margin-left: 3rem;
-}
-
-.cascadingMenu {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-}
-
-.menu {
-  display: flex;
-  flex-direction: row;
-}
-
-.submenu {
-  display: flex;
-  flex: 1;
+.submenuItem {
   padding: 1rem;
-  margin-left: 10%;
-  width: 300px;
-  background-color: rgb(227 237 214);
-  border-radius: 1rem;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  color: white;
+  font-weight: 500;
+  user-select: none;
+  border-radius: 3rem;
+  transition: all 0.3s;
+
+  /* remove underlines */
+  text-decoration: none;
 }
 
-.submenu a {
-  color: rgb(44 70 39);
-}
-
-.submenu ul {
-  margin: 0px;
+.submenuItem:hover {
+  background-color: white;
+  color: black;
+  scale: 1.04;
 }

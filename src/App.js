@@ -33,8 +33,13 @@ function Layout() {
   const [selectedBike, setSelectedBike] = useState(null);
 
   return (
-    <div style={{ display: "flex" }}>
-      {/* Left Side - Static Links */}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+      }}
+    >
       <Sidebar
         setBicycleSelection={(newBike) => {
           console.log("new bike", newBike);

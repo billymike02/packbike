@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
+import { BsBicycle } from "react-icons/bs";
+import { PiShoppingBagOpenFill } from "react-icons/pi";
+import { RiAccountCircleFill } from "react-icons/ri";
 
 const Sidebar = ({ setBicycleSelection }) => {
   const { user } = useAuth();
   const [bicycles, setBicycles] = useState([]);
+  const [expanded, setExpanded] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState(null);
-  const [sidebarWidth, setSidebarWidth] = useState("20%"); // Initialize with a default value
 
   useEffect(() => {
     const fetchBicycles = async () => {
@@ -37,12 +40,6 @@ const Sidebar = ({ setBicycleSelection }) => {
     fetchBicycles();
   }, [user]);
 
-  const handleClick = (index) => {
-    const newExpandedIndex = expandedIndex === index ? null : index;
-    setExpandedIndex(newExpandedIndex);
-    setSidebarWidth(newExpandedIndex !== null ? "55%" : "20%");
-  };
-
   // Update the "Garage" item to include bicycles dynamically
   const items = [
     {
@@ -53,6 +50,7 @@ const Sidebar = ({ setBicycleSelection }) => {
           link: `/workspace`, // Adjust the link as needed
         })),
       ],
+      icon: <BsBicycle />,
     },
     {
       title: "Inventory",
@@ -60,6 +58,7 @@ const Sidebar = ({ setBicycleSelection }) => {
         { label: "Manage gear", link: "/gear-manager" },
         { label: "Sub 4", link: "/page3" },
       ],
+      icon: <PiShoppingBagOpenFill></PiShoppingBagOpenFill>,
     },
     {
       title: "Account",
@@ -67,58 +66,70 @@ const Sidebar = ({ setBicycleSelection }) => {
         { label: `About ${user?.displayName}`, link: "/Profile" },
         { label: "Login", link: "/Login" },
       ],
+      icon: <RiAccountCircleFill></RiAccountCircleFill>,
     },
   ];
 
-  const divStyle = {
-    padding: "10px",
-    backgroundColor: "rgb(228	237	214	)",
-    color: "rgb(44	70	38	)",
+  const handleMenuIconClick = (index) => {
+    // handle those edge cases
+    if (expandedIndex == index) {
+      setExpandedIndex(null);
+      setSidebarExpanded(false);
+
+      return;
+    } else if (sidebarExpanded && expandedIndex != index) {
+      setExpandedIndex(index);
+      return;
+    }
+
+    setSidebarExpanded(!sidebarExpanded);
+
+    setExpandedIndex(index);
   };
 
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+
   return (
-    <nav className={styles.Sidebar} style={{ width: sidebarWidth }}>
-      <h1>PackBike</h1>
-      <div className={styles.menu}>
-        <ul>
-          {items.map((item, index) => (
-            <li className={styles.cascadingMenu} key={index}>
-              <div>
-                <a
-                  style={expandedIndex === index ? divStyle : {}}
-                  onClick={() => handleClick(index)}
-                >
-                  {item.title}
-                </a>
-              </div>
-            </li>
-          ))}
-        </ul>
-        {expandedIndex !== null && (
-          <div className={styles.submenu}>
-            <ul>
-              {items[expandedIndex].subItems.map((subItem, subIndex) => (
-                <li key={subIndex}>
-                  <Link
-                    to={subItem.link}
-                    className={styles.subitem}
-                    onClick={() => {
-                      // Only set the selected bike if we're under the "Garage" section
-                      if (items[expandedIndex].title === "Garage") {
-                        console.log(subItem.label);
-                        setBicycleSelection(subItem.label);
-                      }
-                    }}
-                  >
-                    {subItem.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+    <div className={styles.Sidebar}>
+      <div className={styles.Menu}>
+        {items.map((item, index) => (
+          <div
+            className={styles.menuIcon}
+            onClick={() => {
+              handleMenuIconClick(index);
+            }}
+          >
+            {item.icon}
           </div>
-        )}
+        ))}
       </div>
-    </nav>
+
+      <div
+        className={styles.Submenu}
+        style={{
+          width: sidebarExpanded ? "15vw" : "0vw",
+          marginLeft: sidebarExpanded ? "30px" : "0px",
+        }}
+      >
+        {expandedIndex !== null &&
+          sidebarExpanded &&
+          items[expandedIndex].subItems.map((item, index) => (
+            <Link
+              to={`${item.link}`}
+              className={styles.submenuItem}
+              onClick={() => {
+                if (items[expandedIndex].title == "Garage") {
+                  setBicycleSelection(item.label);
+                }
+
+                setSidebarExpanded(false);
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+      </div>
+    </div>
   );
 };
 
