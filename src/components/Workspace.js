@@ -177,40 +177,45 @@ const Workspace = () => {
       <div className={styles.Workspace}>
         <div className={styles.Manager}>
           <nav>
-            <ul>
-              <li
-                onClick={() => {
-                  setDropdownOpen(!dropdownOpen);
-                }}
-              >
-                <a>Add</a>
-                {dropdownOpen && (
-                  <div className={styles.dropdown}>
-                    <button
-                      onClick={() => {
-                        addVisualContainer("pannier");
-                      }}
-                    >
-                      Pannier
-                    </button>
-                    <button
-                      onClick={() => {
-                        addVisualContainer("roll");
-                      }}
-                    >
-                      Roll
-                    </button>
-                  </div>
-                )}
-              </li>
-              <li>
-                <a>View Info</a>
-              </li>
-              <li>
-                <a>Reset</a>
-              </li>
-            </ul>
+            <div className={styles.MenuBar}>
+              <ul>
+                <li
+                  onClick={() => {
+                    setDropdownOpen(!dropdownOpen);
+                  }}
+                >
+                  <a>Add</a>
+                </li>
+                <li>
+                  <a>View Info</a>
+                </li>
+                <li>
+                  <a>Reset</a>
+                </li>
+              </ul>
+            </div>
+            {dropdownOpen && (
+              <div className={styles.dropdown}>
+                <button
+                  onClick={() => {
+                    addVisualContainer("pannier");
+                    setDropdownOpen(false);
+                  }}
+                >
+                  Pannier
+                </button>
+                <button
+                  onClick={() => {
+                    addVisualContainer("roll");
+                    setDropdownOpen(false);
+                  }}
+                >
+                  Roll
+                </button>
+              </div>
+            )}
           </nav>
+
           <a className={styles.bikeName}>Selected Bike: {selectedBike}</a>
         </div>
         <div className={styles.Display} id="display">

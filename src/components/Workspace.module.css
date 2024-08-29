@@ -14,17 +14,6 @@
   z-index: 1;
 }
 
-.Manager nav {
-  transition: all 0.3s;
-  overflow-x: hidden;
-  overflow-y: visible;
-  border: 0.2rem solid black;
-}
-
-.Manager nav:hover {
-  scale: 1.03;
-}
-
 .Manager ul {
   display: flex;
   list-style: none;
@@ -38,6 +27,20 @@
   align-items: center;
 }
 
+.Manager nav {
+  position: relative;
+}
+
+.Manager .MenuBar {
+  display: flex;
+  background-color: black;
+  position: relative;
+  border-radius: 3rem;
+  transition: all 0.3s;
+  border: 0.2rem solid black;
+  overflow: hidden;
+}
+
 .Manager h2 {
   margin-left: 1rem;
   font-size: 2rem;
@@ -48,7 +51,6 @@
   padding: 1.3rem;
   padding-block: 0.5rem;
   border-radius: 1rem;
-
   transition: all 0.3s;
   cursor: pointer;
   user-select: none;
@@ -65,11 +67,6 @@
   color: black;
 }
 
-.right-nav {
-  display: flex;
-  margin-left: auto;
-}
-
 .Display {
   display: flex;
   flex: 1;
@@ -81,28 +78,23 @@
   user-select: none;
 }
 
-.Manager nav {
-  display: flex;
-  background-color: black;
-  border-radius: 3rem;
-}
-
 .Manager .dropdown {
   display: flex;
   flex-direction: column;
   position: absolute;
-  background-color: rgb(234 237 226);
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.176);
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.604);
   left: 0px;
   top: 120%;
-  width: 15vw;
+  width: 10vw;
   height: 40vh;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   overflow: hidden;
   gap: 4px;
   align-items: center;
   padding: 0.3rem;
   cursor: default;
+  z-index: 10;
 }
 
 .Manager .dropdown button {
@@ -133,4 +125,6 @@
   margin-left: auto;
   margin-right: 3vw;
   font-weight: 500;
+  user-select: none;
+  cursor: default;
 }
