@@ -123,6 +123,7 @@ const GearManager = () => {
           onDisplayNameChange={updateContainerDisplayName} // Pass the callback
         />
       ))}
+
       <div className={styles.addButton} onClick={addContainer}>
         <IoIosAdd />
       </div>

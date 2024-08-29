@@ -1,7 +1,7 @@
 import styles from "./Sidebar.module.css";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
 import { BsBicycle } from "react-icons/bs";
@@ -15,29 +15,23 @@ const Sidebar = ({ setBicycleSelection }) => {
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
-    const fetchBicycles = async () => {
-      if (user) {
-        const userDocRef = doc(db, "users", user.uid);
+    if (!user) return;
 
-        try {
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setBicycles(Object.keys(userData.bicycles) || []); // Default to empty array if bicycles field doesn't exist
-            console.log(userData.bicycles);
-            // bikesToMenu(userData.bicycles);
-          } else {
-            console.log("User document does not exist");
-          }
-        } catch (error) {
-          console.error("Error fetching bicycles: ", error);
-        }
+    const userDocRef = doc(db, "users", user.uid);
+
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        // Convert containers map to an array
+        setBicycles(Object.keys(data.bicycles) || []);
       } else {
-        console.log("User not authenticated");
+        console.log("No such document!");
+        setBicycles([]); // Clear state if document does not exist
       }
-    };
+    });
 
-    fetchBicycles();
+    return () => unsubscribe();
   }, [user]);
 
   // Update the "Garage" item to include bicycles dynamically
