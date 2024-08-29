@@ -35,12 +35,6 @@ const Workspace = () => {
   useEffect(() => {
     if (!user) return; // Exit if no user
 
-    if (selectedBike == "Add +") {
-      setShowNewModal(true);
-      return;
-    }
-
-    setLoading(true);
     console.log("loading");
     const docRef = doc(firestore, "users", user.uid);
 
@@ -48,6 +42,13 @@ const Workspace = () => {
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists() && selectedBike != null) {
         const data = docSnap.data();
+
+        if (selectedBike == "Add +") {
+          setShowNewModal(true);
+          return;
+        }
+
+        setLoading(true);
 
         // Convert containers map to an array
         const containersArray = Object.entries(
