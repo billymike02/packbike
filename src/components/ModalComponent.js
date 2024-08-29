@@ -8,11 +8,10 @@ const Modal = ({ onClose, onSubmit }) => {
   const handleSubmit = () => {
     onSubmit(bikeName);
     setBikeName("");
-    onClose();
   };
 
   return createPortal(
-    <div className={styles.modalOverlay}>
+    <div className={`${styles.modalOverlay} ${styles.blur}`}>
       <div className={styles.modalContent}>
         <h2>Add a New Bike</h2>
         <div className={styles.modalBody}>
@@ -25,9 +24,6 @@ const Modal = ({ onClose, onSubmit }) => {
         </div>
 
         <div className={styles.buttons}>
-          <button onClick={onClose} className={styles.abort}>
-            Cancel
-          </button>
           <button onClick={handleSubmit} className={styles.submit}>
             Done
           </button>

@@ -57,7 +57,7 @@ function Layout() {
 
       {/* Right Side - Content that changes with routes */}
       <div style={{ width: "100%", height: "100vh", display: "flex" }}>
-        <Outlet context={{ selectedBike }} />
+        <Outlet context={{ selectedBike, setSelectedBike }} />
       </div>
     </div>
   );
@@ -101,10 +101,6 @@ function App() {
             <Route path="/workspace" element={<Workspace />} />
             <Route path="/gear-manager" element={<GearManager />} />
             <Route path="/profile" element={<Profile />} />
-            <Route
-              path="/add-bicycle"
-              element={<Modal onClose={handleClose} onSubmit={handleClose} />}
-            />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

@@ -13,7 +13,6 @@ const Sidebar = ({ setBicycleSelection }) => {
   const { user } = useAuth();
   const [bicycles, setBicycles] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
-  const [modalShowing, setModalShowing] = useState(false);
 
   useEffect(() => {
     const fetchBicycles = async () => {
@@ -41,40 +40,6 @@ const Sidebar = ({ setBicycleSelection }) => {
     fetchBicycles();
   }, [user]);
 
-  const handleAddBicycle = async (bikeName) => {
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-
-      try {
-        // Fetch the current document
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          const existingBicycles = userData.bicycles || []; // Default to empty array if bicycles field doesn't exist
-
-          // Add the new bicycle item
-          const updatedBicycles = [...existingBicycles, bikeName];
-
-          // Update the document with the new array
-          await updateDoc(userDocRef, {
-            bicycles: updatedBicycles,
-          });
-
-          console.log("Bicycle added successfully!");
-        } else {
-          console.log("User document does not exist");
-        }
-      } catch (error) {
-        console.error("Error adding bicycle: ", error);
-      }
-    } else {
-      console.log("User not authenticated");
-    }
-  };
-
-  const handleModal = (setting) => {
-    setModalShowing(setting);
-  };
 
   // Update the "Garage" item to include bicycles dynamically
   const items = [
@@ -85,7 +50,7 @@ const Sidebar = ({ setBicycleSelection }) => {
           label: bicycle,
           link: `/workspace`, // Adjust the link as needed
         })),
-        { label: "Add +", link: "/add-bicycle" },
+        { label: "Add +", link: "/workspace" },
       ],
       icon: <BsBicycle />,
     },

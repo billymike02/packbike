@@ -23,9 +23,11 @@ const GearModal = ({
 }) => {
   const { user } = useAuth();
   const [containers, setContainers] = useState([]);
-  const [backendContainer, setBackendContainer] = useState(null);
+  const [backendContainer, setBackendContainer] = useState(
+    currentBackendContainer
+  );
 
-  const [bgColor, setBgColor] = useState("");
+  const [bgColor, setBgColor] = useState(currentColor);
 
   const colors = [
     "red",
@@ -79,11 +81,11 @@ const GearModal = ({
   return createPortal(
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2>{"Assign a gear container"}</h2>
+        <h2>{"Edit gear container"}</h2>
         <div className={modalStyles.modalBody}>
           <select name="gearContainer" onChange={handleChange}>
             <option value="" disabled selected>
-              Select an option
+              Select a container
             </option>
             {containers.map((container) => (
               <option
@@ -96,7 +98,11 @@ const GearModal = ({
               </option>
             ))}
           </select>
+
           <select name="containerColor" onChange={handleColorChange}>
+            <option value="" disabled selected>
+              Select a color
+            </option>
             {colors.map((color) => (
               <option
                 key={color}
@@ -277,13 +283,14 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
         minHeight={100}
         bounds="parent"
         className={`${styles.clickable} ${styles[type]} ${
-          backendContainer == null ? "" : styles.filled
+          backendContainer != null && backendContainer != ""
+            ? styles.filled
+            : ""
         }`}
         style={{ backgroundColor: bgColor }}
         onResizeStop={onResizeStop}
         onDragStop={onDragStop}
         enableResizing="false"
-        // size={size}
         position={position}
       >
         <div className={styles.clickableOverlay}>

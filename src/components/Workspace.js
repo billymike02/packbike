@@ -19,19 +19,26 @@ import {
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
+import Modal from "./ModalComponent";
 
 const Workspace = () => {
   const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
 
-  const { selectedBike } = useOutletContext();
-
+  const { selectedBike, setSelectedBike } = useOutletContext();
 
   const [containerElements, setContainerElements] = useState([]);
 
+  const [showNewModal, setShowNewModal] = useState(false);
+
   useEffect(() => {
     if (!user) return; // Exit if no user
+
+    if (selectedBike == "Add +") {
+      setShowNewModal(true);
+      return;
+    }
 
     setLoading(true);
     console.log("loading");
@@ -66,6 +73,42 @@ const Workspace = () => {
     return () => unsubscribe();
   }, [user, selectedBike]); // Depend on `user`, so it re-subscribes if `user` changes
 
+  const handleAddBicycle = async (bikeName) => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+
+      try {
+        // Fetch the current document
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const bicycles = userData.bicycles || {};
+
+          // Add the new bicycle item as a key-value pair
+          const updatedBicycles = {
+            ...bicycles,
+            [bikeName]: {},
+          };
+
+          // Update the document with the new map
+          await updateDoc(userDocRef, {
+            bicycles: updatedBicycles,
+          });
+
+          console.log("Bicycle added successfully!");
+          setSelectedBike(bikeName);
+          setShowNewModal(false);
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.error("Error adding bicycle: ", error);
+      }
+    } else {
+      console.log("User not authenticated");
+    }
+  };
+
   const addVisualContainer = async (type) => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
@@ -81,7 +124,7 @@ const Workspace = () => {
             container_id: null, // this will be set when you decide which backend container to use with it
             position: { x: 0, y: 0 },
             type: type,
-            color: "yellow",
+            color: "grey",
           };
 
           await updateDoc(userDocRef, {
@@ -98,7 +141,6 @@ const Workspace = () => {
       }
     }
   };
-
 
   const handleVisualContainerDelete = async (id) => {
     if (user) {
@@ -207,6 +249,8 @@ const Workspace = () => {
               selectedBike={selectedBike}
             />
           ))}
+
+          {showNewModal && <Modal onSubmit={handleAddBicycle}></Modal>}
         </div>
       </div>
     </>

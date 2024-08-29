@@ -9,6 +9,10 @@
   align-items: center;
 }
 
+.blur {
+  backdrop-filter: blur(10px);
+}
+
 .modalContent {
   background-color: white;
   border-radius: 1rem;

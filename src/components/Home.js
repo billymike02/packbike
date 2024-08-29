@@ -61,15 +61,7 @@ const Home = () => {
           <img src={bike} className="App-logo" alt="logo" />
         </div>
       </div>
-      {isModalOpen && (
-        <Modal
-          onClose={closeModal}
-          onSubmit={(bikeName) => {
-            handleAddBicycle(bikeName);
-            closeModal();
-          }}
-        />
-      )}
+
     </div>
   );
 };
