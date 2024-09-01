@@ -3,11 +3,41 @@ import { Link } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  getAuth,
+  signOut,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { auth, firestore } from "./firebase";
 import { useNavigate } from "react-router-dom";
+
+const Logout = () => {
+  const [signedOut, setSignedOut] = useState(false);
+  const auth = getAuth();
+
+  useEffect(() => {
+    signOut(auth)
+      .then(() => {
+        setSignedOut(true);
+      })
+      .catch((error) => {
+        console.error("Sign out error:", error);
+      });
+  }, [auth]);
+
+  return (
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {signedOut ? "Signed out successfully." : "Signing out..."}
+    </div>
+  );
+};
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -83,4 +113,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export { Login, Logout };

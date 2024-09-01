@@ -1,15 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import Home from "./components/Home";
 import "./App.css";
-import Login from "./components/Login";
-import {
-  HashRouter,
-  Routes,
-  Route,
-  Link,
-  Outlet,
-  useNavigate,
-} from "react-router-dom";
+import { Login, Logout } from "./components/Login";
+import { HashRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -17,13 +9,10 @@ import Sidebar from "./components/Sidebar";
 import Workspace from "./components/Workspace";
 import Profile from "./components/Profile";
 import GearManager from "./components/GearManager";
-import Modal from "./components/ModalComponent";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
-let currentUser = null;
 const db = getFirestore();
-export { currentUser };
 
 export const getCurrentUser = () => {
   return new Promise((resolve, reject) => {
@@ -35,6 +24,12 @@ export const getCurrentUser = () => {
       reject
     );
   });
+};
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+
+  return user ? children : <Navigate to="/login" />;
 };
 
 function Layout() {
@@ -69,9 +64,6 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        currentUser = user;
-        const uid = user.uid;
-
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           setUser({
@@ -79,30 +71,35 @@ function App() {
             displayName: userDoc.data().name,
           });
         }
-
-        console.log("uid", uid);
       } else {
-        console.log("user is logged out");
+        setUser(null); // Ensure user is null when logged out
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleClose = () => {
-    // useNavigate().navigate("/workspace"); // Replace '/desired-path' with the route you want to navigate to
-  };
-
   return (
     <AuthContext.Provider value={{ user }}>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          {/* Protect the entire layout */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
             <Route path="/workspace" element={<Workspace />} />
             <Route path="/gear-manager" element={<GearManager />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
+
+          {/* No need to protect login and logout */}
           <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
         </Routes>
       </HashRouter>
     </AuthContext.Provider>
