@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/packbike/static/css/main.0925778b.css",
-    "main.js": "/packbike/static/js/main.f4ee93bc.js",
+    "main.css": "/packbike/static/css/main.c6ecec47.css",
+    "main.js": "/packbike/static/js/main.6191fa0b.js",
     "static/js/453.31aedef3.chunk.js": "/packbike/static/js/453.31aedef3.chunk.js",
     "static/media/bike.svg": "/packbike/static/media/bike.08cb72c2b690bcad2d8b7ec6d94cb1fc.svg",
     "index.html": "/packbike/index.html",
-    "main.0925778b.css.map": "/packbike/static/css/main.0925778b.css.map",
-    "main.f4ee93bc.js.map": "/packbike/static/js/main.f4ee93bc.js.map",
+    "main.c6ecec47.css.map": "/packbike/static/css/main.c6ecec47.css.map",
+    "main.6191fa0b.js.map": "/packbike/static/js/main.6191fa0b.js.map",
     "453.31aedef3.chunk.js.map": "/packbike/static/js/453.31aedef3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0925778b.css",
-    "static/js/main.f4ee93bc.js"
+    "static/css/main.c6ecec47.css",
+    "static/js/main.6191fa0b.js"
   ]
 }
