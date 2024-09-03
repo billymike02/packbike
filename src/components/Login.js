@@ -10,6 +10,7 @@ import { doc, setDoc } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
 import { auth, firestore } from "./firebase";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../App";
 
 const Logout = () => {
   const [signedOut, setSignedOut] = useState(false);
@@ -46,14 +47,24 @@ const Login = () => {
   const [success, setSuccess] = useState(null);
 
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log("Logged in successfully!");
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Immediately update the user state
       setSuccess("Logged in successfully.");
-      navigate("/");
-      // Handle successful login (e.g., redirect, update state)
+      setUser(userCredential.user); // <-- Assuming you have access to setUser here
+
+      // Introduce a slight delay before navigating
+      setTimeout(() => {
+        navigate("/");
+      }, 100);
     } catch (err) {
       setError(err.message);
     }

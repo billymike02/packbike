@@ -97,7 +97,7 @@ function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       <HashRouter>
         <Routes>
           <Route element={<ProtectedRoutes />}>
