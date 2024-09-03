@@ -55,7 +55,7 @@ const Sidebar = ({ setBicycleSelection }) => {
     {
       title: "Account",
       subItems: [
-        { label: `About ${user?.displayName}`, link: "/Profile" },
+        // { label: `About ${user?.displayName}`, link: "/Profile" },
         user
           ? { label: "Logout", link: "/Logout" }
           : { label: "Login", link: "/Login" },
