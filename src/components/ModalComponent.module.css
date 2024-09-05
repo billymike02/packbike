@@ -88,6 +88,13 @@ h2 {
   background-color: rgb(255, 0, 0);
 }
 
-.modalContent select {
-  height: 100px;
+.customSelect {
+  appearance: none;
+  height: 5vh;
+  font-size: 1rem;
+  font-weight: 500;
+
+  padding: 1rem;
+  width: 90%;
+  font-family: Arial, Helvetica, sans-serif;
 }

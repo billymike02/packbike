@@ -83,7 +83,11 @@ const GearModal = ({
       <div className={modalStyles.modalContent}>
         <h2>{"Edit gear container"}</h2>
         <div className={modalStyles.modalBody}>
-          <select name="gearContainer" onChange={handleChange}>
+          <select
+            name="gearContainer"
+            onChange={handleChange}
+            className={modalStyles.customSelect}
+          >
             <option value="" disabled selected>
               Select a container
             </option>
@@ -99,7 +103,11 @@ const GearModal = ({
             ))}
           </select>
 
-          <select name="containerColor" onChange={handleColorChange}>
+          <select
+            name="containerColor"
+            onChange={handleColorChange}
+            className={modalStyles.customSelect}
+          >
             <option value="" disabled selected>
               Select a color
             </option>
