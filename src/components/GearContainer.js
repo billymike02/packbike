@@ -142,7 +142,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
     }
   }, [user]);
 
-  const handleBlur = () => {
+  const handleNameSubmit = () => {
     if (name !== displayName) {
       onDisplayNameChange(id, name);
     }
@@ -279,7 +279,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
               placeholder="Container name"
               onChange={(e) => setName(e.target.value)}
               value={name}
-              onBlur={handleBlur}
+              onBlur={handleNameSubmit}
               required
             />
           </form>

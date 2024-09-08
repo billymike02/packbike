@@ -155,9 +155,8 @@ const Workspace = () => {
   useEffect(() => {
     if (!user) return; // Exit if no user
 
-    if (selectedBike == "Add +") {
-      setShowNewModal(true);
-      return;
+    if (selectedBike == null) {
+      setSelectedBike("New Bike");
     }
 
     setLoading(true);
@@ -168,6 +167,10 @@ const Workspace = () => {
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists() && selectedBike != null) {
         const data = docSnap.data();
+
+        if (data.bicycles[selectedBike] == null) {
+          return;
+        }
 
         // Convert containers map to an array
         const containersArray = Object.entries(
@@ -302,14 +305,6 @@ const Workspace = () => {
     { name: "framebag", width: "500px", height: "500px" },
   ];
 
-  if (selectedBike == null) {
-    return (
-      <div className="loading-screen">
-        <h3>Please select a bicycle from the sidebar.</h3>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div className="loading-screen">
@@ -321,7 +316,10 @@ const Workspace = () => {
   return (
     <>
       <div className={styles.Workspace}>
-        <div className={styles.Manager}>
+        <div className={styles.leftPane}>
+          
+        </div>
+        {/* <div className={styles.Manager}>
           <nav>
             <div className={styles.MenuBar}>
               <ul>
@@ -367,8 +365,8 @@ const Workspace = () => {
             )}
           </nav>
 
-          <a className={styles.bikeName}>Selected Bike: {selectedBike}</a>
-        </div>
+       
+        </div> */}
         <div className={styles.Display} id="display">
           <div className={styles.figure}>
             <img

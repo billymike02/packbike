@@ -47,6 +47,7 @@ function Layout() {
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",
+        flexDirection: "column",
       }}
     >
       <Sidebar
@@ -57,7 +58,7 @@ function Layout() {
       />
 
       {/* Right Side - Content that changes with routes */}
-      <div style={{ width: "100%", height: "100vh", display: "flex" }}>
+      <div style={{ width: "100vw", height: "94vh", display: "flex" }}>
         <Outlet context={{ selectedBike, setSelectedBike }} />
       </div>
     </div>

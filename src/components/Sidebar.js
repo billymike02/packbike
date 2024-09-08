@@ -1,6 +1,6 @@
 import styles from "./Sidebar.module.css";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
@@ -8,11 +8,14 @@ import { BsBicycle } from "react-icons/bs";
 import { PiShoppingBagOpenFill } from "react-icons/pi";
 import { RiAccountCircleFill } from "react-icons/ri";
 import Modal from "./ModalComponent";
+import { IoArrowBack } from "react-icons/io5";
 
 const Sidebar = ({ setBicycleSelection }) => {
   const { user } = useAuth();
   const [bicycles, setBicycles] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
+
+  const navigator = useNavigate();
 
   useEffect(() => {
     if (!user) return;
@@ -38,18 +41,10 @@ const Sidebar = ({ setBicycleSelection }) => {
   const items = [
     {
       title: "Garage",
-      subItems: [
-        ...bicycles.map((bicycle) => ({
-          label: bicycle,
-          link: `/workspace`, // Adjust the link as needed
-        })),
-        { label: "Add +", link: "/workspace" },
-      ],
       icon: <BsBicycle />,
     },
     {
       title: "Inventory",
-      subItems: [{ label: "Manage gear", link: "/gear-manager" }],
       icon: <PiShoppingBagOpenFill></PiShoppingBagOpenFill>,
     },
     {
@@ -65,64 +60,43 @@ const Sidebar = ({ setBicycleSelection }) => {
   ];
 
   const handleMenuIconClick = (index) => {
-    // handle those edge cases
-    if (expandedIndex == index) {
-      setExpandedIndex(null);
-      setSidebarExpanded(false);
-
-      return;
-    } else if (sidebarExpanded && expandedIndex != index) {
-      setExpandedIndex(index);
-      return;
+    if (index == 0) {
+      navigator("/workspace");
+    } else if (index == 1) {
+      navigator("/gear-manager");
     }
-
-    setSidebarExpanded(!sidebarExpanded);
-
-    setExpandedIndex(index);
   };
 
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   return (
     <div className={styles.Sidebar}>
-      <div className={styles.Menu}>
-        {items.map((item, index) => (
-          <div
-            className={styles.menuIcon}
-            onClick={() => {
-              handleMenuIconClick(index);
-            }}
-          >
-            {item.icon}
-          </div>
-        ))}
-      </div>
-
-      <div
-        className={styles.Submenu}
-        style={{
-          width: sidebarExpanded ? "15vw" : "0vw",
-          marginLeft: sidebarExpanded ? "30px" : "0px",
-        }}
-      >
-        {expandedIndex !== null &&
-          sidebarExpanded &&
-          items[expandedIndex].subItems.map((item, index) => (
-            <Link
-              to={`${item.link}`}
-              className={styles.submenuItem}
+      <h2>Packbike</h2>
+      {expandedIndex == null && (
+        <div className={styles.Menu}>
+          {items.map((item, index) => (
+            <div
+              className={styles.menuItem}
               onClick={() => {
-                if (items[expandedIndex].title == "Garage") {
-                  setBicycleSelection(item.label);
-                }
-
-                setSidebarExpanded(false);
+                handleMenuIconClick(index);
               }}
             >
-              {item.label}
-            </Link>
+              <div className={styles.menuIcon}>{item.icon}</div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textTransform: "uppercase",
+                  fontWeight: "600",
+                }}
+              >
+                {item.title}
+              </div>
+            </div>
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
