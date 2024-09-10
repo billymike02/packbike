@@ -23,7 +23,7 @@ import { v4 as uuidv4 } from "uuid"; // Import uuid
 import Modal from "./ModalComponent";
 
 // modal that shows bike info (gear weight, etc.)
-const InfoModal = ({ onClose, bikeName }) => {
+const BikeInfo = ({ bikeName }) => {
   const { user } = useAuth();
   const [containersUsed, setContainersUsed] = useState(null);
   const [gearWeight, setGearWeight] = useState(null);
@@ -119,23 +119,14 @@ const InfoModal = ({ onClose, bikeName }) => {
     }
   };
 
-  return createPortal(
-    <div className={modalStyles.modalOverlay}>
-      <div className={modalStyles.modalContent}>
-        <h2>{"Bicycle Info"}</h2>
-        <div className={modalStyles.modalBody}></div>
-        <h3>Name: {bikeName}</h3>
+  return (
+    <div>
+      <div>
         <h3>Gear containers used: {containersUsed}</h3>
         <h3>Known gear weight: {gearWeight}</h3>
         <h3>Known gear volume: {gearVolume}</h3>
-        <div className={modalStyles.buttons}>
-          <button onClick={onClose} className={modalStyles.abort}>
-            Cancel
-          </button>
-        </div>
       </div>
-    </div>,
-    document.getElementById("modal-root")
+    </div>
   );
 };
 
@@ -317,56 +308,30 @@ const Workspace = () => {
     <>
       <div className={styles.Workspace}>
         <div className={styles.leftPane}>
-          
+          <h2>Add a container</h2>
+          <div className={styles.containerList}>
+            {containerTypes.map((container, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  addVisualContainer(
+                    container.name,
+                    container.width,
+                    container.height
+                  );
+                  setDropdownOpen(false);
+                }}
+              >
+                {container.name}
+              </button>
+            ))}
+          </div>
+          <h2>Info</h2>
+          <BikeInfo bikeName={selectedBike}></BikeInfo>
+          <h2>Tools</h2>
+          <button onClick={handleVisualReset}>Reset</button>
         </div>
-        {/* <div className={styles.Manager}>
-          <nav>
-            <div className={styles.MenuBar}>
-              <ul>
-                <li
-                  onClick={() => {
-                    setDropdownOpen(!dropdownOpen);
-                  }}
-                >
-                  <a>Add</a>
-                </li>
-                <li onClick={() => setShowInfoModal(true)}>
-                  <a>View Info</a>
-                </li>
-                {showInfoModal && (
-                  <InfoModal
-                    onClose={() => setShowInfoModal(false)}
-                    bikeName={selectedBike}
-                  />
-                )}
-                <li onClick={handleVisualReset}>
-                  <a>Reset</a>
-                </li>
-              </ul>
-            </div>
-            {dropdownOpen && (
-              <div className={styles.dropdown}>
-                {containerTypes.map((container, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      addVisualContainer(
-                        container.name,
-                        container.width,
-                        container.height
-                      );
-                      setDropdownOpen(false);
-                    }}
-                  >
-                    {container.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </nav>
 
-       
-        </div> */}
         <div className={styles.Display} id="display">
           <div className={styles.figure}>
             <img

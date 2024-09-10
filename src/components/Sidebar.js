@@ -44,7 +44,7 @@ const Sidebar = ({ setBicycleSelection }) => {
       icon: <BsBicycle />,
     },
     {
-      title: "Inventory",
+      title: "Gear",
       icon: <PiShoppingBagOpenFill></PiShoppingBagOpenFill>,
     },
     {
@@ -71,30 +71,43 @@ const Sidebar = ({ setBicycleSelection }) => {
 
   return (
     <div className={styles.Sidebar}>
-      <h2>Packbike</h2>
+      <h2 style={{ cursor: "default" }}>Packbike</h2>
       {expandedIndex == null && (
         <div className={styles.Menu}>
-          {items.map((item, index) => (
-            <div
-              className={styles.menuItem}
-              onClick={() => {
-                handleMenuIconClick(index);
-              }}
-            >
-              <div className={styles.menuIcon}>{item.icon}</div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textTransform: "uppercase",
-                  fontWeight: "600",
-                }}
-              >
-                {item.title}
-              </div>
+          <div
+            className={styles.menuItem}
+            onClick={() => {
+              navigator("/workspace");
+            }}
+          >
+            <div className={styles.menuIcon}>
+              <BsBicycle></BsBicycle>
             </div>
-          ))}
+            <div className={styles.menuLabel}>Garage</div>
+          </div>
+          <div
+            className={styles.menuItem}
+            onClick={() => {
+              navigator("/gear-manager");
+            }}
+          >
+            <div className={styles.menuIcon}>
+              <PiShoppingBagOpenFill></PiShoppingBagOpenFill>
+            </div>
+            <div className={styles.menuLabel}>Gear</div>
+          </div>
+          <div
+            className={styles.menuItem}
+            style={{ position: "absolute", right: "2px" }}
+            onClick={() => {
+              alert("account");
+            }}
+          >
+            <div className={styles.menuLabel}>Account</div>
+            <div className={styles.menuIcon}>
+              <RiAccountCircleFill></RiAccountCircleFill>
+            </div>
+          </div>
         </div>
       )}
     </div>

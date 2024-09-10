@@ -79,13 +79,13 @@ input:invalid {
   color: rgb(0, 115, 255);
 }
 
-h3 {
+.login h3 {
   cursor: pointer;
-  font-weight: 400;
+
   transition: all 0.3s;
 }
 
-h3:hover {
+.login h3:hover {
   scale: 1.02;
   color: rgb(0, 119, 255);
 }
