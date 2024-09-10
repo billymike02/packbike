@@ -19,6 +19,7 @@ import Profile from "./components/Profile";
 import GearManager from "./components/GearManager";
 import Modal from "./components/ModalComponent";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import { BrowserView, MobileView } from "react-device-detect";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -93,28 +94,44 @@ function App() {
 
   if (authLoading) {
     return (
-      <div className="loading-screen">
-        <h3>Preparing PackBike...</h3>
-      </div>
+      <></>
+      // <div style={{ height: "100vh" }} className="loading-screen">
+      //   <h3>Preparing PackBike...</h3>
+      // </div>
     ); // Or any loading spinner or placeholder
   }
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
-      <HashRouter>
-        <Routes>
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/" element={<Layout />}>
-              <Route path="/workspace" element={<Workspace />} />
-              <Route path="/gear-manager" element={<GearManager />} />
-              <Route path="/profile" element={<Profile />} />
+      <MobileView>
+        <h3
+          style={{
+            alignContent: "center",
+            justifyContent: "center",
+            display: "flex",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          PackBike requires the use of a desktop browser.
+        </h3>
+      </MobileView>
+      <BrowserView>
+        <HashRouter>
+          <Routes>
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/" element={<Layout />}>
+                <Route path="/workspace" element={<Workspace />} />
+                <Route path="/gear-manager" element={<GearManager />} />
+                <Route path="/profile" element={<Profile />} />
+              </Route>
             </Route>
-          </Route>
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-        </Routes>
-      </HashRouter>
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+          </Routes>
+        </HashRouter>
+      </BrowserView>
     </AuthContext.Provider>
   );
 }

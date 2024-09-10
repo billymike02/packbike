@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
 import modalStyles from "./ModalComponent.module.css";
+import { Rnd } from "react-rnd";
 
 // firestore stuffs
 import { firestore } from "./firebase";
@@ -339,18 +340,18 @@ const Workspace = () => {
               className={styles.BicycleVector}
               alt="bicycle-image"
             />
-          </div>
 
-          {containerElements.map((container) => (
-            <GearDropdown
-              key={container.id}
-              id={container.id}
-              containerID={container.id}
-              type={container.type}
-              onDelete={handleVisualContainerDelete}
-              selectedBike={selectedBike}
-            />
-          ))}
+            {containerElements.map((container) => (
+              <GearDropdown
+                key={container.id}
+                id={container.id}
+                containerID={container.id}
+                type={container.type}
+                onDelete={handleVisualContainerDelete}
+                selectedBike={selectedBike}
+              />
+            ))}
+          </div>
 
           {showNewModal && <Modal onSubmit={handleAddBicycle}></Modal>}
         </div>

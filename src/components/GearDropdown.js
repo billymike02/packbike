@@ -287,7 +287,7 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
           width: 30,
           height: 30,
         }}
-        bounds="parent"
+        // bounds="parent"
         className={`${styles.clickable} ${styles[type]} ${
           backendContainer != null && backendContainer != ""
             ? styles.filled

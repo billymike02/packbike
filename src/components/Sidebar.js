@@ -59,16 +59,6 @@ const Sidebar = ({ setBicycleSelection }) => {
     },
   ];
 
-  const handleMenuIconClick = (index) => {
-    if (index == 0) {
-      navigator("/workspace");
-    } else if (index == 1) {
-      navigator("/gear-manager");
-    }
-  };
-
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
-
   return (
     <div className={styles.Sidebar}>
       <h2 style={{ cursor: "default" }}>Packbike</h2>
