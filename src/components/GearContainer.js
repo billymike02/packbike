@@ -256,7 +256,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
           <div className={styles.deleteOverlay}>
             Are you sure?
             <button
-              className={styles.abort}
+              style={{ color: "black" }}
               onClick={() => {
                 setShowDelete(false);
               }}
@@ -264,7 +264,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
               <RxCross2 className={styles.deleteIcons}></RxCross2>
             </button>
             <button
-              className={styles.continue}
+              style={{ color: "black" }}
               onClick={() => {
                 onRemove();
               }}

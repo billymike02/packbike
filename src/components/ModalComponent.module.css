@@ -75,7 +75,8 @@ h2 {
 
 .buttons .abort {
   background-color: white;
-  color: black;
+  color: black !important;
+  fill: black;
   border: 0.1rem solid black;
 }
 

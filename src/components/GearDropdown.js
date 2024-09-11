@@ -302,6 +302,7 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
       >
         <div className={styles.clickableOverlay}>
           <FaPencil
+            style={{ cursor: "pointer" }}
             onClick={() => {
               setIsGearModalOpen(true);
             }}

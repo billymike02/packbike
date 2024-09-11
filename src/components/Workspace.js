@@ -2,26 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../App";
 import { firestore as db } from "./firebase";
 import bike from "../assets/images/bike.svg";
-import { useLocation, useOutletContext } from "react-router-dom";
-import { createPortal } from "react-dom";
+import { useOutletContext } from "react-router-dom";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
-import modalStyles from "./ModalComponent.module.css";
-import { Rnd } from "react-rnd";
 
 // firestore stuffs
 import { firestore } from "./firebase";
-import {
-  arrayUnion,
-  doc,
-  arrayRemove,
-  FieldValue,
-  deleteField,
-} from "firebase/firestore";
+import { doc, deleteField } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
 import Modal from "./ModalComponent";
+import { RxReset } from "react-icons/rx";
+import { IoCreateSharp } from "react-icons/io5";
+import { FaCircleInfo } from "react-icons/fa6";
+import { FaTools } from "react-icons/fa";
 
 // modal that shows bike info (gear weight, etc.)
 const BikeInfo = ({ bikeName }) => {
@@ -123,9 +118,8 @@ const BikeInfo = ({ bikeName }) => {
   return (
     <div>
       <div>
-        <h3>Gear containers used: {containersUsed}</h3>
-        <h3>Known gear weight: {gearWeight}</h3>
-        <h3>Known gear volume: {gearVolume}</h3>
+        <h3>Weight: {gearWeight}lbs.</h3>
+        <h3>Volume: {gearVolume}L</h3>
       </div>
     </div>
   );
@@ -141,8 +135,6 @@ const Workspace = () => {
   const [containerElements, setContainerElements] = useState([]);
 
   const [showNewModal, setShowNewModal] = useState(false);
-
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -294,7 +286,6 @@ const Workspace = () => {
   const containerTypes = [
     { name: "pannier", width: "200px", height: "200px" },
     { name: "roll", width: "100px", height: "100px" },
-    { name: "framebag", width: "500px", height: "500px" },
   ];
 
   if (loading) {
@@ -309,10 +300,15 @@ const Workspace = () => {
     <>
       <div className={styles.Workspace}>
         <div className={styles.leftPane}>
-          <h2>Add a container</h2>
+          <h2 style={{ marginTop: "0.0rem" }}>
+            Create <IoCreateSharp></IoCreateSharp>
+          </h2>
           <div className={styles.containerList}>
             {containerTypes.map((container, index) => (
               <button
+                style={{
+                  textTransform: "capitalize",
+                }}
                 key={index}
                 onClick={() => {
                   addVisualContainer(
@@ -327,10 +323,27 @@ const Workspace = () => {
               </button>
             ))}
           </div>
-          <h2>Info</h2>
+          <h2>
+            Info <FaCircleInfo></FaCircleInfo>
+          </h2>
           <BikeInfo bikeName={selectedBike}></BikeInfo>
-          <h2>Tools</h2>
-          <button onClick={handleVisualReset}>Reset</button>
+          <h2>
+            Tools <FaTools></FaTools>
+          </h2>
+          <button
+            style={{
+              backgroundColor: "red",
+
+              textTransform: "uppercase",
+              fontWeight: "500",
+
+              color: "white",
+            }}
+            onClick={handleVisualReset}
+          >
+            Reset
+            <RxReset></RxReset>
+          </button>
         </div>
 
         <div className={styles.Display} id="display">

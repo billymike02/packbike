@@ -52,15 +52,12 @@
 }
 
 .deleteOverlay button:hover {
-  scale: 1.1;
+  scale: 1.2;
+  box-shadow: none;
 }
 
 .deleteOverlay button .deleteIcons {
-  scale: 3;
-}
-
-.deleteOverlay .continue:hover {
-  background-color: rgb(255, 0, 0);
+  scale: 2.4;
 }
 
 .gearContainerHeader {
