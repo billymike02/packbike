@@ -26,6 +26,12 @@
   padding: 1rem;
 }
 
+.modalContent input {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
 .modalContent:hover {
   scale: 1.02;
 }
@@ -36,7 +42,6 @@
   align-items: center;
   width: 100%;
 
-  padding-inline: 2rem; /* Adjust padding if needed */
   flex-direction: column;
   gap: 8px;
   overflow: visible;
@@ -44,13 +49,6 @@
 
 h2 {
   text-transform: uppercase;
-}
-
-.modalBody input {
-  display: flex;
-  height: 2vh;
-  width: 100%;
-  margin-bottom: 0px;
 }
 
 .buttons {

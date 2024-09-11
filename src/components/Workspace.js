@@ -5,7 +5,7 @@ import bike from "../assets/images/bike.svg";
 import { useOutletContext } from "react-router-dom";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
-import { IoIosAdd } from "react-icons/io";
+import { IoIosAdd, IoIosAddCircle } from "react-icons/io";
 
 // firestore stuffs
 import { firestore } from "./firebase";
@@ -266,6 +266,26 @@ const Workspace = () => {
     );
   };
 
+  const handleBicycleDelete = async () => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          await updateDoc(userDocRef, {
+            [`bicycles.${selectedBike}`]: deleteField(),
+          });
+
+          setSelectedBike(null);
+        }
+      } catch (error) {
+        console.log("Error removing bicycle: ", error);
+      }
+    }
+  };
+
   const handleVisualContainerDelete = async (id) => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
@@ -322,21 +342,24 @@ const Workspace = () => {
                 onSelect={handleSelectionChange}
                 placeholder={selectedBike || "Select a bicycle"}
               />
-              <IoIosAdd
-                size={40}
+              <IoIosAddCircle
+                size={60}
                 style={{
-                  borderRadius: "50%",
-                  backgroundColor: "black",
-                  height: "2vw",
-                  width: "2vw",
-                  minWidth: "2vw",
-                  minHeight: "2vw",
-                  color: "white",
+                  color: "black",
                   cursor: "pointer",
                 }}
                 onClick={() => setShowNewModal(true)}
-              ></IoIosAdd>
+                className="button-icon"
+              ></IoIosAddCircle>
             </div>
+            {selectedBike && (
+              <button
+                style={{ backgroundColor: "black", textTransform: "uppercase" }}
+                onClick={handleBicycleDelete}
+              >
+                Delete Bike
+              </button>
+            )}
           </div>
 
           <div>
@@ -428,26 +451,28 @@ const Workspace = () => {
             right: "2vw",
             backgroundColor: "black",
             borderRadius: "3rem",
-            width: "10%",
+            width: "fit-content",
             height: "6%",
             display: "flex",
-            justifyContent: "space-around",
+
             alignItems: "center",
+            gap: "30px",
+            paddingInline: "1rem",
             color: "white",
           }}
         >
           <TbZoomOutFilled
             className={styles.zoomButton}
-            size={50}
+            size={40}
             style={{ cursor: "pointer" }}
             onClick={() => {
               setFigureScale(figureScale - 0.1);
             }}
           ></TbZoomOutFilled>
-          <a style={{ fontSize: "2rem" }}>Zoom</a>
+          <a style={{ fontSize: "1.7rem" }}>Zoom</a>
           <TbZoomInFilled
             className={styles.zoomButton}
-            size={50}
+            size={40}
             style={{ cursor: "pointer" }}
             onClick={() => {
               setFigureScale(figureScale + 0.1);
