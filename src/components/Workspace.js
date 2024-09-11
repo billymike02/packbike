@@ -403,16 +403,18 @@ const Workspace = () => {
               alt="bicycle-image"
             />
 
-            {containerElements.map((container) => (
-              <GearDropdown
-                key={container.id}
-                id={container.id}
-                containerID={container.id}
-                type={container.type}
-                onDelete={handleVisualContainerDelete}
-                selectedBike={selectedBike}
-              />
-            ))}
+            <div style={{ visibility: loading ? "hidden" : "visible" }}>
+              {containerElements.map((container) => (
+                <GearDropdown
+                  key={container.id}
+                  id={container.id}
+                  containerID={container.id}
+                  type={container.type}
+                  onDelete={handleVisualContainerDelete}
+                  selectedBike={selectedBike}
+                />
+              ))}
+            </div>
           </div>
 
           {showNewModal && <Modal onSubmit={handleAddBicycle}></Modal>}
