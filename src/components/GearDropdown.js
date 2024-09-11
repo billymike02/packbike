@@ -13,6 +13,7 @@ import { firestore } from "./firebase";
 import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
+import CustomSelect from "./CustomSelect";
 
 const GearModal = ({
   onClose,
@@ -70,12 +71,12 @@ const GearModal = ({
     return () => unsubscribe();
   }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
 
-  const handleChange = (event) => {
-    setBackendContainer(event.target.value);
+  const handleColorSelection = (selected) => {
+    setBgColor(selected);
   };
 
-  const handleColorChange = (event) => {
-    setBgColor(event.target.value);
+  const handleContainerChange = (selected) => {
+    setBackendContainer(selected);
   };
 
   return createPortal(
@@ -83,45 +84,19 @@ const GearModal = ({
       <div className={modalStyles.modalContent}>
         <h2>{"Edit gear container"}</h2>
         <div className={modalStyles.modalBody}>
-          <select
-            name="gearContainer"
-            onChange={handleChange}
-            className={modalStyles.customSelect}
-          >
-            <option value="" disabled selected>
-              Select a container
-            </option>
-            {containers.map((container) => (
-              <option
-                key={container.id}
-                id={container.id}
-                value={container.id}
-                selected={container.id === currentBackendContainer}
-              >
-                {container.displayName}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="containerColor"
-            onChange={handleColorChange}
-            className={modalStyles.customSelect}
-          >
-            <option value="" disabled selected>
-              Select a color
-            </option>
-            {colors.map((color) => (
-              <option
-                key={color}
-                id={color}
-                value={color}
-                selected={color === currentColor}
-              >
-                {color}
-              </option>
-            ))}
-          </select>
+          <CustomSelect
+            options={containers.map((container) => ({
+              value: container.id, // Value to be passed back
+              label: container.displayName, // Display name for the select
+            }))}
+            placeholder={backendContainer || "Select a container"}
+            onSelect={handleContainerChange}
+          ></CustomSelect>
+          <CustomSelect
+            placeholder="Select a color"
+            options={colors}
+            onSelect={handleColorSelection}
+          ></CustomSelect>
         </div>
 
         <div className={modalStyles.buttons}>

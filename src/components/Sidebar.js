@@ -12,7 +12,7 @@ import { IoArrowBack } from "react-icons/io5";
 
 const Sidebar = ({ setBicycleSelection }) => {
   const { user } = useAuth();
-  const [bicycles, setBicycles] = useState([]);
+
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   const navigator = useNavigate();
@@ -25,12 +25,8 @@ const Sidebar = ({ setBicycleSelection }) => {
     const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-
-        // Convert containers map to an array
-        setBicycles(Object.keys(data.bicycles) || []);
       } else {
         console.log("No such document!");
-        setBicycles([]); // Clear state if document does not exist
       }
     });
 

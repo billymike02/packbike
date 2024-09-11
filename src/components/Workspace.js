@@ -5,6 +5,7 @@ import bike from "../assets/images/bike.svg";
 import { useOutletContext } from "react-router-dom";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
+import { IoIosAdd } from "react-icons/io";
 
 // firestore stuffs
 import { firestore } from "./firebase";
@@ -17,16 +18,23 @@ import { RxReset } from "react-icons/rx";
 import { IoCreateSharp } from "react-icons/io5";
 import { FaCircleInfo } from "react-icons/fa6";
 import { FaTools } from "react-icons/fa";
+import CustomSelect from "./CustomSelect";
+
+import { AiFillFunnelPlot } from "react-icons/ai";
 
 // modal that shows bike info (gear weight, etc.)
 const BikeInfo = ({ bikeName }) => {
   const { user } = useAuth();
   const [containersUsed, setContainersUsed] = useState(null);
-  const [gearWeight, setGearWeight] = useState(null);
-  const [gearVolume, setGearVolume] = useState(null);
+  const [gearWeight, setGearWeight] = useState("0");
+  const [gearVolume, setGearVolume] = useState("0");
 
   useEffect(() => {
     if (!user) return; // Exit if no user
+
+    if (bikeName == null) {
+      return;
+    }
 
     const docRef = doc(firestore, "users", user.uid);
 
@@ -117,9 +125,9 @@ const BikeInfo = ({ bikeName }) => {
 
   return (
     <div>
-      <div>
-        <h3>Weight: {gearWeight}lbs.</h3>
-        <h3>Volume: {gearVolume}L</h3>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <a>Weight: {gearWeight}lbs.</a>
+        <a>Volume: {gearVolume}L</a>
       </div>
     </div>
   );
@@ -130,6 +138,7 @@ const Workspace = () => {
 
   const { user } = useAuth();
 
+  const [bicycles, setBicycles] = useState([]);
   const { selectedBike, setSelectedBike } = useOutletContext();
 
   const [containerElements, setContainerElements] = useState([]);
@@ -139,18 +148,18 @@ const Workspace = () => {
   useEffect(() => {
     if (!user) return; // Exit if no user
 
-    if (selectedBike == null) {
-      setSelectedBike("New Bike");
-    }
-
     setLoading(true);
     console.log("loading");
     const docRef = doc(firestore, "users", user.uid);
 
     // Set up real-time listener
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists() && selectedBike != null) {
+      if (docSnap.exists()) {
         const data = docSnap.data();
+
+        // Convert containers map to an array
+        setBicycles(Object.keys(data.bicycles) || []);
+        console.log("found bicycles: ", Object.keys(data.bicycles));
 
         if (data.bicycles[selectedBike] == null) {
           return;
@@ -173,7 +182,9 @@ const Workspace = () => {
     });
 
     setTimeout(() => {
-      setLoading(false);
+      if (selectedBike != null) {
+        setLoading(false);
+      }
     }, 750);
 
     // Clean up subscription on component unmount
@@ -288,66 +299,104 @@ const Workspace = () => {
     { name: "roll", width: "100px", height: "100px" },
   ];
 
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <h3>Preparing your workspace...</h3>
-      </div>
-    );
-  }
+  const handleSelectionChange = (selected) => {
+    setSelectedBike(selected);
+  };
 
   return (
     <>
       <div className={styles.Workspace}>
         <div className={styles.leftPane}>
-          <h2 style={{ marginTop: "0.0rem" }}>
-            Create <IoCreateSharp></IoCreateSharp>
-          </h2>
-          <div className={styles.containerList}>
-            {containerTypes.map((container, index) => (
-              <button
+          <div>
+            <h2 style={{ marginBlockStart: "0rem", width: "100%" }}>
+              Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>
+            </h2>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <CustomSelect
+                options={bicycles}
+                onSelect={handleSelectionChange}
+                placeholder={selectedBike || "Select a bicycle"}
+              />
+              <IoIosAdd
+                size={40}
                 style={{
-                  textTransform: "capitalize",
+                  borderRadius: "50%",
+                  backgroundColor: "black",
+                  height: "2vw",
+                  width: "2vw",
+                  minWidth: "2vw",
+                  minHeight: "2vw",
+                  color: "white",
+                  cursor: "pointer",
                 }}
-                key={index}
-                onClick={() => {
-                  addVisualContainer(
-                    container.name,
-                    container.width,
-                    container.height
-                  );
-                  setDropdownOpen(false);
-                }}
-              >
-                {container.name}
-              </button>
-            ))}
+                onClick={() => setShowNewModal(true)}
+              ></IoIosAdd>
+            </div>
           </div>
-          <h2>
-            Info <FaCircleInfo></FaCircleInfo>
-          </h2>
-          <BikeInfo bikeName={selectedBike}></BikeInfo>
-          <h2>
-            Tools <FaTools></FaTools>
-          </h2>
-          <button
-            style={{
-              backgroundColor: "red",
 
-              textTransform: "uppercase",
-              fontWeight: "500",
+          <div>
+            <h2 style={{ marginTop: "0.0rem" }}>
+              Create <IoCreateSharp></IoCreateSharp>
+            </h2>
+            <div className={styles.containerList}>
+              {containerTypes.map((container, index) => (
+                <button
+                  style={{
+                    textTransform: "capitalize",
+                  }}
+                  key={index}
+                  onClick={() => {
+                    addVisualContainer(
+                      container.name,
+                      container.width,
+                      container.height
+                    );
+                    setDropdownOpen(false);
+                  }}
+                >
+                  {container.name}
+                </button>
+              ))}
+            </div>
+            <h2>
+              Info <FaCircleInfo></FaCircleInfo>
+            </h2>
+            <BikeInfo bikeName={selectedBike}></BikeInfo>
+            <h2>
+              Tools <FaTools></FaTools>
+            </h2>
+            <button
+              style={{
+                backgroundColor: "red",
 
-              color: "white",
-            }}
-            onClick={handleVisualReset}
-          >
-            Reset
-            <RxReset></RxReset>
-          </button>
+                textTransform: "uppercase",
+                fontWeight: "500",
+
+                color: "white",
+              }}
+              onClick={handleVisualReset}
+            >
+              Reset
+              <RxReset></RxReset>
+            </button>
+          </div>
         </div>
 
         <div className={styles.Display} id="display">
-          <div className={styles.figure}>
+          <div
+            className={styles.figure}
+            style={{
+              filter: loading ? "blur(10px)" : "none",
+              transition: "filter 0.1s",
+            }}
+          >
             <img
               src={bike}
               className={styles.BicycleVector}

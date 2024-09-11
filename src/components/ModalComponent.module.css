@@ -19,8 +19,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 24vw;
+  width: 25vw;
+  min-width: fit-content;
   transition: all 0.2s;
+  padding: 1rem;
 }
 
 .modalContent:hover {
@@ -32,10 +34,11 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  box-sizing: border-box; /* Include padding and border in width */
+
   padding-inline: 2rem; /* Adjust padding if needed */
   flex-direction: column;
   gap: 8px;
+  overflow: visible;
 }
 
 h2 {
@@ -50,27 +53,15 @@ h2 {
 }
 
 .buttons {
+  margin-top: 10px;
   display: flex;
-  height: 9vh;
-  width: 100%; /* Match the input width */
+  gap: 6px;
+  width: 100%;
   justify-content: space-between;
-  box-sizing: border-box; /* Include padding and border in width */
-  padding: 1rem; /* Adjust padding if needed */
-  gap: 8px;
 }
 
 .modalContent button {
-  border-style: none;
-  width: 100%;
-  font-size: 1rem;
-  border-radius: 0.5rem;
   text-transform: uppercase;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.buttons button:hover {
-  scale: 1.03;
 }
 
 .buttons .abort {
