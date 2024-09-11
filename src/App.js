@@ -10,6 +10,7 @@ import {
   Outlet,
   useNavigate,
 } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -121,6 +122,8 @@ function App() {
           <Routes>
             <Route element={<ProtectedRoutes />}>
               <Route path="/" element={<Layout />}>
+                <Route index element={<Navigate to="/profile" />} />{" "}
+                {/* Redirect default path to /profile */}
                 <Route path="/workspace" element={<Workspace />} />
                 <Route path="/gear-manager" element={<GearManager />} />
                 <Route path="/profile" element={<Profile />} />

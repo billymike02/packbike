@@ -13,9 +13,8 @@ import { IoArrowBack } from "react-icons/io5";
 const Sidebar = ({ setBicycleSelection }) => {
   const { user } = useAuth();
 
-  const [expandedIndex, setExpandedIndex] = useState(null);
-
   const navigator = useNavigate();
+  const [accountDropdownExpanded, setAccountDropdownExpanded] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -58,43 +57,54 @@ const Sidebar = ({ setBicycleSelection }) => {
   return (
     <div className={styles.Sidebar}>
       <h2 style={{ cursor: "default" }}>Packbike</h2>
-      {expandedIndex == null && (
-        <div className={styles.Menu}>
-          <div
-            className={styles.menuItem}
-            onClick={() => {
-              navigator("/workspace");
-            }}
-          >
-            <div className={styles.menuIcon}>
-              <BsBicycle></BsBicycle>
+      {true && (
+        <>
+          <div className={styles.Menu}>
+            <div
+              className={styles.menuItem}
+              onClick={() => {
+                navigator("/workspace");
+              }}
+            >
+              <div className={styles.menuIcon}>
+                <BsBicycle></BsBicycle>
+              </div>
+              <div className={styles.menuLabel}>Garage</div>
             </div>
-            <div className={styles.menuLabel}>Garage</div>
-          </div>
-          <div
-            className={styles.menuItem}
-            onClick={() => {
-              navigator("/gear-manager");
-            }}
-          >
-            <div className={styles.menuIcon}>
-              <PiShoppingBagOpenFill></PiShoppingBagOpenFill>
-            </div>
-            <div className={styles.menuLabel}>Gear</div>
-          </div>
-          <div
-            className={styles.menuItem}
-            style={{ position: "absolute", right: "2px" }}
-            onClick={() => {
-              alert("account");
-            }}
-          >
-            <div className={styles.menuLabel}>Account</div>
-            <div className={styles.menuIcon}>
-              <RiAccountCircleFill></RiAccountCircleFill>
+            <div
+              className={styles.menuItem}
+              onClick={() => {
+                navigator("/gear-manager");
+              }}
+            >
+              <div className={styles.menuIcon}>
+                <PiShoppingBagOpenFill></PiShoppingBagOpenFill>
+              </div>
+              <div className={styles.menuLabel}>Gear</div>
             </div>
           </div>
-        </div>
+          <div className={styles.MenuRight}>
+            <div
+              className={styles.menuItem}
+              onClick={() => {
+                navigator("profile");
+              }}
+            >
+              <div className={styles.menuLabel}>Account</div>
+              <div className={styles.menuIcon}>
+                <RiAccountCircleFill></RiAccountCircleFill>
+              </div>
+            </div>
+            {accountDropdownExpanded && (
+              <ul
+                className="select-options"
+                style={{ width: "200px", marginTop: "24%" }}
+              >
+                <li>Hey</li>
+              </ul>
+            )}
+          </div>
+        </>
       )}
     </div>
   );

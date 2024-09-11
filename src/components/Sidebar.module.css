@@ -28,11 +28,22 @@
 .Menu {
   display: flex;
   height: 100%;
+  width: 100%;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
   gap: 10px;
+}
+
+.MenuRight {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: end;
+  padding-right: 1rem;
+  position: relative;
+  align-items: center;
 }
 
 .menuIcon {

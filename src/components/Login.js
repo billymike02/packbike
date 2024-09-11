@@ -114,7 +114,15 @@ const Login = () => {
         <button className={styles.login} onClick={handleLogin}>
           Sign In
         </button>
-        <button className={styles.register} onClick={handleSignUp}>
+        <button
+          className={styles.register}
+          style={{
+            border: "0.1rem solid black",
+            color: "black",
+            backgroundColor: "white",
+          }}
+          onClick={handleSignUp}
+        >
           Create User
         </button>
         {error && <p style={{ color: "red" }}>{error}</p>}
