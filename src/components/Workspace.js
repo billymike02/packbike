@@ -466,7 +466,11 @@ const Workspace = () => {
             size={40}
             style={{ cursor: "pointer" }}
             onClick={() => {
-              setFigureScale(figureScale * 0.9);
+              const newScale = figureScale * 0.9;
+
+              if (newScale > 0.4) {
+                setFigureScale(newScale);
+              }
             }}
           ></TbZoomOutFilled>
           <a style={{ fontSize: "1.7rem" }}>Zoom</a>
@@ -475,7 +479,11 @@ const Workspace = () => {
             size={40}
             style={{ cursor: "pointer" }}
             onClick={() => {
-              setFigureScale(figureScale * 1.1);
+              const newScale = figureScale * 1.1;
+
+              if (newScale < 2.3) {
+                setFigureScale(newScale);
+              }
             }}
           ></TbZoomInFilled>
         </div>
