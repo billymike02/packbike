@@ -128,7 +128,7 @@ const GearModal = ({
   );
 };
 
-const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
+const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const { user } = useAuth();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "200px", height: "200px" });
@@ -262,7 +262,7 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
           width: 30,
           height: 30,
         }}
-        // bounds="parent"
+        scale={parentScale}
         className={`${styles.clickable} ${styles[type]} ${
           backendContainer != null && backendContainer != ""
             ? styles.filled
@@ -271,7 +271,6 @@ const GearDropdown = ({ id, type, onDelete, selectedBike }) => {
         style={{ backgroundColor: bgColor }}
         onResizeStop={onResizeStop}
         onDragStop={onDragStop}
-        enableResizing="false"
         position={position}
         size={size}
       >

@@ -101,6 +101,7 @@ button,
   z-index: 100;
   list-style: none; /* Remove bullet points */
   padding-left: 0; /* Remove left padding */
+  text-transform: capitalize;
 }
 
 .select-options li {

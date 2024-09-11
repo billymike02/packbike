@@ -21,6 +21,7 @@ import { FaTools } from "react-icons/fa";
 import CustomSelect from "./CustomSelect";
 
 import { AiFillFunnelPlot } from "react-icons/ai";
+import { TbZoomInFilled, TbZoomOutFilled } from "react-icons/tb";
 
 // modal that shows bike info (gear weight, etc.)
 const BikeInfo = ({ bikeName }) => {
@@ -135,15 +136,12 @@ const BikeInfo = ({ bikeName }) => {
 
 const Workspace = () => {
   const [loading, setLoading] = useState(true);
-
   const { user } = useAuth();
-
   const [bicycles, setBicycles] = useState([]);
   const { selectedBike, setSelectedBike } = useOutletContext();
-
   const [containerElements, setContainerElements] = useState([]);
-
   const [showNewModal, setShowNewModal] = useState(false);
+  const [figureScale, setFigureScale] = useState(1);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -395,6 +393,8 @@ const Workspace = () => {
             style={{
               filter: loading ? "blur(10px)" : "none",
               transition: "filter 0.1s",
+              scale: figureScale + "",
+              transition: "all 0.2s",
             }}
           >
             <img
@@ -406,6 +406,7 @@ const Workspace = () => {
             <div style={{ visibility: loading ? "hidden" : "visible" }}>
               {containerElements.map((container) => (
                 <GearDropdown
+                  parentScale={figureScale}
                   key={container.id}
                   id={container.id}
                   containerID={container.id}
@@ -418,6 +419,40 @@ const Workspace = () => {
           </div>
 
           {showNewModal && <Modal onSubmit={handleAddBicycle}></Modal>}
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            bottom: "2vw",
+            right: "2vw",
+            backgroundColor: "black",
+            borderRadius: "3rem",
+            width: "10%",
+            height: "6%",
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            color: "white",
+          }}
+        >
+          <TbZoomOutFilled
+            className={styles.zoomButton}
+            size={50}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              setFigureScale(figureScale - 0.1);
+            }}
+          ></TbZoomOutFilled>
+          <a style={{ fontSize: "2rem" }}>Zoom</a>
+          <TbZoomInFilled
+            className={styles.zoomButton}
+            size={50}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              setFigureScale(figureScale + 0.1);
+            }}
+          ></TbZoomInFilled>
         </div>
       </div>
     </>

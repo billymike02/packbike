@@ -109,6 +109,7 @@
   display: relative;
   height: 100%;
   width: 100%;
+  transform-origin: top left;
 }
 
 .BicycleVector {
@@ -128,4 +129,13 @@
   font-weight: 500;
   user-select: none;
   cursor: default;
+}
+
+.zoomButton {
+  transition: all 0.1s;
+}
+
+.zoomButton:active {
+  color: rgb(0, 106, 255);
+  scale: 1.2;
 }
