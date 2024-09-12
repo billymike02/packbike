@@ -18,13 +18,11 @@
   padding-top: 1.5rem;
 }
 
-.leftPane > div:nth-child(-n + 2) {
+.paneContainer {
   width: 240px;
   height: min-content;
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.313);
-  margin: 2rem;
-  margin-block: 0.4rem;
-  margin-right: 0rem;
+  margin: 1rem 2rem 0rem 2rem;
   border-radius: 1rem;
 
   padding: 1.5rem;

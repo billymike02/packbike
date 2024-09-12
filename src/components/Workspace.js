@@ -325,7 +325,7 @@ const Workspace = () => {
     <>
       <div className={styles.Workspace}>
         <div className={styles.leftPane}>
-          <div>
+          <div className={styles.paneContainer}>
             <h2 style={{ marginBlockStart: "0rem", width: "100%" }}>
               Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>
             </h2>
@@ -363,6 +363,7 @@ const Workspace = () => {
           </div>
 
           <div
+            className={styles.paneContainer}
             style={{
               opacity: selectedBike ? "100%" : "65%",
               pointerEvents: selectedBike ? "auto" : "none",
