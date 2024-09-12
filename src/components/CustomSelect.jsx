@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+// designed to work with key, value arrays
 const CustomSelect = ({ options, onSelect, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -9,33 +10,27 @@ const CustomSelect = ({ options, onSelect, placeholder }) => {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
-    // Check if option has a 'value' property (for objects) or use the option itself (for strings)
-    onSelect(option.value !== undefined ? option.value : option);
+    // Return the `key` to the parent
+    onSelect(option.value);
   };
-
-  // Determine if options are objects or strings
-  const isObjectOptions =
-    options.length > 0 && typeof options[0] === "object" && options[0] !== null;
 
   return (
     <div className="custom-select">
       <div className="select-box" onClick={toggleDropdown}>
         {selectedOption
-          ? isObjectOptions
-            ? selectedOption.label
-            : selectedOption
+          ? selectedOption.label
           : placeholder || "Select an option"}
       </div>
       {isOpen && (
         <ul className="select-options">
           {options.length > 0 ? (
-            options.map((option, index) => (
+            options.map((option) => (
               <li
-                key={isObjectOptions ? option.value : index}
+                key={option.key}
                 onClick={() => handleOptionClick(option)}
                 className="option"
               >
-                {isObjectOptions ? option.label : option}
+                {option.label}
               </li>
             ))
           ) : (

@@ -147,7 +147,7 @@ const Workspace = () => {
     if (!user) return; // Exit if no user
 
     setLoading(true);
-    console.log("loading");
+
     const docRef = doc(firestore, "users", user.uid);
 
     // Set up real-time listener
@@ -155,9 +155,15 @@ const Workspace = () => {
       if (docSnap.exists()) {
         const data = docSnap.data();
 
-        // Convert containers map to an array
-        setBicycles(Object.keys(data.bicycles) || []);
-        console.log("found bicycles: ", Object.keys(data.bicycles));
+        // Transform the bicycles map into an array of objects with id and displayName
+        const bicyclesArray = Object.entries(data.bicycles || {}).map(
+          ([id, bike]) => ({
+            value: id, // The bicycle's unique id (from Firebase key)
+            label: bike.name || id, // The name of the bicycle or use the id as a fallback
+          })
+        );
+
+        setBicycles(bicyclesArray); // Set bicycles as an array of objects with id and displayName
 
         if (data.bicycles[selectedBike] == null) {
           return;
@@ -171,7 +177,6 @@ const Workspace = () => {
           ...container, // Spread the container data
         }));
 
-        console.log("Visual containers:", containersArray);
         setContainerElements(containersArray); // Set the array in state
       } else {
         console.log("No such document!");
@@ -249,8 +254,6 @@ const Workspace = () => {
             [`bicycles.${selectedBike}.visualContainers.${unique_id}`]:
               newContainer,
           });
-
-          console.log("Updated visual containers");
         } else {
           console.log("User document does not exist");
         }
@@ -299,8 +302,6 @@ const Workspace = () => {
           await updateDoc(userDocRef, {
             [`bicycles.${selectedBike}.visualContainers.${id}`]: deleteField(),
           });
-
-          console.log("Updated visual containers");
         } else {
           console.log("User document does not exist");
         }
@@ -362,7 +363,12 @@ const Workspace = () => {
             )}
           </div>
 
-          <div>
+          <div
+            style={{
+              opacity: selectedBike ? "100%" : "65%",
+              pointerEvents: selectedBike ? "auto" : "none",
+            }}
+          >
             <h2 style={{ marginTop: "0.0rem" }}>
               Create <IoCreateSharp></IoCreateSharp>
             </h2>

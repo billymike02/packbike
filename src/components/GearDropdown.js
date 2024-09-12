@@ -19,7 +19,7 @@ const GearModal = ({
   onClose,
   onSubmit,
   onDelete,
-  currentBackendContainer,
+  currentBackendContainer, // this is the id, not the display name
   currentColor,
 }) => {
   const { user } = useAuth();
@@ -27,18 +27,20 @@ const GearModal = ({
   const [backendContainer, setBackendContainer] = useState(
     currentBackendContainer
   );
+  const [containerDisplayName, setContainerDisplayName] = useState(null);
 
   const [bgColor, setBgColor] = useState(currentColor);
 
+  // Convert colors to the correct format for CustomSelect
   const colors = [
-    "red",
-    "orange",
-    "yellow",
-    "green",
-    "blue",
-    "purple",
-    "brown",
-    "black",
+    { value: "red", label: "Red" },
+    { value: "orange", label: "Orange" },
+    { value: "yellow", label: "Yellow" },
+    { value: "green", label: "Green" },
+    { value: "blue", label: "Blue" },
+    { value: "purple", label: "Purple" },
+    { value: "brown", label: "Brown" },
+    { value: "black", label: "Black" },
   ];
 
   useEffect(() => {
@@ -48,6 +50,7 @@ const GearModal = ({
 
     // Set up real-time listener
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      console.log("kate", currentColor);
       if (docSnap.exists()) {
         const data = docSnap.data();
 
@@ -59,7 +62,22 @@ const GearModal = ({
           })
         );
 
-        console.log("Backend containers:", containersArray);
+        // Assuming container_id is the value you are looking for
+        const searchId = backendContainer; // or wherever you get this value
+
+        // Find the container that matches the searchId
+        const selectedContainer = containersArray.find(
+          (container) => container.id === searchId
+        );
+
+        console.log("searching for", searchId, "in", containersArray);
+
+        console.log("found: ", selectedContainer);
+
+        if (selectedContainer) {
+          setContainerDisplayName(selectedContainer.displayName || "");
+        }
+
         setContainers(containersArray); // Set the array in state
       } else {
         console.log("No such document!");
@@ -77,6 +95,8 @@ const GearModal = ({
 
   const handleContainerChange = (selected) => {
     setBackendContainer(selected);
+
+    console.log("set bg container", selected);
   };
 
   return createPortal(
@@ -84,19 +104,21 @@ const GearModal = ({
       <div className={modalStyles.modalContent}>
         <h2>{"Edit gear container"}</h2>
         <div className={modalStyles.modalBody}>
+          {/* CustomSelect for containers */}
           <CustomSelect
             options={containers.map((container) => ({
               value: container.id, // Value to be passed back
               label: container.displayName, // Display name for the select
             }))}
-            placeholder={backendContainer || "Select a container"}
+            placeholder={containerDisplayName || "Select a container"}
             onSelect={handleContainerChange}
-          ></CustomSelect>
+          />
+          {/* CustomSelect for colors */}
           <CustomSelect
-            placeholder="Select a color"
+            placeholder={currentColor || "Select a color"}
             options={colors}
             onSelect={handleColorSelection}
-          ></CustomSelect>
+          />
         </div>
 
         <div className={modalStyles.buttons}>
@@ -115,6 +137,7 @@ const GearModal = ({
 
           <button
             onClick={() => {
+              console.log("submitted backend", backendContainer);
               onSubmit(backendContainer, bgColor);
             }}
             className={modalStyles.submit}
@@ -134,8 +157,9 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const [size, setSize] = useState({ width: "200px", height: "200px" });
   const [backendContainer, setBackendContainer] = useState("");
   const [bgColor, setBgColor] = useState("");
-
+  const [containers, setContainers] = useState([]);
   const [isGearModalOpen, setIsGearModalOpen] = useState(false);
+  const [currentDisplayName, setCurrentDisplayName] = useState("");
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -147,14 +171,22 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
 
+        // Convert containers map to an array
+        const containersArray = Object.entries(data.containers || {}).map(
+          ([id, container]) => ({
+            id,
+            ...container,
+          })
+        );
+
+        setContainers(containersArray); // Set the array in state
+
         // Access the nested fields
         const visualContainers = data?.bicycles[selectedBike].visualContainers;
         const container = visualContainers?.[id];
 
         setBackendContainer(container?.container_id);
         setBgColor(container?.color);
-
-        console.log("downloaded bg color: ", container?.color);
 
         const containerWidth = container?.width;
         const containerHeight = container?.height;
@@ -163,7 +195,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
         const containerPosY = containerPos?.y;
 
         setSize({ width: containerWidth, height: containerHeight });
-
         setPosition({ x: containerPosX, y: containerPosY });
       } else {
         console.log("No such document!");
@@ -172,29 +203,22 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
 
     // Clean up subscription on component unmount
     return () => unsubscribe();
-  }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
+  }, [user, selectedBike, id]);
 
   const onResizeStop = async (e, direction, ref, delta, position) => {
-    // Get the current width and height
     const newWidth = ref.style.width;
     const newHeight = ref.style.height;
 
-    // Update the state with the new size
     setSize({
       width: parseInt(newWidth),
       height: parseInt(newHeight),
     });
-
-    // Print the resize scale
-    console.log("Resize scale:", { width: newWidth, height: newHeight });
 
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
 
       try {
         const userDoc = await getDoc(userDocRef);
-        console.log(id);
-
         if (userDoc.exists()) {
           await updateDoc(userDocRef, {
             [`bicycles.${selectedBike}.visualContainers.${id}.size.width`]:
@@ -202,18 +226,14 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
             [`bicycles.${selectedBike}.visualContainers.${id}.size.height`]:
               newHeight,
           });
-        } else {
         }
       } catch (error) {}
     }
   };
 
   const onDragStop = async (e, d) => {
-    // Get the current position
     const { x, y } = d;
 
-    console.log("size", size.width, size.height);
-    // Update the state with the new position
     setPosition({ x, y });
 
     if (user) {
@@ -221,14 +241,11 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
 
       try {
         const userDoc = await getDoc(userDocRef);
-        console.log(id);
-
         if (userDoc.exists()) {
           await updateDoc(userDocRef, {
             [`bicycles.${selectedBike}.visualContainers.${id}.position.x`]: x,
             [`bicycles.${selectedBike}.visualContainers.${id}.position.y`]: y,
           });
-        } else {
         }
       } catch (error) {}
     }
@@ -247,7 +264,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
               newContainer,
             [`bicycles.${selectedBike}.visualContainers.${id}.color`]: newColor,
           });
-        } else {
         }
       } catch (error) {}
     }
@@ -289,7 +305,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
             setIsGearModalOpen(false);
           }}
           onSubmit={(newContainer, newColor) => {
-            console.log("new container", newContainer);
             onModalChange(newContainer, newColor);
             setIsGearModalOpen(false);
           }}
