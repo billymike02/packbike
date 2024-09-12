@@ -1,4 +1,4 @@
-import styles from "./Sidebar.module.css";
+import styles from "./MenuBar.module.css";
 import React, { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
@@ -10,7 +10,7 @@ import { RiAccountCircleFill } from "react-icons/ri";
 import Modal from "./ModalComponent";
 import { IoArrowBack } from "react-icons/io5";
 
-const Sidebar = ({ setBicycleSelection }) => {
+const MenuBar = ({ setBicycleSelection }) => {
   const { user } = useAuth();
 
   const navigator = useNavigate();
@@ -55,7 +55,7 @@ const Sidebar = ({ setBicycleSelection }) => {
   ];
 
   return (
-    <div className={styles.Sidebar}>
+    <div className={styles.MenuBar}>
       <h2 style={{ cursor: "default" }}>Packbike</h2>
       {true && (
         <>
@@ -110,4 +110,4 @@ const Sidebar = ({ setBicycleSelection }) => {
   );
 };
 
-export default Sidebar;
+export default MenuBar;

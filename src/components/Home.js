@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "./Sidebar";
+import MenuBar from "./MenuBar";
 import bike from "../assets/images/bike.svg";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import GearDropdown from "./GearDropdown";
@@ -61,7 +61,6 @@ const Home = () => {
           <img src={bike} className="App-logo" alt="logo" />
         </div>
       </div>
-
     </div>
   );
 };

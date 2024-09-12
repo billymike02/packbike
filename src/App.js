@@ -14,7 +14,7 @@ import { Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import Sidebar from "./components/Sidebar";
+import MenuBar from "./components/MenuBar";
 import Workspace from "./components/Workspace";
 import Profile from "./components/Profile";
 import GearManager from "./components/GearManager";
@@ -52,7 +52,7 @@ function Layout() {
         overflow: "hidden",
       }}
     >
-      <Sidebar />
+      <MenuBar />
 
       {/* Right Side - Content that changes with routes */}
       <div
