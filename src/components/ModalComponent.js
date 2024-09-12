@@ -6,8 +6,9 @@ const Modal = ({ onClose, onSubmit }) => {
   const [bikeName, setBikeName] = useState("");
 
   const handleSubmit = () => {
-    onSubmit(bikeName);
+    onClose();
     setBikeName("");
+    onSubmit(bikeName);
   };
 
   return createPortal(

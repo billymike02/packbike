@@ -218,7 +218,6 @@ const Workspace = () => {
 
           console.log("Bicycle added successfully!");
           setSelectedBike(bikeName);
-          setShowNewModal(false);
         } else {
           console.log("User document does not exist");
         }
@@ -447,7 +446,14 @@ const Workspace = () => {
             </div>
           </div>
 
-          {showNewModal && <Modal onSubmit={handleAddBicycle}></Modal>}
+          {showNewModal && (
+            <Modal
+              onSubmit={handleAddBicycle}
+              onClose={() => {
+                setShowNewModal(false);
+              }}
+            ></Modal>
+          )}
         </div>
 
         <div
