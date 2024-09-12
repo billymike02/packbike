@@ -63,7 +63,7 @@ const MenuBar = ({ setBicycleSelection }) => {
             <div
               className={styles.menuItem}
               onClick={() => {
-                navigator("/workspace");
+                navigator("/app/layout/workspace");
               }}
             >
               <div className={styles.menuIcon}>
@@ -74,7 +74,7 @@ const MenuBar = ({ setBicycleSelection }) => {
             <div
               className={styles.menuItem}
               onClick={() => {
-                navigator("/gear-manager");
+                navigator("/app/layout/gear-manager");
               }}
             >
               <div className={styles.menuIcon}>
@@ -87,7 +87,7 @@ const MenuBar = ({ setBicycleSelection }) => {
             <div
               className={styles.menuItem}
               onClick={() => {
-                navigator("profile");
+                navigator("app/layout/profile");
               }}
             >
               <div className={styles.menuLabel}>Account</div>

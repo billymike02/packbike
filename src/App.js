@@ -1,16 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Home from "./components/Home";
+import BikeSVG from "./assets/images/bike.svg";
 import "./App.css";
 import { Login, Logout } from "./components/Login";
-import {
-  HashRouter,
-  Routes,
-  Route,
-  Link,
-  Outlet,
-  useNavigate,
-} from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -21,6 +14,8 @@ import GearManager from "./components/GearManager";
 import Modal from "./components/ModalComponent";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import { BrowserView, MobileView } from "react-device-detect";
+import PWAPrompt from "react-ios-pwa-prompt";
+import HomePage from "./components/HomePage";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -53,8 +48,6 @@ function Layout() {
       }}
     >
       <MenuBar />
-
-      {/* Right Side - Content that changes with routes */}
       <div
         style={{
           width: "100vw",
@@ -71,7 +64,8 @@ function Layout() {
 
 function App() {
   const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true); // <-- Added authLoading state
+  const [authLoading, setAuthLoading] = useState(true);
+  const [showInstall, setShowInstall] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -85,9 +79,9 @@ function App() {
           });
         }
       } else {
-        setUser(null); // Ensure user is set to null if not authenticated
+        setUser(null);
       }
-      setAuthLoading(false); // <-- Auth status is now determined
+      setAuthLoading(false);
     });
 
     return () => unsubscribe();
@@ -103,24 +97,32 @@ function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <HashRouter>
-        <Routes>
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Navigate to="/profile" />} />{" "}
-              {/* Redirect default path to /profile */}
-              <Route path="/workspace" element={<Workspace />} />
-              <Route path="/gear-manager" element={<GearManager />} />
-              <Route path="/profile" element={<Profile />} />
+    <>
+      <AuthContext.Provider value={{ user, setUser }}>
+        <HashRouter>
+          <Routes>
+            <Route path="/app" element={<ProtectedRoutes />}>
+              <Route index element={<Navigate to="/app/layout" />} />
+              <Route path="/app/layout" element={<Layout />}>
+                <Route
+                  index
+                  element={<Navigate to="/app/layout/workspace" />}
+                />
+                <Route path="/app/layout/workspace" element={<Workspace />} />
+                <Route
+                  path="/app/layout/gear-manager"
+                  element={<GearManager />}
+                />
+                <Route path="/app/layout/profile" element={<Profile />} />
+              </Route>
             </Route>
-          </Route>
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-        </Routes>
-      </HashRouter>
-    </AuthContext.Provider>
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/" element={<HomePage />} />
+          </Routes>
+        </HashRouter>
+      </AuthContext.Provider>
+    </>
   );
 }
 
