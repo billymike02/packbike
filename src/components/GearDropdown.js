@@ -33,14 +33,15 @@ const GearModal = ({
 
   // Convert colors to the correct format for CustomSelect
   const colors = [
-    { value: "red", label: "Red" },
-    { value: "orange", label: "Orange" },
-    { value: "yellow", label: "Yellow" },
-    { value: "green", label: "Green" },
-    { value: "blue", label: "Blue" },
-    { value: "purple", label: "Purple" },
-    { value: "brown", label: "Brown" },
-    { value: "black", label: "Black" },
+    { value: "Red", label: "Red" },
+    { value: "Orange", label: "Orange" },
+    { value: "Yellow", label: "Yellow" },
+    { value: "Green", label: "Green" },
+    { value: "Blue", label: "Blue" },
+    { value: "Purple", label: "Purple" },
+    { value: "Brown", label: "Brown" },
+    { value: "Black", label: "Black" },
+    { value: "Grey", label: "Grey" },
   ];
 
   useEffect(() => {
@@ -110,12 +111,14 @@ const GearModal = ({
               value: container.id, // Value to be passed back
               label: container.displayName, // Display name for the select
             }))}
-            placeholder={containerDisplayName || "Select a container"}
+            placeholderText={"Select a container"}
+            defaultSelection={containerDisplayName}
             onSelect={handleContainerChange}
           />
           {/* CustomSelect for colors */}
           <CustomSelect
-            placeholder={currentColor || "Select a color"}
+            placeholder={"Select a color"}
+            defaultSelection={currentColor}
             options={colors}
             onSelect={handleColorSelection}
           />
@@ -292,7 +295,9 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
       >
         <div className={styles.clickableOverlay}>
           <FaPencil
-            style={{ cursor: "pointer" }}
+            size={40}
+            className="button-icon"
+            style={{ cursor: "pointer", zIndex: "15" }}
             onClick={() => {
               setIsGearModalOpen(true);
             }}

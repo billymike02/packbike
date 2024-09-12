@@ -138,7 +138,7 @@ const Workspace = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const [bicycles, setBicycles] = useState([]);
-  const { selectedBike, setSelectedBike } = useOutletContext();
+  const [selectedBike, setSelectedBike] = useState(null);
   const [containerElements, setContainerElements] = useState([]);
   const [showNewModal, setShowNewModal] = useState(false);
   const [figureScale, setFigureScale] = useState(1);
@@ -205,10 +205,12 @@ const Workspace = () => {
           const userData = userDoc.data();
           const bicycles = userData.bicycles || {};
 
+          const newBike = {};
+
           // Add the new bicycle item as a key-value pair
           const updatedBicycles = {
             ...bicycles,
-            [bikeName]: {},
+            [bikeName]: newBike,
           };
 
           // Update the document with the new map
@@ -246,7 +248,7 @@ const Workspace = () => {
             width: width,
             height: height,
             type: type,
-            color: "grey",
+            color: "Grey",
           };
 
           await updateDoc(userDocRef, {
@@ -310,8 +312,6 @@ const Workspace = () => {
     }
   };
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
   const containerTypes = [
     { name: "pannier", width: "200px", height: "200px" },
     { name: "roll", width: "100px", height: "100px" },
@@ -340,7 +340,8 @@ const Workspace = () => {
               <CustomSelect
                 options={bicycles}
                 onSelect={handleSelectionChange}
-                placeholder={selectedBike || "Select a bicycle"}
+                placeholderText={"Select a bicycle"}
+                defaultSelection={selectedBike}
               />
               <IoIosAddCircle
                 size={60}
@@ -365,8 +366,10 @@ const Workspace = () => {
           <div
             className={styles.paneContainer}
             style={{
-              opacity: selectedBike ? "100%" : "65%",
               pointerEvents: selectedBike ? "auto" : "none",
+              transition: "all 0.2s",
+              opacity: loading ? "0%" : "100%",
+              filter: loading ? "blur(6px)" : "",
             }}
           >
             <h2 style={{ marginTop: "0.0rem" }}>
@@ -385,7 +388,6 @@ const Workspace = () => {
                       container.width,
                       container.height
                     );
-                    setDropdownOpen(false);
                   }}
                 >
                   {container.name}
@@ -416,34 +418,47 @@ const Workspace = () => {
           </div>
         </div>
 
-        <div className={styles.Display} id="display">
+        <div
+          className={styles.Display}
+          style={{
+            backgroundColor: "white",
+          }}
+          id="display"
+        >
           <div
-            className={styles.figure}
+            className={styles.scrollable}
             style={{
-              filter: loading ? "blur(10px)" : "none",
-              transition: "filter 0.1s",
-              scale: figureScale + "",
-              transition: "all 0.2s",
+              height: "100%",
+              width: "100%",
             }}
           >
-            <img
-              src={bike}
-              className={styles.BicycleVector}
-              alt="bicycle-image"
-            />
+            <div
+              className={styles.figure}
+              style={{
+                transform: `scale(${figureScale})`,
+                transition: "all 0.2s",
+                filter: loading ? "blur(10px)" : "",
+              }}
+            >
+              <img
+                src={bike}
+                className={styles.BicycleVector}
+                alt="bicycle-image"
+              />
 
-            <div style={{ visibility: loading ? "hidden" : "visible" }}>
-              {containerElements.map((container) => (
-                <GearDropdown
-                  parentScale={figureScale}
-                  key={container.id}
-                  id={container.id}
-                  containerID={container.id}
-                  type={container.type}
-                  onDelete={handleVisualContainerDelete}
-                  selectedBike={selectedBike}
-                />
-              ))}
+              <div style={{ visibility: loading ? "hidden" : "visible" }}>
+                {containerElements.map((container) => (
+                  <GearDropdown
+                    parentScale={figureScale}
+                    key={container.id}
+                    id={container.id}
+                    containerID={container.id}
+                    type={container.type}
+                    onDelete={handleVisualContainerDelete}
+                    selectedBike={selectedBike}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
@@ -459,9 +474,9 @@ const Workspace = () => {
 
         <div
           style={{
-            position: "absolute",
-            bottom: "2vw",
-            right: "2vw",
+            position: "fixed",
+            bottom: "2vh",
+            right: "2vh",
             backgroundColor: "black",
             borderRadius: "3rem",
             width: "fit-content",

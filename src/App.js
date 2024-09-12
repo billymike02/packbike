@@ -41,8 +41,6 @@ export const getCurrentUser = () => {
 };
 
 function Layout() {
-  const [selectedBike, setSelectedBike] = useState(null);
-
   return (
     <div
       style={{
@@ -54,16 +52,18 @@ function Layout() {
         overflow: "hidden",
       }}
     >
-      <Sidebar
-        setBicycleSelection={(newBike) => {
-          console.log("new bike", newBike);
-          setSelectedBike(newBike);
-        }}
-      />
+      <Sidebar />
 
       {/* Right Side - Content that changes with routes */}
-      <div style={{ width: "100vw", height: "100%", display: "flex" }}>
-        <Outlet context={{ selectedBike, setSelectedBike }} />
+      <div
+        style={{
+          width: "100vw",
+          height: "100%",
+          display: "flex",
+          overflow: "auto",
+        }}
+      >
+        <Outlet />
       </div>
     </div>
   );

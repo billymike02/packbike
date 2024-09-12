@@ -49,7 +49,7 @@ button:hover,
 }
 
 .button-icon {
-  transition: all 0.4s;
+  transition: scale 0.4s;
 }
 
 .button-icon:hover {
@@ -113,7 +113,6 @@ button,
   z-index: 100;
   list-style: none; /* Remove bullet points */
   padding-left: 0; /* Remove left padding */
-  text-transform: capitalize;
 }
 
 .select-options li {
