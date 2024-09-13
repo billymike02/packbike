@@ -1,9 +1,8 @@
 .MenuBar {
   /* positioning */
   z-index: 2;
-  height: 100%;
-  max-height: 8%;
-  /* height: 65px; */
+  height: 80px;
+  min-height: 50px;
   width: 100vw;
   user-select: none;
 

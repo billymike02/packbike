@@ -483,19 +483,19 @@ const Workspace = () => {
           backgroundColor: "black",
           borderRadius: "3rem",
           width: "fit-content",
-          height: "6%",
           padding: "0.5rem",
           display: "flex",
 
           alignItems: "center",
           gap: "30px",
-          paddingInline: "1rem",
+
           color: "white",
+          userSelect: "none",
         }}
       >
         <TbZoomOutFilled
           className={styles.zoomButton}
-          size={40}
+          size={30}
           style={{ cursor: "pointer" }}
           onClick={() => {
             const newScale = figureScale * 0.9;
@@ -505,10 +505,10 @@ const Workspace = () => {
             }
           }}
         ></TbZoomOutFilled>
-        <a style={{ fontSize: "1.7rem" }}>Zoom</a>
+        <a style={{ fontSize: "1.5rem" }}>Zoom</a>
         <TbZoomInFilled
           className={styles.zoomButton}
-          size={40}
+          size={30}
           style={{ cursor: "pointer" }}
           onClick={() => {
             const newScale = figureScale * 1.1;

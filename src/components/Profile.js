@@ -27,7 +27,7 @@ const Profile = () => {
       }}
     >
       <div>
-        <h3>You're signed in as {user?.uid}</h3>
+        <h3>You're signed in as user: {user?.uid}</h3>
         <button onClick={handleSignOut}>Sign Out</button>
       </div>
     </div>

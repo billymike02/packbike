@@ -56,9 +56,7 @@
   box-shadow: none;
 }
 
-.deleteOverlay button .deleteIcons {
-  scale: 2.4;
-}
+
 
 .gearContainerHeader {
   display: flex;
@@ -134,9 +132,9 @@
 }
 
 .addButton {
-  position: absolute;
-  bottom: 10%;
-  right: 3%;
+  position: fixed;
+  bottom: 3vh;
+  right: 3vh;
   user-select: none;
   cursor: pointer;
   display: flex;

@@ -301,6 +301,9 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
             onClick={() => {
               setIsGearModalOpen(true);
             }}
+            onTouchStartCapture={() => {
+              setIsGearModalOpen(true);
+            }}
           />
         </div>
       </Rnd>
