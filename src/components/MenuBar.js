@@ -87,7 +87,7 @@ const MenuBar = ({ setBicycleSelection }) => {
             <div
               className={styles.menuItem}
               onClick={() => {
-                navigator("app/layout/profile");
+                navigator("/app/layout/profile");
               }}
             >
               <div className={styles.menuLabel}>Account</div>
