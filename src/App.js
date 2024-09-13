@@ -44,16 +44,16 @@ function Layout() {
         alignItems: "center",
         flexDirection: "column",
         height: "100vh",
-        overflow: "hidden",
+        width: "100vw",
       }}
     >
       <MenuBar />
       <div
         style={{
-          width: "100vw",
+          width: "100%",
           height: "100%",
           display: "flex",
-          overflow: "auto",
+          overflow: "scroll",
         }}
       >
         <Outlet />

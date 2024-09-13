@@ -322,9 +322,27 @@ const Workspace = () => {
   };
 
   return (
-    <>
-      <div className={styles.Workspace}>
-        <div className={styles.leftPane}>
+    <div className={styles.Workspace}>
+      <div
+        id="Display"
+        style={{
+          backgroundColor: "white",
+          display: "flex",
+          flexDirection: "row",
+          height: "300vh",
+          width: "300vw", // 3x the width of the viewport
+          overflow: "auto",
+        }}
+      >
+        <div
+          id="Left-Pane"
+          style={{
+            zIndex: 10,
+            height: "100vh",
+            overflowY: "scroll",
+            position: "fixed",
+          }}
+        >
           <div className={styles.paneContainer}>
             <h2 style={{ marginBlockStart: "0rem", width: "100%" }}>
               Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>
@@ -355,7 +373,10 @@ const Workspace = () => {
             </div>
             {selectedBike && (
               <button
-                style={{ backgroundColor: "black", textTransform: "uppercase" }}
+                style={{
+                  backgroundColor: "black",
+                  textTransform: "uppercase",
+                }}
                 onClick={handleBicycleDelete}
               >
                 Delete Bike
@@ -404,10 +425,8 @@ const Workspace = () => {
             <button
               style={{
                 backgroundColor: "red",
-
                 textTransform: "uppercase",
                 fontWeight: "500",
-
                 color: "white",
               }}
               onClick={handleVisualReset}
@@ -417,106 +436,90 @@ const Workspace = () => {
             </button>
           </div>
         </div>
-
         <div
-          className={styles.Display}
+          className={styles.figure}
           style={{
-            backgroundColor: "white",
+            transform: `scale(${figureScale})`,
+            transition: "all 0.2s",
+            filter: loading ? "blur(10px)" : "",
           }}
-          id="display"
         >
-          <div
-            className={styles.scrollable}
-            style={{
-              height: "100%",
-              width: "100%",
-            }}
-          >
-            <div
-              className={styles.figure}
-              style={{
-                transform: `scale(${figureScale})`,
-                transition: "all 0.2s",
-                filter: loading ? "blur(10px)" : "",
-              }}
-            >
-              <img
-                src={bike}
-                className={styles.BicycleVector}
-                alt="bicycle-image"
+          <img
+            src={bike}
+            className={styles.BicycleVector}
+            alt="bicycle-image"
+          />
+
+          <div style={{ visibility: loading ? "hidden" : "visible" }}>
+            {containerElements.map((container) => (
+              <GearDropdown
+                parentScale={figureScale}
+                key={container.id}
+                id={container.id}
+                containerID={container.id}
+                type={container.type}
+                onDelete={handleVisualContainerDelete}
+                selectedBike={selectedBike}
               />
-
-              <div style={{ visibility: loading ? "hidden" : "visible" }}>
-                {containerElements.map((container) => (
-                  <GearDropdown
-                    parentScale={figureScale}
-                    key={container.id}
-                    id={container.id}
-                    containerID={container.id}
-                    type={container.type}
-                    onDelete={handleVisualContainerDelete}
-                    selectedBike={selectedBike}
-                  />
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
-
-          {showNewModal && (
-            <Modal
-              onSubmit={handleAddBicycle}
-              onClose={() => {
-                setShowNewModal(false);
-              }}
-            ></Modal>
-          )}
         </div>
 
-        <div
-          style={{
-            position: "fixed",
-            bottom: "2vh",
-            right: "2vh",
-            backgroundColor: "black",
-            borderRadius: "3rem",
-            width: "fit-content",
-            height: "6%",
-            display: "flex",
-
-            alignItems: "center",
-            gap: "30px",
-            paddingInline: "1rem",
-            color: "white",
-          }}
-        >
-          <TbZoomOutFilled
-            className={styles.zoomButton}
-            size={40}
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              const newScale = figureScale * 0.9;
-
-              if (newScale > 0.4) {
-                setFigureScale(newScale);
-              }
+        {showNewModal && (
+          <Modal
+            onSubmit={handleAddBicycle}
+            onClose={() => {
+              setShowNewModal(false);
             }}
-          ></TbZoomOutFilled>
-          <a style={{ fontSize: "1.7rem" }}>Zoom</a>
-          <TbZoomInFilled
-            className={styles.zoomButton}
-            size={40}
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              const newScale = figureScale * 1.1;
-
-              if (newScale < 2.3) {
-                setFigureScale(newScale);
-              }
-            }}
-          ></TbZoomInFilled>
-        </div>
+          ></Modal>
+        )}
       </div>
-    </>
+
+      <div
+        style={{
+          position: "fixed",
+          bottom: "2vh",
+          right: "2vh",
+          backgroundColor: "black",
+          borderRadius: "3rem",
+          width: "fit-content",
+          height: "6%",
+          padding: "0.5rem",
+          display: "flex",
+
+          alignItems: "center",
+          gap: "30px",
+          paddingInline: "1rem",
+          color: "white",
+        }}
+      >
+        <TbZoomOutFilled
+          className={styles.zoomButton}
+          size={40}
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            const newScale = figureScale * 0.9;
+
+            if (newScale > 0.4) {
+              setFigureScale(newScale);
+            }
+          }}
+        ></TbZoomOutFilled>
+        <a style={{ fontSize: "1.7rem" }}>Zoom</a>
+        <TbZoomInFilled
+          className={styles.zoomButton}
+          size={40}
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            const newScale = figureScale * 1.1;
+
+            if (newScale < 2.3) {
+              setFigureScale(newScale);
+            }
+          }}
+        ></TbZoomInFilled>
+      </div>
+    </div>
   );
 };
 
