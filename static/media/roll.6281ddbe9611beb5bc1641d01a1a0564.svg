@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 209.1 209.1" fill="white">
+  <defs>
+    <style>
+      .roll-cls-1 {
+        fill: inherit;
+        stroke: #000;
+        stroke-linejoin: round;
+        stroke-width: 15px;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.7.1, SVG Export Plug-In . SVG Version: 1.2.0 Build 142)  -->
+  <g>
+      <g id="Roll">
+        <circle class="roll-cls-1" cx="104.6" cy="104.6" r="97.1"/>
+      </g>
+  </g>
+</svg>

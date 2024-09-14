@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 449.7 382.8" fill="white">
+  <defs>
+    <style>
+      .framebag-1 {
+        fill: none;
+      }
+
+      .framebag-1, .framebag-2 {
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 19px;
+      }
+
+      .framebag-2 {
+        fill: inherit;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.7.1, SVG Export Plug-In . SVG Version: 1.2.0 Build 142)  -->
+  <g>
+    <g id="Layer_1">
+      <g id="Layer_1-2" data-name="Layer_1">
+        <g id="Framebag">
+          <polygon id="Base" class="framebag-2" points="9.5 61 100.5 373.3 440.2 9.5 9.5 61"/>
+          <line id="Zipper" class="framebag-1" x1="97.7" y1="123.8" x2="272.2" y2="102.5"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
