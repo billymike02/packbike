@@ -27,14 +27,14 @@
 
 .BicycleVector {
   position: absolute;
-  top: 50px;
-  left: 200px;
+  top: 100px;
+  left: 250px;
   width: 600px;
   height: auto;
   scale: 1.5;
   user-select: none;
   z-index: -10;
-  margin-left: max(300px, 0px);
+  margin-left: max(200px, 0px);
 }
 
 .bikeName {

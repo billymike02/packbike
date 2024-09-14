@@ -5,7 +5,6 @@ import { FaPencil } from "react-icons/fa6";
 import { useAuth } from "../App";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-
 import modalStyles from "./ModalComponent.module.css";
 
 // firestore stuffs
@@ -14,6 +13,11 @@ import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import CustomSelect from "./CustomSelect";
+
+// New images
+import { ReactComponent as Pannier } from "../assets/images/pannier.svg";
+import { ReactComponent as Roll } from "../assets/images/roll.svg";
+import { ReactComponent as Forkbag } from "../assets/images/forkbag.svg";
 
 const GearModal = ({
   onClose,
@@ -280,21 +284,36 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
         default={{
           x: 0,
           y: 0,
-          width: 30,
-          height: 30,
         }}
         scale={parentScale}
-        className={`${styles.clickable} ${styles[type]} ${
-          backendContainer != null && backendContainer != ""
-            ? styles.filled
-            : ""
-        }`}
-        style={{ backgroundColor: bgColor }}
+        style={{
+          display: "flex",
+        }}
         onResizeStop={onResizeStop}
         onDragStop={onDragStop}
         position={position}
         size={size}
       >
+        {type == "pannier" ? (
+          <Pannier
+            style={{ height: "100%", width: "100%" }}
+            className="bag-svg"
+          />
+        ) : type == "roll" ? (
+          <Roll style={{ height: "100%", width: "100%" }} className="bag-svg" />
+        ) : type == "forkbag" ? (
+          <Forkbag
+            style={{ height: "100%", width: "100%" }}
+            className="bag-svg"
+          />
+        ) : null}
+
+        <style>{`
+          .bag-svg #base {
+            fill: ${bgColor};
+          }
+        `}</style>
+
         <div className={styles.clickableOverlay}>
           <FaPencil
             size={40}

@@ -28,7 +28,7 @@ const HomePage = () => {
           filter: "invert(1)",
           opacity: "5%",
           zIndex: "1",
-          transform: "scale(-100%, 100%) translate(5%)",
+          transform: "scale(-100%, 100%)",
         }}
       />
 

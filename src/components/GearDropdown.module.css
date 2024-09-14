@@ -14,21 +14,15 @@
   align-items: center;
   color: transparent;
   user-select: none;
-  cursor: grab !important;
-
   transition: color 0.05s, background-color 0.05s, box-shadow 0.1s;
   overflow: hidden;
-}
-
-.filled {
-  border-width: 0.8rem;
+  position: relative;
 }
 
 .clickable:hover {
   color: white;
   background-color: rgba(0, 0, 0, 0.545) !important;
   z-index: 5;
-  backdrop-filter: blur(2px);
 }
 
 .clickable:active {
@@ -39,9 +33,12 @@
 .clickableOverlay {
   display: flex;
   height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
-  /* transition: all 0.3s; */
+
+  transition: color 0.3s;
+  position: absolute;
 }
 
 .clickable:active {

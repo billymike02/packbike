@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import Home from "./components/Home";
+
 import BikeSVG from "./assets/images/bike.svg";
 import "./App.css";
 import { Login, Logout } from "./components/Login";

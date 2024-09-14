@@ -321,6 +321,7 @@ const Workspace = () => {
   const containerTypes = [
     { name: "pannier", width: 200, height: 200 },
     { name: "roll", width: 100, height: 100 },
+    { name: "forkbag", width: 160, height: 160 },
   ];
 
   const handleSelectionChange = (selected) => {
