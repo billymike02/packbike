@@ -1,16 +1,19 @@
 {
   "files": {
-    "main.css": "/packbike/static/css/main.5d217318.css",
-    "main.js": "/packbike/static/js/main.be9e6975.js",
+    "main.css": "/packbike/static/css/main.8cea963e.css",
+    "main.js": "/packbike/static/js/main.743caef6.js",
     "static/js/453.31aedef3.chunk.js": "/packbike/static/js/453.31aedef3.chunk.js",
-    "static/media/bike.svg": "/packbike/static/media/bike.a4b82c85b36ad8ad4badb3faa4a5f541.svg",
+    "static/media/forkbag.svg": "/packbike/static/media/forkbag.76894e2396289067c95c279e61952ef8.svg",
+    "static/media/bike.svg": "/packbike/static/media/bike.34ee7e4c34bad53eba848d54460ff295.svg",
+    "static/media/pannier.svg": "/packbike/static/media/pannier.663b86693acdc5013fa4276664213d51.svg",
     "index.html": "/packbike/index.html",
-    "main.5d217318.css.map": "/packbike/static/css/main.5d217318.css.map",
-    "main.be9e6975.js.map": "/packbike/static/js/main.be9e6975.js.map",
+    "static/media/roll.svg": "/packbike/static/media/roll.f8fa8db4f532662913c6cf2c3d87384f.svg",
+    "main.8cea963e.css.map": "/packbike/static/css/main.8cea963e.css.map",
+    "main.743caef6.js.map": "/packbike/static/js/main.743caef6.js.map",
     "453.31aedef3.chunk.js.map": "/packbike/static/js/453.31aedef3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5d217318.css",
-    "static/js/main.be9e6975.js"
+    "static/css/main.8cea963e.css",
+    "static/js/main.743caef6.js"
   ]
 }
