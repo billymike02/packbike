@@ -1,9 +1,6 @@
-.roll {
-  border-radius: 50%;
-}
-
-.pannier {
-  border-radius: 1rem;
+.bag {
+  height: 100%;
+  width: 100%;
 }
 
 .clickable {

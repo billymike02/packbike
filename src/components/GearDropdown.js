@@ -15,9 +15,11 @@ import { getDoc } from "firebase/firestore";
 import CustomSelect from "./CustomSelect";
 
 // New images
-import { ReactComponent as Pannier } from "../assets/images/pannier.svg";
-import { ReactComponent as Roll } from "../assets/images/roll.svg";
-import { ReactComponent as Forkbag } from "../assets/images/forkbag.svg";
+import Pannier from "./Bags/Pannier";
+import Roll from "./Bags/Roll";
+import Forkbag from "./Bags/Forkbag";
+import Seatpack from "./Bags/Seatpack";
+import Framebag from "./Bags/Framebag";
 
 const GearModal = ({
   onClose,
@@ -295,24 +297,16 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
         size={size}
       >
         {type == "pannier" ? (
-          <Pannier
-            style={{ height: "100%", width: "100%" }}
-            className="bag-svg"
-          />
+          <Pannier fillColor={bgColor} />
         ) : type == "roll" ? (
-          <Roll style={{ height: "100%", width: "100%" }} className="bag-svg" />
+          <Roll fillColor={bgColor} />
         ) : type == "forkbag" ? (
-          <Forkbag
-            style={{ height: "100%", width: "100%" }}
-            className="bag-svg"
-          />
+          <Forkbag fillColor={bgColor} />
+        ) : type == "seatpack" ? (
+          <Seatpack fillColor={bgColor} />
+        ) : type == "framebag" ? (
+          <Framebag fillColor={bgColor} />
         ) : null}
-
-        <style>{`
-          .bag-svg #base {
-            fill: ${bgColor};
-          }
-        `}</style>
 
         <div className={styles.clickableOverlay}>
           <FaPencil

@@ -22,6 +22,7 @@ import CustomSelect from "./CustomSelect";
 
 import { AiFillFunnelPlot } from "react-icons/ai";
 import { TbZoomInFilled, TbZoomOutFilled } from "react-icons/tb";
+import ModularModal from "./Modal";
 
 // modal that shows bike info (gear weight, etc.)
 const BikeInfo = ({ bikeName }) => {
@@ -321,7 +322,9 @@ const Workspace = () => {
   const containerTypes = [
     { name: "pannier", width: 200, height: 200 },
     { name: "roll", width: 100, height: 100 },
-    { name: "forkbag", width: 160, height: 160 },
+    { name: "forkbag", width: 140, height: 160 },
+    { name: "seatpack", width: 220, height: 100 },
+    { name: "framebag", width: 220, height: 175 },
   ];
 
   const handleSelectionChange = (selected) => {
@@ -355,6 +358,8 @@ const Workspace = () => {
 
   const [trackingClick, setTrackingClick] = useState(false);
   const [indexNewContainer, setIndexNewContainer] = useState(null);
+
+  const [bShowingResetModal, setShowResetModal] = useState(false);
 
   return (
     <div className={styles.Workspace}>
@@ -490,7 +495,9 @@ const Workspace = () => {
                 fontWeight: "500",
                 color: "white",
               }}
-              onClick={handleVisualReset}
+              onClick={() => {
+                setShowResetModal(true);
+              }}
             >
               Reset
               <RxReset></RxReset>
@@ -534,6 +541,14 @@ const Workspace = () => {
             }}
           ></Modal>
         )}
+
+        {bShowingResetModal && (
+          <ModularModal
+            title="Confirm Reset"
+            onClose={() => setShowResetModal(false)}
+            onSubmit={() => handleVisualReset()}
+          ></ModularModal>
+        )}
       </div>
 
       <div
@@ -561,7 +576,7 @@ const Workspace = () => {
           onClick={() => {
             const newScale = figureScale * 0.9;
 
-            if (newScale > 0.4) {
+            if (newScale > 1) {
               setFigureScale(newScale);
             }
           }}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 379.9 170.7" fill="white">
+  <defs>
+    <style>
+      .seatpack-1, .seatpack-2, .seatpack-3 {
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .seatpack-1, .seatpack-3 {
+        stroke-width: 17px;
+      }
+
+      .seatpack-2 {
+
+        stroke-width: 14px;
+      }
+
+      .seatpack-3 {
+        fill: inherit;
+      }
+
+      .seatpack-1
+      {
+        fill: black;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.7.1, SVG Export Plug-In . SVG Version: 1.2.0 Build 142)  -->
+  <g>
+    <g id="Layer_1">
+      <g id="Seatpack">
+        <path id="Base" class="seatpack-3" d="M341.9,51.1c.5-4.3-176.2-29.2-269.5-42C41.5,4.8,13,26.7,9.2,57.7h0c-6.6,53.7,33.7,101.7,87.7,104.5l274.5-9.1-29.5-102.1Z"/>
+        <polygon id="Plate" class="seatpack-1" points="112.8 156 130.8 120 358.5 120.6 369 144.4 112.8 156"/>
+        <path id="Fold" class="seatpack-2" d="M25.7,31.2l31.4,27.3-1.2,48.2-28.5,13.4-5.7-14.5c-8.5-21.6-8.2-45.6.8-66.9l3.2-7.5Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

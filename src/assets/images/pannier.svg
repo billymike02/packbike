@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 471.9 543.9">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 471.9 543.9" fill="white">
   <defs>
     <style>
       .cls-1 {
-        fill: #9c9c9c;
+        fill: inherit;
         stroke-width: 27px;
       }
 
@@ -17,6 +17,7 @@
 
       .cls-2 {
         stroke-linejoin: round;
+        fill: black
       }
 
       .cls-2, .cls-3 {
