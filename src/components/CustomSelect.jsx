@@ -7,6 +7,7 @@ const CustomSelect = ({
   placeholderText = "Select an option", // default value for placeholder
   defaultSelection = null, // default to null if no selection is passed
   expanded = false,
+  emptyMessage = "No available options.",
 }) => {
   const [isOpen, setIsOpen] = useState(expanded);
   const [selectedOption, setSelectedOption] = useState(defaultSelection);
@@ -47,7 +48,7 @@ const CustomSelect = ({
               </li>
             ))
           ) : (
-            <li>No available options.</li>
+            <li>{emptyMessage}</li>
           )}
         </ul>
       )}

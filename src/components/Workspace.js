@@ -231,7 +231,13 @@ const Workspace = () => {
     }
   };
 
-  const addVisualContainer = async (type, width, height) => {
+  const addVisualContainer = async (
+    type,
+    width,
+    height,
+    posX = 0,
+    posY = 0
+  ) => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
 
@@ -244,7 +250,7 @@ const Workspace = () => {
           const newContainer = {
             id: unique_id,
             container_id: null, // this will be set when you decide which backend container to use with it
-            position: { x: 0, y: 0 },
+            position: { x: posX, y: posY },
             width: width,
             height: height,
             type: type,
@@ -313,27 +319,83 @@ const Workspace = () => {
   };
 
   const containerTypes = [
-    { name: "pannier", width: "200px", height: "200px" },
-    { name: "roll", width: "100px", height: "100px" },
+    { name: "pannier", width: 200, height: 200 },
+    { name: "roll", width: 100, height: 100 },
   ];
 
   const handleSelectionChange = (selected) => {
     setSelectedBike(selected);
   };
 
+  const handleEvent = (event) => {
+    let clientX, clientY;
+
+    if (event.type === "touchstart") {
+      // Handle touch events
+      const touch = event.touches[0]; // Get the first touch
+      clientX = touch.clientX;
+      clientY = touch.clientY;
+    } else {
+      // Handle mouse events
+      clientX = event.clientX;
+      clientY = event.clientY;
+    }
+
+    const ownerContainer = event.currentTarget.getBoundingClientRect();
+    const container = containerTypes[indexNewContainer];
+    const x =
+      (clientX - ownerContainer.left) / figureScale - container.width * 0.5;
+    const y =
+      (clientY - ownerContainer.top) / figureScale - container.height * 0.5;
+
+    setTrackingClick(false);
+    addVisualContainer(container.name, container.width, container.height, x, y);
+  };
+
+  const [trackingClick, setTrackingClick] = useState(false);
+  const [indexNewContainer, setIndexNewContainer] = useState(null);
+
   return (
     <div className={styles.Workspace}>
       <div
         id="Display"
         style={{
-          backgroundColor: "white",
+          backgroundColor: trackingClick ? "rgb(200 200 200)" : "white",
+          transition: "background-color 0.5s",
           display: "flex",
           flexDirection: "row",
           height: "300vh",
           width: "300vw", // 3x the width of the viewport
           overflow: "auto",
+          cursor: trackingClick ? "copy" : "default",
         }}
+        onClick={trackingClick ? handleEvent : null}
+        onTouchStart={trackingClick ? handleEvent : null}
       >
+        <a
+          style={{
+            color: "black",
+            left: "50vw",
+            top: "100px",
+            transform: "translate(-50%, -50%)",
+            position: "fixed",
+            backgroundColor: "white",
+            fontSize: "1.5rem",
+            boxShadow: "0px 0px 10px rgb(25, 0, 0, 0.7)",
+            zIndex: "10",
+            fontWeight: "400",
+            padding: "0.7rem",
+            margin: "1rem",
+            borderRadius: "0.6rem",
+            transition: "all 0.5s",
+            userSelect: "none",
+            opacity: trackingClick ? "100%" : "0%",
+            pointerEvents: trackingClick ? "all" : "none",
+          }}
+        >
+          Tap to place the container.
+        </a>
+
         <div
           id="Left-Pane"
           style={{
@@ -360,6 +422,7 @@ const Workspace = () => {
                 onSelect={handleSelectionChange}
                 placeholderText={"Select a bicycle"}
                 defaultSelection={selectedBike}
+                emptyMessage="Add a bicycle with the button."
               />
               <IoIosAddCircle
                 size={60}
@@ -404,11 +467,8 @@ const Workspace = () => {
                   }}
                   key={index}
                   onClick={() => {
-                    addVisualContainer(
-                      container.name,
-                      container.width,
-                      container.height
-                    );
+                    setIndexNewContainer(index);
+                    setTrackingClick(true);
                   }}
                 >
                   {container.name}
@@ -505,7 +565,15 @@ const Workspace = () => {
             }
           }}
         ></TbZoomOutFilled>
-        <a style={{ fontSize: "1.5rem" }}>Zoom</a>
+        <a
+          style={{
+            fontSize: "1.5rem",
+            userSelect: "none",
+            pointerEvents: "none",
+          }}
+        >
+          Zoom
+        </a>
         <TbZoomInFilled
           className={styles.zoomButton}
           size={30}

@@ -21,7 +21,7 @@
   display: relative;
   height: 100%;
   width: 100%;
-  margin-left: max(300px, 0px);
+
   transform-origin: top left;
 }
 
@@ -34,6 +34,7 @@
   scale: 1.5;
   user-select: none;
   z-index: -10;
+  margin-left: max(300px, 0px);
 }
 
 .bikeName {

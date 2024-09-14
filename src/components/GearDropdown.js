@@ -114,6 +114,7 @@ const GearModal = ({
             placeholderText={"Select a container"}
             defaultSelection={containerDisplayName}
             onSelect={handleContainerChange}
+            emptyMessage="None. Create a container in the 'Gear' tab."
           />
           {/* CustomSelect for colors */}
           <CustomSelect
@@ -275,6 +276,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   return (
     <>
       <Rnd
+        enableResizing="false"
         default={{
           x: 0,
           y: 0,
