@@ -19,7 +19,6 @@ const CustomSelect = ({
       setSelectedOption(null);
     } else if (defaultSelection != null) {
       setSelectedOption(defaultSelection);
-      console.log("default selection changedewdawda:", defaultSelection);
     }
   }, [defaultSelection]);
 

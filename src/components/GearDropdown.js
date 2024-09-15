@@ -21,6 +21,7 @@ import Roll from "./Bags/Roll";
 import Forkbag from "./Bags/Forkbag";
 import Seatpack from "./Bags/Seatpack";
 import Framebag from "./Bags/Framebag";
+import ModularModal from "./Modal";
 
 const GearModal = ({
   onClose,
@@ -166,11 +167,24 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const { user } = useAuth();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "200px", height: "200px" });
-  const [backendContainer, setBackendContainer] = useState("");
   const [bgColor, setBgColor] = useState("");
   const [containers, setContainers] = useState([]);
   const [isGearModalOpen, setIsGearModalOpen] = useState(false);
   const [bFetchingData, setFetchingData] = useState(true);
+  const [backendContainer, setBackendContainer] = useState(null);
+  const [containerDisplayName, setContainerDisplayName] = useState(null);
+
+  const colors = [
+    { value: "Red", label: "Red" },
+    { value: "Orange", label: "Orange" },
+    { value: "Yellow", label: "Yellow" },
+    { value: "Green", label: "Green" },
+    { value: "Blue", label: "Blue" },
+    { value: "Purple", label: "Purple" },
+    { value: "Brown", label: "Brown" },
+    { value: "Black", label: "Black" },
+    { value: "Grey", label: "Grey" },
+  ];
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -198,6 +212,21 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
 
         setBackendContainer(container?.container_id);
         setBgColor(container?.color);
+
+        // Assuming container_id is the value you are looking for
+        const searchId = container?.container_id; // or wherever you get this value
+
+        // Find the container that matches the searchId
+        const selectedContainer = containersArray.find(
+          (container) => container.id === searchId
+        );
+
+        console.log("searching for", searchId, "in", containersArray);
+
+        if (selectedContainer) {
+          console.log("found: ", selectedContainer.displayName);
+          setContainerDisplayName(selectedContainer.displayName || "");
+        }
 
         const containerWidth = container?.width;
         const containerHeight = container?.height;
@@ -258,6 +287,39 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
     }
   };
 
+  const firestore_ApplyColor = async (newColor) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          await updateDoc(userDocRef, {
+            [`bicycles.${selectedBike}.visualContainers.${id}.color`]: newColor,
+          });
+        }
+      } catch (error) {}
+    }
+  };
+
+  const firestore_ApplyBackendContainer = async (newContainer) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          await updateDoc(userDocRef, {
+            [`bicycles.${selectedBike}.visualContainers.${id}.container_id`]:
+              newContainer,
+          });
+        }
+      } catch (error) {}
+    }
+  };
+
   if (bFetchingData == false) {
     return (
       <>
@@ -267,6 +329,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
           scale={parentScale}
         >
           <div
+            className={styles.clickableSVG}
             style={{
               position: "absolute",
               height: size.height,
@@ -303,20 +366,43 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
         </Draggable>
 
         {isGearModalOpen && (
-          <GearModal
-            onClose={() => {
-              setIsGearModalOpen(false);
-            }}
-            onSubmit={(newContainer, newColor) => {
-              onModalChange(newContainer, newColor);
-              setIsGearModalOpen(false);
-            }}
-            currentBackendContainer={backendContainer}
-            currentColor={bgColor}
-            onDelete={() => {
-              onDelete(id);
-            }}
-          ></GearModal>
+          <ModularModal title="Edit Gear Container">
+            <CustomSelect
+              options={containers.map((container) => ({
+                value: container.id, // Value to be passed back
+                label: container.displayName, // Display name for the select
+              }))}
+              placeholderText={"Select a container"}
+              defaultSelection={containerDisplayName}
+              onSelect={firestore_ApplyBackendContainer}
+              emptyMessage="None. Create a container in the 'Gear' tab."
+            />
+            {/* CustomSelect for colors */}
+            <CustomSelect
+              placeholder={"Select a color"}
+              defaultSelection={bgColor}
+              options={colors}
+              onSelect={firestore_ApplyColor}
+            />
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                flexDirection: "column",
+              }}
+            >
+              <button
+                style={{ backgroundColor: "red" }}
+                onClick={() => {
+                  setIsGearModalOpen(false);
+                  onDelete(id);
+                }}
+              >
+                Delete
+              </button>
+              <button onClick={() => setIsGearModalOpen(false)}>Close</button>
+            </div>
+          </ModularModal>
         )}
       </>
     );
