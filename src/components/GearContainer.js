@@ -142,10 +142,8 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
     }
   }, [user]);
 
-  const handleNameSubmit = () => {
-    if (name !== displayName) {
-      onDisplayNameChange(id, name);
-    }
+  const handleNameSubmit = (newName) => {
+    onDisplayNameChange(id, newName);
   };
 
   const handleAddOrEditItem = async (
@@ -277,9 +275,11 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
           <form>
             <input
               placeholder="Container name"
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                handleNameSubmit(e.target.value);
+              }}
               value={name}
-              onBlur={handleNameSubmit}
               required
             />
           </form>

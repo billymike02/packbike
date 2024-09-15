@@ -511,7 +511,7 @@ const Workspace = () => {
             transform: `scale(${figureScale})`,
             transition: "all 0.2s",
             filter: loading ? "blur(10px)" : "",
-
+            position: "relative",
             height: "100%",
             width: "100%",
             transformOrigin: "top left",

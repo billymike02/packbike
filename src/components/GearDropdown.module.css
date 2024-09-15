@@ -13,7 +13,7 @@
   user-select: none;
   transition: color 0.05s, background-color 0.05s, box-shadow 0.1s;
   overflow: hidden;
-  position: relative;
+  /* position: relative; */
 }
 
 .clickable:hover {
