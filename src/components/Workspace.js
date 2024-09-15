@@ -143,6 +143,10 @@ const Workspace = () => {
   const [containerElements, setContainerElements] = useState([]);
   const [showNewModal, setShowNewModal] = useState(false);
   const [figureScale, setFigureScale] = useState(1);
+  const [trackingClick, setTrackingClick] = useState(false);
+  const [indexNewContainer, setIndexNewContainer] = useState(null);
+  const [bShowingResetModal, setShowResetModal] = useState(false);
+  const [clickBoxes, setClickBoxes] = useState([]);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -331,52 +335,150 @@ const Workspace = () => {
     setSelectedBike(selected);
   };
 
-  const handleEvent = (event) => {
+  const handleVisualClick = (event) => {
+    setTrackingClick(false);
     let clientX, clientY;
 
+    // we need this to move the click coordinates relative to the right pane
+    var bounds = event.target.getBoundingClientRect();
+
     if (event.type === "touchstart") {
-      // Handle touch events
-      const touch = event.touches[0]; // Get the first touch
+      const touch = event.touches[0];
       clientX = touch.clientX;
       clientY = touch.clientY;
     } else {
-      // Handle mouse events
       clientX = event.clientX;
       clientY = event.clientY;
     }
-
-    const ownerContainer = event.currentTarget.getBoundingClientRect();
     const container = containerTypes[indexNewContainer];
-    const x =
-      (clientX - ownerContainer.left) / figureScale - container.width * 0.5;
-    const y =
-      (clientY - ownerContainer.top) / figureScale - container.height * 0.5;
 
-    setTrackingClick(false);
+    const x = (clientX - bounds.left) / figureScale - container.width * 0.5;
+    const y = (clientY - bounds.top) / figureScale - container.height * 0.5;
+
     addVisualContainer(container.name, container.width, container.height, x, y);
   };
-
-  const [trackingClick, setTrackingClick] = useState(false);
-  const [indexNewContainer, setIndexNewContainer] = useState(null);
-
-  const [bShowingResetModal, setShowResetModal] = useState(false);
 
   return (
     <div className={styles.Workspace}>
       <div
-        id="Display"
+        id="Left-Pane"
         style={{
+          zIndex: 10,
+          height: "100%",
+          borderRight: "5px solid black",
+          minWidth: "200px",
+          width: "350px",
+          backgroundColor: "white",
+          overflow: "scroll",
+        }}
+      >
+        <div className={styles.paneContainer}>
+          <h2 style={{ marginBlockStart: "0rem", width: "100%" }}>
+            Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>
+          </h2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <CustomSelect
+              options={bicycles}
+              onSelect={handleSelectionChange}
+              placeholderText={"Select a bicycle"}
+              defaultSelection={selectedBike}
+              emptyMessage="Add a bicycle with the button."
+            />
+            <IoIosAddCircle
+              size={60}
+              style={{
+                color: "black",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowNewModal(true)}
+              className="button-icon"
+            ></IoIosAddCircle>
+          </div>
+          {selectedBike && (
+            <button
+              style={{
+                backgroundColor: "black",
+                textTransform: "uppercase",
+              }}
+              onClick={handleBicycleDelete}
+            >
+              Delete Bike
+            </button>
+          )}
+        </div>
+
+        <div
+          className={styles.paneContainer}
+          style={{
+            pointerEvents: selectedBike ? "auto" : "none",
+            transition: "all 0.2s",
+            opacity: loading ? "0%" : "100%",
+            filter: loading ? "blur(6px)" : "",
+          }}
+        >
+          <h2>
+            Create <IoCreateSharp></IoCreateSharp>
+          </h2>
+          <div className={styles.containerList}>
+            {containerTypes.map((container, index) => (
+              <button
+                style={{
+                  textTransform: "capitalize",
+                }}
+                key={index}
+                onClick={() => {
+                  setIndexNewContainer(index);
+                  setTrackingClick(true);
+                }}
+              >
+                {container.name}
+              </button>
+            ))}
+          </div>
+          <h2>
+            Info <FaCircleInfo></FaCircleInfo>
+          </h2>
+          <BikeInfo bikeName={selectedBike}></BikeInfo>
+          <h2>
+            Tools <FaTools></FaTools>
+          </h2>
+          <button
+            style={{
+              backgroundColor: "red",
+              textTransform: "uppercase",
+              fontWeight: "500",
+              color: "white",
+            }}
+            onClick={() => {
+              setShowResetModal(true);
+            }}
+          >
+            Reset
+            <RxReset></RxReset>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="Right-Pane"
+        style={{
+          height: "100%",
+          width: "100%",
+          backgroundColor: "white",
           backgroundColor: trackingClick ? "rgb(200 200 200)" : "white",
           transition: "background-color 0.5s",
-          display: "flex",
-          flexDirection: "row",
-          height: "300vh",
-          width: "300vw", // 3x the width of the viewport
-          overflow: "auto",
           cursor: trackingClick ? "copy" : "default",
+          display: "relative",
         }}
-        onClick={trackingClick ? handleEvent : null}
-        onTouchStart={trackingClick ? handleEvent : null}
+        onClick={trackingClick ? handleVisualClick : null}
+        onTouchStart={trackingClick ? handleVisualClick : null}
       >
         <a
           style={{
@@ -403,113 +505,16 @@ const Workspace = () => {
         </a>
 
         <div
-          id="Left-Pane"
-          style={{
-            zIndex: 10,
-            height: "100vh",
-            overflowY: "scroll",
-            position: "fixed",
-          }}
-        >
-          <div className={styles.paneContainer}>
-            <h2 style={{ marginBlockStart: "0rem", width: "100%" }}>
-              Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>
-            </h2>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              <CustomSelect
-                options={bicycles}
-                onSelect={handleSelectionChange}
-                placeholderText={"Select a bicycle"}
-                defaultSelection={selectedBike}
-                emptyMessage="Add a bicycle with the button."
-              />
-              <IoIosAddCircle
-                size={60}
-                style={{
-                  color: "black",
-                  cursor: "pointer",
-                }}
-                onClick={() => setShowNewModal(true)}
-                className="button-icon"
-              ></IoIosAddCircle>
-            </div>
-            {selectedBike && (
-              <button
-                style={{
-                  backgroundColor: "black",
-                  textTransform: "uppercase",
-                }}
-                onClick={handleBicycleDelete}
-              >
-                Delete Bike
-              </button>
-            )}
-          </div>
-
-          <div
-            className={styles.paneContainer}
-            style={{
-              pointerEvents: selectedBike ? "auto" : "none",
-              transition: "all 0.2s",
-              opacity: loading ? "0%" : "100%",
-              filter: loading ? "blur(6px)" : "",
-            }}
-          >
-            <h2 style={{ marginTop: "0.0rem" }}>
-              Create <IoCreateSharp></IoCreateSharp>
-            </h2>
-            <div className={styles.containerList}>
-              {containerTypes.map((container, index) => (
-                <button
-                  style={{
-                    textTransform: "capitalize",
-                  }}
-                  key={index}
-                  onClick={() => {
-                    setIndexNewContainer(index);
-                    setTrackingClick(true);
-                  }}
-                >
-                  {container.name}
-                </button>
-              ))}
-            </div>
-            <h2>
-              Info <FaCircleInfo></FaCircleInfo>
-            </h2>
-            <BikeInfo bikeName={selectedBike}></BikeInfo>
-            <h2>
-              Tools <FaTools></FaTools>
-            </h2>
-            <button
-              style={{
-                backgroundColor: "red",
-                textTransform: "uppercase",
-                fontWeight: "500",
-                color: "white",
-              }}
-              onClick={() => {
-                setShowResetModal(true);
-              }}
-            >
-              Reset
-              <RxReset></RxReset>
-            </button>
-          </div>
-        </div>
-        <div
-          className={styles.figure}
+          className="workspace-figure"
+          id="Figure"
           style={{
             transform: `scale(${figureScale})`,
             transition: "all 0.2s",
             filter: loading ? "blur(10px)" : "",
+
+            height: "100%",
+            width: "100%",
+            transformOrigin: "top left",
           }}
         >
           <img
@@ -532,26 +537,27 @@ const Workspace = () => {
             ))}
           </div>
         </div>
-
-        {showNewModal && (
-          <Modal
-            onSubmit={handleAddBicycle}
-            onClose={() => {
-              setShowNewModal(false);
-            }}
-          ></Modal>
-        )}
-
-        {bShowingResetModal && (
-          <ModularModal
-            title="Confirm Reset"
-            onClose={() => setShowResetModal(false)}
-            onSubmit={() => handleVisualReset()}
-          ></ModularModal>
-        )}
       </div>
 
+      {showNewModal && (
+        <Modal
+          onSubmit={handleAddBicycle}
+          onClose={() => {
+            setShowNewModal(false);
+          }}
+        ></Modal>
+      )}
+
+      {bShowingResetModal && (
+        <ModularModal
+          title="Confirm Reset"
+          onClose={() => setShowResetModal(false)}
+          onSubmit={() => handleVisualReset()}
+        ></ModularModal>
+      )}
+
       <div
+        id="zoom-buttons"
         style={{
           position: "fixed",
           bottom: "2vh",
@@ -561,12 +567,11 @@ const Workspace = () => {
           width: "fit-content",
           padding: "0.5rem",
           display: "flex",
-
           alignItems: "center",
           gap: "30px",
-
           color: "white",
           userSelect: "none",
+          WebkitUserSelect: "none",
         }}
       >
         <TbZoomOutFilled
@@ -576,7 +581,7 @@ const Workspace = () => {
           onClick={() => {
             const newScale = figureScale * 0.9;
 
-            if (newScale > 1) {
+            if (newScale > 0.4) {
               setFigureScale(newScale);
             }
           }}

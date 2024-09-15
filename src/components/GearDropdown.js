@@ -9,7 +9,7 @@ import modalStyles from "./ModalComponent.module.css";
 
 // firestore stuffs
 import { firestore } from "./firebase";
-import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
+import { doc } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import CustomSelect from "./CustomSelect";
@@ -169,7 +169,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const [bgColor, setBgColor] = useState("");
   const [containers, setContainers] = useState([]);
   const [isGearModalOpen, setIsGearModalOpen] = useState(false);
-  const [currentDisplayName, setCurrentDisplayName] = useState("");
+  const [bFetchingData, setFetchingData] = useState(true);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -206,6 +206,10 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
 
         setSize({ width: containerWidth, height: containerHeight });
         setPosition({ x: containerPosX, y: containerPosY });
+
+        console.log("creating vis container @", containerPosX, containerPosY);
+
+        setFetchingData(false);
       } else {
         console.log("No such document!");
       }
@@ -214,32 +218,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
     // Clean up subscription on component unmount
     return () => unsubscribe();
   }, [user, selectedBike, id]);
-
-  const onResizeStop = async (e, direction, ref, delta, position) => {
-    const newWidth = ref.style.width;
-    const newHeight = ref.style.height;
-
-    setSize({
-      width: parseInt(newWidth),
-      height: parseInt(newHeight),
-    });
-
-    if (user) {
-      const userDocRef = doc(firestore, "users", user.uid);
-
-      try {
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          await updateDoc(userDocRef, {
-            [`bicycles.${selectedBike}.visualContainers.${id}.size.width`]:
-              newWidth,
-            [`bicycles.${selectedBike}.visualContainers.${id}.size.height`]:
-              newHeight,
-          });
-        }
-      } catch (error) {}
-    }
-  };
 
   const onDragStop = async (e, d) => {
     const { x, y } = d;
@@ -279,67 +257,64 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
     }
   };
 
-  return (
-    <>
-      <Rnd
-        enableResizing="false"
-        default={{
-          x: 0,
-          y: 0,
-        }}
-        scale={parentScale}
-        style={{
-          display: "flex",
-        }}
-        onResizeStop={onResizeStop}
-        onDragStop={onDragStop}
-        position={position}
-        size={size}
-      >
-        {type == "pannier" ? (
-          <Pannier fillColor={bgColor} />
-        ) : type == "roll" ? (
-          <Roll fillColor={bgColor} />
-        ) : type == "forkbag" ? (
-          <Forkbag fillColor={bgColor} />
-        ) : type == "seatpack" ? (
-          <Seatpack fillColor={bgColor} />
-        ) : type == "framebag" ? (
-          <Framebag fillColor={bgColor} />
-        ) : null}
-
-        <div className={styles.clickableOverlay}>
-          <FaPencil
-            size={40}
-            className="button-icon"
-            style={{ cursor: "pointer", zIndex: "15" }}
-            onClick={() => {
-              setIsGearModalOpen(true);
-            }}
-            onTouchStartCapture={() => {
-              setIsGearModalOpen(true);
-            }}
-          />
+  if (bFetchingData == false) {
+    return (
+      <>
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            top: position.y,
+            left: position.x,
+            height: size.height,
+            width: size.width,
+          }}
+        >
+          {type == "pannier" ? (
+            <Pannier fillColor={bgColor} />
+          ) : type == "roll" ? (
+            <Roll fillColor={bgColor} />
+          ) : type == "forkbag" ? (
+            <Forkbag fillColor={bgColor} />
+          ) : type == "seatpack" ? (
+            <Seatpack fillColor={bgColor} />
+          ) : type == "framebag" ? (
+            <Framebag fillColor={bgColor} />
+          ) : null}
+          <div className={styles.clickableOverlay}>
+            <FaPencil
+              size={40}
+              className="button-icon"
+              style={{ cursor: "pointer", zIndex: "15" }}
+              onClick={() => {
+                setIsGearModalOpen(true);
+              }}
+              onTouchStartCapture={() => {
+                setIsGearModalOpen(true);
+              }}
+            />
+          </div>
         </div>
-      </Rnd>
-      {isGearModalOpen && (
-        <GearModal
-          onClose={() => {
-            setIsGearModalOpen(false);
-          }}
-          onSubmit={(newContainer, newColor) => {
-            onModalChange(newContainer, newColor);
-            setIsGearModalOpen(false);
-          }}
-          currentBackendContainer={backendContainer}
-          currentColor={bgColor}
-          onDelete={() => {
-            onDelete(id);
-          }}
-        ></GearModal>
-      )}
-    </>
-  );
+
+        {isGearModalOpen && (
+          <GearModal
+            onClose={() => {
+              setIsGearModalOpen(false);
+            }}
+            onSubmit={(newContainer, newColor) => {
+              onModalChange(newContainer, newColor);
+              setIsGearModalOpen(false);
+            }}
+            currentBackendContainer={backendContainer}
+            currentColor={bgColor}
+            onDelete={() => {
+              onDelete(id);
+            }}
+          ></GearModal>
+        )}
+      </>
+    );
+  }
 };
 
 export default GearDropdown;
