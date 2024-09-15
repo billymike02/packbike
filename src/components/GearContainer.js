@@ -252,40 +252,45 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
       <div className={styles.gearContainer}>
         {showDelete && (
           <div className={styles.deleteOverlay}>
-            Are you sure?
-            <button
-              style={{ color: "black" }}
-              onClick={() => {
-                setShowDelete(false);
-              }}
-            >
-              <RxCross2 className={styles.deleteIcons}></RxCross2>
-            </button>
-            <button
-              style={{ color: "black" }}
-              onClick={() => {
-                onRemove();
-              }}
-            >
-              <RxCheck className={styles.deleteIcons}></RxCheck>
-            </button>
+            <a>Are you sure?</a>
+            <RxCross2
+              className="button-icon"
+              onClick={() => setShowDelete(false)}
+              size={35}
+            ></RxCross2>
+            <RxCheck
+              onClick={onRemove}
+              className="button-icon"
+              size={40}
+            ></RxCheck>
           </div>
         )}
-        <div className={styles.gearContainerHeader}>
-          <form>
-            <input
-              placeholder="Container name"
-              onChange={(e) => {
-                setName(e.target.value);
-                handleNameSubmit(e.target.value);
-              }}
-              value={name}
-              onSubmit={null}
-              required
-            />
-          </form>
+        <div
+          style={{
+            backgroundColor: "black",
+            display: "flex",
+            color: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "1rem",
+            gap: "8px",
+          }}
+        >
+          <input
+            style={{ marginBottom: "0rem" }}
+            placeholder="Container name"
+            onChange={(e) => {
+              setName(e.target.value);
+              handleNameSubmit(e.target.value);
+            }}
+            value={name}
+            onSubmit={null}
+            required
+          />
+
           <MdDelete
-            className={styles.deleteButton}
+            className="button-icon"
+            size={50}
             onClick={() => {
               setShowDelete(true);
             }}
