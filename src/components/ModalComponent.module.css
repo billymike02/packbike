@@ -26,18 +26,12 @@
   padding: 1rem;
 }
 
-
-
-.modalContent:hover {
-  scale: 1.02;
-}
-
 .modalBody {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-
+  position: relative;
   flex-direction: column;
   gap: 8px;
   overflow: visible;

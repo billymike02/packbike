@@ -280,6 +280,7 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
                 handleNameSubmit(e.target.value);
               }}
               value={name}
+              onSubmit={null}
               required
             />
           </form>

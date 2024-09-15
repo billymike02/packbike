@@ -6,6 +6,7 @@ import { useAuth } from "../App";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import modalStyles from "./ModalComponent.module.css";
+import Draggable from "react-draggable";
 
 // firestore stuffs
 import { firestore } from "./firebase";
@@ -260,41 +261,46 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   if (bFetchingData == false) {
     return (
       <>
-        <div
-          style={{
-            position: "absolute",
-            display: "flex",
-            top: position.y,
-            left: position.x,
-            height: size.height,
-            width: size.width,
-          }}
+        <Draggable
+          position={{ x: position.x, y: position.y }}
+          onStop={onDragStop}
+          scale={parentScale}
         >
-          {type == "pannier" ? (
-            <Pannier fillColor={bgColor} />
-          ) : type == "roll" ? (
-            <Roll fillColor={bgColor} />
-          ) : type == "forkbag" ? (
-            <Forkbag fillColor={bgColor} />
-          ) : type == "seatpack" ? (
-            <Seatpack fillColor={bgColor} />
-          ) : type == "framebag" ? (
-            <Framebag fillColor={bgColor} />
-          ) : null}
-          <div className={styles.clickableOverlay}>
-            <FaPencil
-              size={40}
-              className="button-icon"
-              style={{ cursor: "pointer", zIndex: "15" }}
-              onClick={() => {
-                setIsGearModalOpen(true);
-              }}
-              onTouchStartCapture={() => {
-                setIsGearModalOpen(true);
-              }}
-            />
+          <div
+            style={{
+              position: "absolute",
+              height: size.height,
+              width: size.width,
+            }}
+          >
+            {type === "pannier" ? (
+              <Pannier fillColor={bgColor} />
+            ) : type === "roll" ? (
+              <Roll fillColor={bgColor} />
+            ) : type === "forkbag" ? (
+              <Forkbag fillColor={bgColor} />
+            ) : type === "seatpack" ? (
+              <Seatpack fillColor={bgColor} />
+            ) : type === "framebag" ? (
+              <Framebag fillColor={bgColor} />
+            ) : null}
+            <div className={styles.clickableOverlay}>
+              <FaPencil
+                size={40}
+                style={{
+                  cursor: "pointer",
+                  zIndex: "15",
+                }}
+                onClick={() => {
+                  setIsGearModalOpen(true);
+                }}
+                onTouchStartCapture={() => {
+                  setIsGearModalOpen(true);
+                }}
+              />
+            </div>
           </div>
-        </div>
+        </Draggable>
 
         {isGearModalOpen && (
           <GearModal

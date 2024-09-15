@@ -365,11 +365,12 @@ const Workspace = () => {
         style={{
           zIndex: 10,
           height: "100%",
+
           borderRight: "5px solid black",
           minWidth: "200px",
           width: "350px",
           backgroundColor: "white",
-          overflow: "scroll",
+          overflow: "auto",
         }}
       >
         <div className={styles.paneContainer}>
@@ -476,6 +477,7 @@ const Workspace = () => {
           transition: "background-color 0.5s",
           cursor: trackingClick ? "copy" : "default",
           display: "relative",
+          overflow: "auto",
         }}
         onClick={trackingClick ? handleVisualClick : null}
         onTouchStart={trackingClick ? handleVisualClick : null}
@@ -553,9 +555,22 @@ const Workspace = () => {
       {bShowingResetModal && (
         <ModularModal
           title="Confirm Reset"
-          onClose={() => setShowResetModal(false)}
-          onSubmit={() => handleVisualReset()}
-        ></ModularModal>
+          subtitle="This will remove all gear on your bike."
+        >
+          <div style={{ display: "flex", width: "100%", gap: "8px" }}>
+            {" "}
+            <button onClick={() => setShowResetModal(false)}>Cancel</button>
+            <button
+              style={{ backgroundColor: "red" }}
+              onClick={() => {
+                setShowResetModal(false);
+                handleVisualReset();
+              }}
+            >
+              Continue
+            </button>
+          </div>
+        </ModularModal>
       )}
 
       <div
@@ -583,7 +598,7 @@ const Workspace = () => {
           onClick={() => {
             const newScale = figureScale * 0.9;
 
-            if (newScale > 0.4) {
+            if (newScale > 0.3) {
               setFigureScale(newScale);
             }
           }}
@@ -604,7 +619,7 @@ const Workspace = () => {
           onClick={() => {
             const newScale = figureScale * 1.1;
 
-            if (newScale < 2.3) {
+            if (newScale < 3) {
               setFigureScale(newScale);
             }
           }}
