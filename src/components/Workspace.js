@@ -259,7 +259,7 @@ const Workspace = () => {
             width: width,
             height: height,
             type: type,
-            color: "Grey",
+            color: "rgb(134	142	149)",
           };
 
           await updateDoc(userDocRef, {
