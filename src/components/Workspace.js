@@ -13,7 +13,7 @@ import { doc, deleteField } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
-import Modal from "./ModalComponent";
+
 import { RxReset } from "react-icons/rx";
 import { IoCreateSharp } from "react-icons/io5";
 import { FaCircleInfo } from "react-icons/fa6";
@@ -544,12 +544,27 @@ const Workspace = () => {
       </div>
 
       {showNewModal && (
-        <Modal
-          onSubmit={handleAddBicycle}
-          onClose={() => {
-            setShowNewModal(false);
-          }}
-        ></Modal>
+        <ModularModal title="Add Bicycle">
+          <input
+            id="bicycleNameInput"
+            placeholder="Name for your bicycle"
+          ></input>
+          <div style={{ display: "flex", width: "100%", gap: "8px" }}>
+            <button onClick={() => setShowNewModal(false)}>Cancel</button>
+            <button
+              onClick={() => {
+                const bicycleName =
+                  document.getElementById("bicycleNameInput").value;
+
+                handleAddBicycle(bicycleName);
+                setShowNewModal(false);
+              }}
+              style={{ backgroundColor: "rgb(52	199	89)" }}
+            >
+              Add Bicycle
+            </button>
+          </div>
+        </ModularModal>
       )}
 
       {bShowingResetModal && (

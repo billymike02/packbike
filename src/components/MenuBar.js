@@ -7,7 +7,7 @@ import { firestore as db } from "./firebase";
 import { BsBicycle } from "react-icons/bs";
 import { PiShoppingBagOpenFill } from "react-icons/pi";
 import { RiAccountCircleFill } from "react-icons/ri";
-import Modal from "./ModalComponent";
+
 import { IoArrowBack } from "react-icons/io5";
 
 const MenuBar = ({ setBicycleSelection }) => {

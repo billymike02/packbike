@@ -19,8 +19,8 @@ const ModularModal = ({ title = "Untitled Modal", subtitle, children }) => {
       style={animatedStyles}
     >
       <div className={styles.modalContent}>
-        <h2 style={{ marginBottom: "0.5rem" }}>{title}</h2>
-        {subtitle && <h3 style={{ marginTop: "0.5rem" }}>{subtitle}</h3>}
+        <h2>{title}</h2>
+        {subtitle && <h3 style={{ marginTop: "0.0rem" }}>{subtitle}</h3>}
         <div className={styles.modalBody}>{children}</div>
       </div>
     </animated.div>,

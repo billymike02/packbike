@@ -11,7 +11,7 @@ import MenuBar from "./components/MenuBar";
 import Workspace from "./components/Workspace";
 import Profile from "./components/Profile";
 import GearManager from "./components/GearManager";
-import Modal from "./components/ModalComponent";
+
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import { BrowserView, MobileView } from "react-device-detect";
 import PWAPrompt from "react-ios-pwa-prompt";
