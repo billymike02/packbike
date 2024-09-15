@@ -1,29 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./ModalComponent.module.css";
 import { animated, useSpring } from "@react-spring/web";
 
-const ModularModal = ({ title = "Untitled Modal", subtitle, children }) => {
+const ModularModal = ({
+  title = "Untitled Modal",
+  subtitle,
+  bShow,
+  children,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); // Controls visibility
+
+  useEffect(() => {
+    if (bShow) {
+      setIsVisible(true); // Make it visible first
+      setIsOpen(true); // Then trigger animation to show
+    } else {
+      setIsOpen(false); // Trigger animation to hide
+    }
+  }, [bShow]);
+
   const animatedStyles = useSpring({
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
+    opacity: isOpen ? 1 : 0,
+    config: { duration: 200 },
+    onRest: () => {
+      if (!isOpen) {
+        setIsVisible(false); // Set visibility to hidden after animation
+      }
     },
   });
 
   return createPortal(
-    <animated.div
-      className={`${styles.modalOverlay} ${styles.blur}`}
-      style={animatedStyles}
-    >
-      <div className={styles.modalContent}>
-        <h2>{title}</h2>
-        {subtitle && <h3 style={{ marginTop: "0.0rem" }}>{subtitle}</h3>}
-        <div className={styles.modalBody}>{children}</div>
-      </div>
-    </animated.div>,
+    isVisible && ( // Only render the modal if it's visible
+      <animated.div
+        className={`${styles.modalOverlay} ${styles.blur}`}
+        style={animatedStyles}
+      >
+        <div className={styles.modalContent}>
+          <h2>{title}</h2>
+          {subtitle && <h3 style={{ marginTop: "0.0rem" }}>{subtitle}</h3>}
+          <div className={styles.modalBody}>{children}</div>
+        </div>
+      </animated.div>
+    ),
     document.getElementById("modal-root") // Make sure to add a div with id 'modal-root' in your index.html
   );
 };

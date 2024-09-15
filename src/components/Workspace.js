@@ -543,50 +543,53 @@ const Workspace = () => {
         </div>
       </div>
 
-      {showNewModal && (
-        <ModularModal title="Add Bicycle">
-          <input
-            id="bicycleNameInput"
-            placeholder="Name for your bicycle"
-          ></input>
-          <div style={{ display: "flex", width: "100%", gap: "8px" }}>
-            <button onClick={() => setShowNewModal(false)}>Cancel</button>
-            <button
-              onClick={() => {
-                const bicycleName =
-                  document.getElementById("bicycleNameInput").value;
+      <ModularModal title="Add Bicycle" bShow={showNewModal}>
+        <input
+          id="bicycleNameInput"
+          placeholder="Name for your bicycle"
+        ></input>
+        <div style={{ display: "flex", width: "100%", gap: "8px" }}>
+          <button
+            onClick={() => {
+              setShowNewModal(false);
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => {
+              const bicycleName =
+                document.getElementById("bicycleNameInput").value;
 
-                handleAddBicycle(bicycleName);
-                setShowNewModal(false);
-              }}
-              style={{ backgroundColor: "rgb(52	199	89)" }}
-            >
-              Add Bicycle
-            </button>
-          </div>
-        </ModularModal>
-      )}
+              handleAddBicycle(bicycleName);
+              setShowNewModal(false);
+            }}
+            style={{ backgroundColor: "rgb(52	199	89)" }}
+          >
+            Add Bicycle
+          </button>
+        </div>
+      </ModularModal>
 
-      {bShowingResetModal && (
-        <ModularModal
-          title="Confirm Reset"
-          subtitle="This will remove all gear on your bike."
-        >
-          <div style={{ display: "flex", width: "100%", gap: "8px" }}>
-            {" "}
-            <button onClick={() => setShowResetModal(false)}>Cancel</button>
-            <button
-              style={{ backgroundColor: "red" }}
-              onClick={() => {
-                setShowResetModal(false);
-                handleVisualReset();
-              }}
-            >
-              Continue
-            </button>
-          </div>
-        </ModularModal>
-      )}
+      <ModularModal
+        title="Confirm Reset"
+        subtitle="This will remove all gear on your bike."
+        bShow={bShowingResetModal}
+      >
+        <div style={{ display: "flex", width: "100%", gap: "8px" }}>
+          {" "}
+          <button onClick={() => setShowResetModal(false)}>Cancel</button>
+          <button
+            style={{ backgroundColor: "red" }}
+            onClick={() => {
+              setShowResetModal(false);
+              handleVisualReset();
+            }}
+          >
+            Continue
+          </button>
+        </div>
+      </ModularModal>
 
       <div
         id="zoom-buttons"

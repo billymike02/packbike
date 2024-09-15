@@ -365,45 +365,43 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
           </div>
         </Draggable>
 
-        {isGearModalOpen && (
-          <ModularModal title="Edit Gear Container">
-            <CustomSelect
-              options={containers.map((container) => ({
-                value: container.id, // Value to be passed back
-                label: container.displayName, // Display name for the select
-              }))}
-              placeholderText={"Select a container"}
-              defaultSelection={containerDisplayName}
-              onSelect={firestore_ApplyBackendContainer}
-              emptyMessage="None. Create a container in the 'Gear' tab."
-            />
-            {/* CustomSelect for colors */}
-            <CustomSelect
-              placeholder={"Select a color"}
-              defaultSelection={bgColor}
-              options={colors}
-              onSelect={firestore_ApplyColor}
-            />
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                flexDirection: "column",
+        <ModularModal title="Edit Gear Container" bShow={isGearModalOpen}>
+          <CustomSelect
+            options={containers.map((container) => ({
+              value: container.id, // Value to be passed back
+              label: container.displayName, // Display name for the select
+            }))}
+            placeholderText={"Select a container"}
+            defaultSelection={containerDisplayName}
+            onSelect={firestore_ApplyBackendContainer}
+            emptyMessage="None. Create a container in the 'Gear' tab."
+          />
+          {/* CustomSelect for colors */}
+          <CustomSelect
+            placeholder={"Select a color"}
+            defaultSelection={bgColor}
+            options={colors}
+            onSelect={firestore_ApplyColor}
+          />
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              flexDirection: "column",
+            }}
+          >
+            <button
+              style={{ backgroundColor: "red" }}
+              onClick={() => {
+                setIsGearModalOpen(false);
+                onDelete(id);
               }}
             >
-              <button
-                style={{ backgroundColor: "red" }}
-                onClick={() => {
-                  setIsGearModalOpen(false);
-                  onDelete(id);
-                }}
-              >
-                Delete
-              </button>
-              <button onClick={() => setIsGearModalOpen(false)}>Close</button>
-            </div>
-          </ModularModal>
-        )}
+              Delete
+            </button>
+            <button onClick={() => setIsGearModalOpen(false)}>Close</button>
+          </div>
+        </ModularModal>
       </>
     );
   }
