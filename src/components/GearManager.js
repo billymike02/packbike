@@ -35,6 +35,14 @@ const GearManager = () => {
           })
         );
 
+        // Sort the array by container displayName
+        containersArray.sort((a, b) => {
+          // Assuming displayName is a string and you want a case-insensitive sort
+          return a.displayName.localeCompare(b.displayName, undefined, {
+            sensitivity: "base",
+          });
+        });
+
         console.log(containersArray);
         setContainers(containersArray); // Set the array in state
       } else {
