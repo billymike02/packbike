@@ -71,7 +71,7 @@ const BikeMetrics = ({ bikeName }) => {
 
     // Clean up subscription on component unmount
     return () => unsubscribe();
-  }); // Depend on `user`, so it re-subscribes if `user` changes
+  }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
 
   const calculateMetrics = async (containers) => {
     if (user) {
@@ -344,8 +344,18 @@ const Workspace = () => {
     setTrackingClick(false);
     let clientX, clientY;
 
-    // we need this to move the click coordinates relative to the right pane
-    var bounds = event.target.getBoundingClientRect();
+    // Replace 'specificDivId' with the id or class of the div you want to use
+    const specificDiv =
+      document.getElementById("Figure") ||
+      document.querySelector(".workspace-figure");
+
+    if (!specificDiv) {
+      console.error("Specific div not found");
+      return;
+    }
+
+    // Get the bounds of the specific div
+    const bounds = specificDiv.getBoundingClientRect();
 
     if (event.type === "touchstart") {
       const touch = event.touches[0];
@@ -357,6 +367,7 @@ const Workspace = () => {
     }
     const container = containerTypes[indexNewContainer];
 
+    // Calculate x and y coordinates relative to the specific div
     const x = (clientX - bounds.left) / figureScale - container.width * 0.5;
     const y = (clientY - bounds.top) / figureScale - container.height * 0.5;
 
