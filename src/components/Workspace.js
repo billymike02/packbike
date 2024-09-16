@@ -146,7 +146,7 @@ const Workspace = () => {
   const [trackingClick, setTrackingClick] = useState(false);
   const [indexNewContainer, setIndexNewContainer] = useState(null);
   const [bShowingResetModal, setShowResetModal] = useState(false);
-  const [clickBoxes, setClickBoxes] = useState([]);
+  const [bShowingRemoveBikeModal, setShowRemoveBikeModal] = useState(false);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -405,10 +405,12 @@ const Workspace = () => {
           {selectedBike && (
             <button
               style={{
-                backgroundColor: "black",
+                backgroundColor: "red",
                 textTransform: "uppercase",
               }}
-              onClick={handleBicycleDelete}
+              onClick={() => {
+                setShowRemoveBikeModal(true);
+              }}
             >
               Delete Bike
             </button>
@@ -584,6 +586,26 @@ const Workspace = () => {
             onClick={() => {
               setShowResetModal(false);
               handleVisualReset();
+            }}
+          >
+            Continue
+          </button>
+        </div>
+      </ModularModal>
+
+      <ModularModal
+        title="Are you sure?"
+        subtitle="This will remove your bike from your account."
+        bShow={bShowingRemoveBikeModal}
+      >
+        <div style={{ display: "flex", width: "100%", gap: "8px" }}>
+          {" "}
+          <button onClick={() => setShowRemoveBikeModal(false)}>Cancel</button>
+          <button
+            style={{ backgroundColor: "red" }}
+            onClick={() => {
+              setShowRemoveBikeModal(false);
+              handleBicycleDelete();
             }}
           >
             Continue
