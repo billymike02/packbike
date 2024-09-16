@@ -22,14 +22,16 @@ import CustomSelect from "./CustomSelect";
 
 import { AiFillFunnelPlot } from "react-icons/ai";
 import { TbZoomInFilled, TbZoomOutFilled } from "react-icons/tb";
+import { MdDelete } from "react-icons/md";
 import ModularModal from "./Modal";
 
 // modal that shows bike info (gear weight, etc.)
-const BikeInfo = ({ bikeName }) => {
+const BikeMetrics = ({ bikeName }) => {
   const { user } = useAuth();
   const [containersUsed, setContainersUsed] = useState(null);
   const [gearWeight, setGearWeight] = useState("0");
   const [gearVolume, setGearVolume] = useState("0");
+  const [units, setUnits] = useOutletContext();
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -69,7 +71,7 @@ const BikeInfo = ({ bikeName }) => {
 
     // Clean up subscription on component unmount
     return () => unsubscribe();
-  }, [user]); // Depend on `user`, so it re-subscribes if `user` changes
+  }); // Depend on `user`, so it re-subscribes if `user` changes
 
   const calculateMetrics = async (containers) => {
     if (user) {
@@ -128,7 +130,10 @@ const BikeInfo = ({ bikeName }) => {
   return (
     <div>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <a>Weight: {gearWeight}lbs.</a>
+        <a>
+          Weight: {gearWeight}
+          {units}
+        </a>
         <a>Volume: {gearVolume}L</a>
       </div>
     </div>
@@ -402,19 +407,6 @@ const Workspace = () => {
               className="button-icon"
             ></IoIosAddCircle>
           </div>
-          {selectedBike && (
-            <button
-              style={{
-                backgroundColor: "red",
-                textTransform: "uppercase",
-              }}
-              onClick={() => {
-                setShowRemoveBikeModal(true);
-              }}
-            >
-              Delete Bike
-            </button>
-          )}
         </div>
 
         <div
@@ -448,13 +440,13 @@ const Workspace = () => {
           <h2>
             Info <FaCircleInfo></FaCircleInfo>
           </h2>
-          <BikeInfo bikeName={selectedBike}></BikeInfo>
+          <BikeMetrics bikeName={selectedBike}></BikeMetrics>
           <h2>
             Tools <FaTools></FaTools>
           </h2>
           <button
             style={{
-              backgroundColor: "red",
+              backgroundColor: "#007FFF",
               textTransform: "uppercase",
               fontWeight: "500",
               color: "white",
@@ -464,8 +456,23 @@ const Workspace = () => {
             }}
           >
             Reset
-            <RxReset></RxReset>
+            <RxReset size={20}></RxReset>
           </button>
+
+          {selectedBike && (
+            <button
+              style={{
+                backgroundColor: "red",
+                textTransform: "uppercase",
+              }}
+              onClick={() => {
+                setShowRemoveBikeModal(true);
+              }}
+            >
+              Delete Bike
+              <MdDelete size={25} />
+            </button>
+          )}
         </div>
       </div>
 

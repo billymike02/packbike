@@ -15,6 +15,8 @@ import { firestore } from "./firebase";
 import { arrayUnion, doc, arrayRemove } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
+import { IoAddCircle } from "react-icons/io5";
+import { useOutletContext } from "react-router-dom";
 
 const Modal = ({
   onClose,
@@ -29,6 +31,8 @@ const Modal = ({
   const [itemName, setItemName] = useState(prevName || "");
   const [itemWeight, setItemWeight] = useState(prevWeight || "");
   const [itemVolume, setItemVolume] = useState(prevVolume || "");
+
+  const [units, setUnits] = useOutletContext();
 
   useEffect(() => {
     setItemName(prevName || "");
@@ -75,14 +79,14 @@ const Modal = ({
             type="number"
             value={itemWeight}
             onChange={(e) => setItemWeight(e.target.value)}
-            placeholder="Enter item weight"
+            placeholder={`Enter item weight (${units})`}
             step="any"
           />
           <input
             type="number"
             value={itemVolume}
             onChange={(e) => setItemVolume(e.target.value)}
-            placeholder="Enter item volume"
+            placeholder="Enter item volume (L)"
             step="any"
           />
         </div>
@@ -323,15 +327,14 @@ const GearContainer = ({ id, displayName, onRemove, onDisplayNameChange }) => {
               )
             )}
           </ul>
-
-          <div
-            className={styles.addButton}
+          <IoAddCircle
+            className="button-icon"
+            size={50}
+            style={{ paddingBottom: "5px" }}
             onClick={() => {
               setShowAddItemModal(true);
             }}
-          >
-            <IoIosAdd />
-          </div>
+          />
         </div>
       </div>
       {showAddItemModal && (

@@ -82,7 +82,6 @@ const Login = () => {
 
       // Store additional user data in Firestore
       await setDoc(doc(firestore, "users", user.uid), {
-        name: "Bill",
         // Add any other fields you need
       });
 

@@ -1,0 +1,12 @@
+.switch {
+  transition: all 0.1s;
+}
+
+.switch:hover {
+  scale: 1.01;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.277);
+}
+
+.switch:active {
+  scale: 1.03 1.02;
+}

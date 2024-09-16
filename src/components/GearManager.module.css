@@ -112,16 +112,11 @@
   position: fixed;
   bottom: 3vh;
   right: 3vh;
-  user-select: none;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 8vh;
-  width: 8vh;
-  background-color: black;
   border-radius: 100%;
-  color: white;
+  color: black;
   font-size: 5rem;
   transition: transform 0.2s;
 }

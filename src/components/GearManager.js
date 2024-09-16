@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./GearManager.module.css";
-import { IoIosAdd } from "react-icons/io";
+import { IoAddCircle, IoCreateSharp } from "react-icons/io5";
 import GearContainer from "./GearContainer";
 import { useAuth } from "../App";
 import { doc } from "firebase/firestore";
@@ -9,10 +9,13 @@ import { firestore } from "./firebase";
 import { getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
+import ButtonSwitch from "./ButtonSwitch";
+import { useOutletContext } from "react-router-dom";
 
 const GearManager = () => {
   const { user } = useAuth();
   const [containers, setContainers] = useState([]);
+  const [units, setUnits] = useOutletContext();
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -112,6 +115,17 @@ const GearManager = () => {
     }
   };
 
+  const onUnitsChanged = async (value) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      // Store additional user data in Firestore
+      await updateDoc(userDocRef, {
+        [`prefs.units`]: value,
+      });
+    }
+  };
+
   return (
     <div className={styles.gearManager}>
       {containers.map((container) => (
@@ -123,9 +137,32 @@ const GearManager = () => {
           onDisplayNameChange={updateContainerDisplayName} // Pass the callback
         />
       ))}
-
-      <div className={styles.addButton} onClick={addContainer}>
-        <IoIosAdd />
+      <div
+        style={{
+          position: "fixed",
+          bottom: "1.5vw",
+          right: "1.5vw",
+          display: "flex",
+          gap: "8px",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ButtonSwitch
+          leftOption="Lbs"
+          rightOption="Kg"
+          defaultSelection={units}
+          onChange={onUnitsChanged}
+        />
+        <IoAddCircle
+          size={80}
+          style={{
+            color: "black",
+            userSelect: "none",
+            WebkitUserSelect: "none",
+          }}
+          onClick={addContainer}
+        />
       </div>
     </div>
   );

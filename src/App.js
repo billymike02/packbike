@@ -10,7 +10,9 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import MenuBar from "./components/MenuBar";
 import Workspace from "./components/Workspace";
 import Profile from "./components/Profile";
+import { onSnapshot } from "firebase/firestore";
 import GearManager from "./components/GearManager";
+import { firestore } from "./components/firebase";
 
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import { BrowserView, MobileView } from "react-device-detect";
@@ -36,6 +38,33 @@ export const getCurrentUser = () => {
 };
 
 function Layout() {
+  const [units, setUnits] = useState(null);
+
+  useEffect(() => {
+    const fetchUnits = async () => {
+      const currentUser = await getCurrentUser(); // Ensure we get the current user
+      if (!currentUser) return; // Exit if no user
+
+      const docRef = doc(firestore, "users", currentUser.uid);
+
+      // Set up real-time listener
+      const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const prefs = data.prefs || {}; // Ensure prefs exists
+          setUnits(prefs.units); // Default to "Lbs" if not found
+        } else {
+          console.log("No such document!");
+        }
+      });
+
+      // Clean up subscription on component unmount
+      return () => unsubscribe();
+    };
+
+    fetchUnits(); // Call the async function inside the effect
+  }, []); // Only run on initial mount
+
   return (
     <div
       style={{
@@ -56,7 +85,7 @@ function Layout() {
           overflow: "scroll",
         }}
       >
-        <Outlet />
+        <Outlet context={[units, setUnits]} />
       </div>
     </div>
   );
@@ -65,7 +94,6 @@ function Layout() {
 function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [showInstall, setShowInstall] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -88,12 +116,7 @@ function App() {
   }, []);
 
   if (authLoading) {
-    return (
-      <></>
-      // <div style={{ height: "100vh" }} className="loading-screen">
-      //   <h3>Preparing PackBike...</h3>
-      // </div>
-    ); // Or any loading spinner or placeholder
+    return <></>; // Or any loading spinner or placeholder
   }
 
   return (
