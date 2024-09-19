@@ -137,3 +137,9 @@ input {
   border-radius: 0.5rem;
   margin-bottom: 10px;
 }
+
+.image-container {
+  display: flex;
+  justify-content: center; /* Center image horizontally */
+  align-items: center; /* Center image vertically */
+}

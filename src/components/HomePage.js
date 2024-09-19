@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BikeSVG from "../assets/images/bike.svg";
 import { TbDownload } from "react-icons/tb";
 import { useRef } from "react";
 import {
@@ -14,11 +13,13 @@ import { useState, useEffect } from "react";
 import ModularModal from "./Modal";
 import { IoCodeSlash, IoShareOutline } from "react-icons/io5";
 import { MdInstallDesktop, MdMoreVert } from "react-icons/md";
-import {
-  IoIosArrowDown,
-  IoIosArrowRoundDown,
-  IoIosArrowRoundUp,
-} from "react-icons/io";
+
+import PageNavButton from "./PageNavButton";
+import ModalImage from "./ModalImage";
+
+// Image assets
+import WorkspaceImg from "../assets/images/workspace.PNG";
+import ViewableImage from "./ModalImage";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -78,7 +79,6 @@ const HomePage = () => {
 
   useChain([backgroundAnimRef, titleAnimRef, buttonAnimRef], [0, 0.3, 0.9]);
 
-  // Page animations for scrolling
   const defaultPageRef = useRef(null);
   const infoPageRef = useRef(null);
 
@@ -205,30 +205,14 @@ const HomePage = () => {
                 textWrap: "nowrap",
               }}
             >
-              Open PackBike in your browser
+              Open PackBike here
             </button>
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "transparent",
-              textTransform: "uppercase",
-              position: "absolute",
-              bottom: "2vh",
-              width: "max-content",
-              height: "min-content",
-              opacity: "0.7",
-              flexDirection: "column",
-              fontSize: "2rem",
-              cursor: "pointer",
-            }}
+          <PageNavButton
             onClick={() => scrollToSection(infoPageRef)}
-          >
-            More Info
-            <IoIosArrowRoundDown size={50}></IoIosArrowRoundDown>
-          </div>
+            note="More Info"
+            inset="auto auto 2vh auto"
+          />
         </animated.div>
       </animated.div>
       <div
@@ -243,27 +227,13 @@ const HomePage = () => {
           position: "relative",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "transparent",
-            textTransform: "uppercase",
-            position: "absolute",
-            top: "2vh",
-            width: "max-content",
-            height: "min-content",
-            opacity: "0.7",
-            flexDirection: "column",
-            fontSize: "2rem",
-            cursor: "pointer",
-          }}
+        <PageNavButton
           onClick={() => scrollToSection(defaultPageRef)}
-        >
-          <IoIosArrowRoundUp size={50}></IoIosArrowRoundUp>
-          Go Back
-        </div>
+          note="Back"
+          direction="up"
+          flexDirection="column-reverse"
+          inset="2vh auto auto auto"
+        />
       </div>
 
       <ModularModal bShow={bShowInstallModal} title={"Install to Device"}>
