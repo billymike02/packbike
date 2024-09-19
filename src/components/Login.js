@@ -63,7 +63,7 @@ const Login = () => {
 
       // Introduce a slight delay before navigating
       setTimeout(() => {
-        navigate("/");
+        navigate("/app/layout/workspace");
       }, 100);
     } catch (err) {
       setError(err.message);
@@ -83,11 +83,12 @@ const Login = () => {
       // Store additional user data in Firestore
       await setDoc(doc(firestore, "users", user.uid), {
         // Add any other fields you need
+        bicycles: {},
       });
 
       console.log("User registered and data saved!");
       setSuccess("User registered.");
-      navigate("/");
+      navigate("/app/layout/workspace");
     } catch (error) {
       setError(error.message);
       console.error("Error registering user:", error.message);
