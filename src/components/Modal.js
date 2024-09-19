@@ -3,12 +3,7 @@ import { createPortal } from "react-dom";
 import styles from "./ModalComponent.module.css";
 import { animated, useSpring } from "@react-spring/web";
 
-const ModularModal = ({
-  title = "Untitled Modal",
-  subtitle,
-  bShow,
-  children,
-}) => {
+const ModularModal = ({ title, subtitle, bShow, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false); // Controls visibility
 
