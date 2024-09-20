@@ -23,7 +23,7 @@ const PageNavButton = ({
   direction = "down",
   flexDirection = "column",
   onClick,
-  visible = true,
+  visible = false,
   inset,
 }) => {
   return (
@@ -42,6 +42,7 @@ const PageNavButton = ({
         fontSize: "2rem",
         cursor: "pointer",
         transition: "opacity 0.3s",
+        visibility: visible == true ? "visible" : "hidden",
       }}
       onClick={onClick}
     >

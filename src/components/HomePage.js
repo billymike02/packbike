@@ -15,11 +15,39 @@ import { IoCodeSlash, IoShareOutline } from "react-icons/io5";
 import { MdInstallDesktop, MdMoreVert } from "react-icons/md";
 
 import PageNavButton from "./PageNavButton";
-import ModalImage from "./ModalImage";
+import ModalImage from "./ViewableImage";
 
 // Image assets
 import WorkspaceImg from "../assets/images/workspace.PNG";
-import ViewableImage from "./ModalImage";
+import GarageImg from "../assets/images/garage.PNG";
+import GearContainerImg from "../assets/images/gear-container_edit.PNG";
+import GearManagerImg from "../assets/images/gear-manager.PNG";
+import ViewableImage from "./ViewableImage";
+
+const InfoBox = ({ src, title, description, width }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        // flexDirection: "column",
+        justifyContent: "flex-start",
+
+        width,
+        height: "min-content",
+        padding: "2rem",
+        gap: "30px",
+        backgroundColor: "rgb(0, 0, 0, 0.2)",
+        borderRadius: "1rem",
+      }}
+    >
+      <ViewableImage src={src} maxWidth={"20"}></ViewableImage>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <a style={{ fontSize: "40px", fontWeight: "600" }}>{title}</a>
+        <p style={{ fontSize: "1.3rem", textWrap: "wrap" }}>{description}</p>
+      </div>
+    </div>
+  );
+};
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -33,6 +61,7 @@ const HomePage = () => {
     gap: "12px",
     justifyContent: "center",
     alignItems: "center",
+    maxWidth: "min-content",
   };
 
   // Animated styles
@@ -69,7 +98,7 @@ const HomePage = () => {
     },
     to: {
       opacity: 1,
-      fontSize: "15vw",
+      fontSize: "16vw",
     },
     config: {
       duration: 500,
@@ -141,7 +170,7 @@ const HomePage = () => {
           </animated.h1>
         </div>
         <animated.div
-          id="download-buttons"
+          id="homepage-subcontent"
           style={{
             ...buttonStyles,
             display: "flex",
@@ -175,15 +204,24 @@ const HomePage = () => {
           </button>
           <h3
             style={{
-              fontSize: "30px",
+              fontSize: "1.8rem",
               opacity: "0.7",
-              margin: "0.5rem",
+              margin: "1rem",
               transform: "translate(0px, -3vh)",
+              textAlign: "center",
             }}
           >
             The bikepacking/touring gear manager.
           </h3>
-          <div style={{ display: "flex", gap: "24px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "4vmin",
+              flexWrap: "wrap", // Allows wrapping when needed
+              width: "100%",
+              justifyContent: "center", // Space items if possible
+            }}
+          >
             <button
               onClick={() => setShowInstallModal(true)}
               style={{
@@ -212,6 +250,7 @@ const HomePage = () => {
             onClick={() => scrollToSection(infoPageRef)}
             note="More Info"
             inset="auto auto 2vh auto"
+            visible="false"
           />
         </animated.div>
       </animated.div>
@@ -225,8 +264,50 @@ const HomePage = () => {
           justifyContent: "center",
           alignItems: "center",
           position: "relative",
+          flexWrap: "wrap",
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            height: "100vh",
+            width: "100vw",
+            justifyContent: "center",
+            position: "absolute",
+            top: "20%",
+            gap: "30px",
+            flexWrap: "wrap",
+          }}
+        >
+          <InfoBox
+            src={WorkspaceImg}
+            title={"Visual workspace"}
+            description={
+              "Handle bag placement and weight distribution in an intuitive and simple window. Add color to your bags to personalize your loadout."
+            }
+            width={"90%"}
+            // height={"30%"}
+          />
+
+          {/* <InfoBox
+            src={GarageImg}
+            title={"Manage multiple bikes"}
+            description={
+              "Do you adhere to the N+1 rule? With PackBike you can manage multiple different bikes with the click of a button. You can easily swap your gear between different bikes."
+            }
+            width={"20%"}
+            height={"30%"}
+          />
+
+          <InfoBox
+            src={GearManagerImg}
+            width={"20%"}
+            height={"30%"}
+            title={"Gear manager"}
+            description={""}
+          /> */}
+        </div>
+
         <PageNavButton
           onClick={() => scrollToSection(defaultPageRef)}
           note="Back"
@@ -236,7 +317,7 @@ const HomePage = () => {
         />
       </div>
 
-      <ModularModal bShow={bShowInstallModal} title={"Install to Device"}>
+      <ModularModal bShow={bShowInstallModal} title={"How to install"}>
         <div
           style={{
             display: "flex",

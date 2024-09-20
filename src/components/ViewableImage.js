@@ -86,31 +86,39 @@ const ModalImage = ({ src, bShow, onClose }) => {
   );
 };
 
-const ViewableImage = ({ src, maxWidth, maxHeight }) => {
+const ViewableImage = ({
+  src,
+  expandable = false,
+  borderRadius = "0.5rem",
+  maxWidth,
+  maxHeight,
+}) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <>
       <div
-        className="image-container"
         style={{
-          maxWidth: maxWidth,
-          maxHeight: maxHeight,
+          display: "flex",
+          maxWidth,
+          maxHeight,
         }}
         onClick={() => setShowModal(true)}
       >
         <img
           className="responsive-image"
           src={src}
-          style={{ borderRadius: "0.3rem" }}
+          style={{ borderRadius, maxHeight: "100%", maxWidth: "100vh" }}
         />
       </div>
 
-      <ModalImage
-        src={src}
-        bShow={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      {expandable && (
+        <ModalImage
+          src={src}
+          bShow={showModal}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </>
   );
 };
