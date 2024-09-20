@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import BikeSVG from "./assets/images/bike.svg";
 import "./App.css";
-import { Login, Logout } from "./components/Login";
+import { Creator, Login, Logout } from "./components/Login";
 import { HashRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
@@ -141,6 +141,7 @@ function App() {
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="create-user" element={<Creator />} />
             <Route path="/" element={<HomePage />} />
           </Routes>
         </HashRouter>

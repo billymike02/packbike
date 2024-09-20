@@ -11,29 +11,3 @@
     rgba(0, 110, 255, 1) 100%
   );
 }
-
-h1 {
-  margin: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-
-input:focus {
-  border-color: rgb(0, 136, 255);
-}
-
-input:invalid {
-  border-color: red;
-}
-
-.Center {
-  background-color: rgb(255, 255, 255);
-  padding: 1rem;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.377);
-  border-radius: 1rem;
-  display: flex;
-  flex-direction: column;
-  width: 20vw;
-  min-width: 300px;
-  justify-content: center;
-  align-items: center;
-}
