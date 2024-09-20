@@ -117,9 +117,8 @@ const Login = () => {
         <button
           className={styles.register}
           style={{
-            border: "0.1rem solid black",
-            color: "black",
-            backgroundColor: "white",
+            color: "white",
+            backgroundColor: "rgb(52	199	89)",
           }}
           onClick={handleSignUp}
         >
