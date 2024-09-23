@@ -4,10 +4,13 @@
   align-items: center;
   height: 100vh;
   text-align: center;
-  background: rgb(55, 141, 255);
   background: linear-gradient(
-    170deg,
-    rgba(55, 141, 255, 1) 44%,
-    rgba(0, 110, 255, 1) 100%
+    144deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(62, 62, 193, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
   );
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
