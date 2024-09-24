@@ -91,7 +91,7 @@ const Login = () => {
           backgroundColor: "black",
           borderRadius: "1rem",
           height: "fit-content",
-          width: "25%",
+          width: "380px",
 
           overflow: "hidden",
         }}
@@ -360,7 +360,7 @@ const Reset = () => {
           backgroundColor: "black",
           borderRadius: "1rem",
           height: "fit-content",
-          width: "25%",
+          width: "380px",
 
           overflow: "hidden",
         }}

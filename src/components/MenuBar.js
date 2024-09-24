@@ -39,7 +39,7 @@ const MenuBar = ({ setBicycleSelection }) => {
       icon: <BsBicycle />,
     },
     {
-      title: "Gear",
+      title: "Inventory",
       icon: <PiShoppingBagOpenFill></PiShoppingBagOpenFill>,
     },
     {
@@ -80,7 +80,7 @@ const MenuBar = ({ setBicycleSelection }) => {
               <div className={styles.menuIcon}>
                 <PiShoppingBagOpenFill></PiShoppingBagOpenFill>
               </div>
-              <div className={styles.menuLabel}>Gear</div>
+              <div className={styles.menuLabel}>Inventory</div>
             </div>
           </div>
           <div className={styles.MenuRight}>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Rnd } from "react-rnd";
 import styles from "./GearDropdown.module.css";
-import { FaPencil } from "react-icons/fa6";
+import { FaP, FaPencil } from "react-icons/fa6";
 import { useAuth } from "../App";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -22,6 +22,8 @@ import Forkbag from "./Bags/Forkbag";
 import Seatpack from "./Bags/Seatpack";
 import Framebag from "./Bags/Framebag";
 import ModularModal from "./Modal";
+import { IoAddCircle } from "react-icons/io5";
+import { IoIosAdd } from "react-icons/io";
 
 const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const { user } = useAuth();
@@ -29,10 +31,15 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const [size, setSize] = useState({ width: "200px", height: "200px" });
   const [bgColor, setBgColor] = useState("");
   const [containers, setContainers] = useState([]);
+  const [inventoryItems, setInventoryItems] = useState([]);
   const [isGearModalOpen, setIsGearModalOpen] = useState(false);
   const [bFetchingData, setFetchingData] = useState(true);
   const [containerDisplayName, setContainerDisplayName] = useState(null);
   const [colorDisplayName, setColorDisplayName] = useState(null);
+
+  // updated inventory states
+  const [availableInventory, setAvailableInventory] = useState([]);
+  const [contents, setContents] = useState([]);
 
   const colors = [
     { value: "rgb(199	48	43)", label: "Red" },
@@ -229,16 +236,154 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
         </Draggable>
 
         <ModularModal title="Edit Gear Container" bShow={isGearModalOpen}>
-          <CustomSelect
-            options={containers.map((container) => ({
-              value: container.id, // Value to be passed back
-              label: container.displayName, // Display name for the select
-            }))}
-            placeholderText={"Select a container"}
-            defaultSelection={containerDisplayName}
-            onSelect={firestore_ApplyBackendContainer}
-            emptyMessage="None. Create a container in the 'Gear' tab."
-          />
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              flexDirection: "row",
+              gap: "16px",
+            }}
+          >
+            <div
+              id="gear-dropdown_left-pane"
+              style={{ width: "8vw", height: "300px" }}
+            >
+              <div
+                style={{
+                  height: "max-content",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <a
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  Contents
+                </a>
+                <div
+                  style={{
+                    margin: "0px",
+                    padding: "0px",
+                    width: "100%",
+                  }}
+                >
+                  {contents.length > 0 ? (
+                    contents.map((item) => {
+                      return (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            width: "100%",
+                            height: "24px",
+                            justifyContent: "space-around",
+                            alignItems: "center",
+                            paddingBlock: "10px",
+                            backgroundColor: "white",
+                            border: "0.1rem solid #ccc",
+                            borderRadius: "0.4rem",
+                          }}
+                        >
+                          <div>{"Name"}</div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <a style={{ fontSize: "16px" }}>This container is empty.</a>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div id="gear-dropdown_right-pane" style={{ width: "16vw" }}>
+              <div
+                style={{
+                  height: "max-content",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <a
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  Available inventory
+                </a>
+                <div
+                  style={{
+                    margin: "0px",
+                    padding: "0px",
+                    width: "100%",
+                  }}
+                >
+                  {availableInventory.length > 0 ? (
+                    availableInventory.map((item) => {
+                      return (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            width: "100%",
+                            height: "48px",
+
+                            alignItems: "center",
+                            overflow: "hidden",
+                            backgroundColor: "white",
+                            border: "0.1rem solid #ccc",
+                            borderRadius: "0.4rem",
+                          }}
+                        >
+                          <div
+                            style={{
+                              backgroundColor: "black",
+                              height: "100%",
+                              width: "60px",
+                              color: "white",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <IoIosAdd size={40} style={{ cursor: "pointer" }} />
+                          </div>
+
+                          <div
+                            style={{
+                              paddingBlock: "10px",
+                              display: "flex",
+                              justifyContent: "space-around",
+                              width: "100%",
+                            }}
+                          >
+                            {" "}
+                            <div>{"Name"}</div>
+                            <div>{"Weight"}</div>
+                            <div>{"Volume"}</div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <a style={{ fontSize: "16px" }}>
+                      No available items in your inventory.
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
           {/* CustomSelect for colors */}
           <CustomSelect
             placeholder={"Select a color"}
