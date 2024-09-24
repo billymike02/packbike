@@ -76,7 +76,7 @@ function Layout() {
         width: "100vw",
       }}
     >
-      <MenuBar />
+      {/* <MenuBar /> */}
       <div
         style={{
           width: "100%",

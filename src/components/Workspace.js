@@ -382,7 +382,7 @@ const Workspace = () => {
           zIndex: 10,
           height: "100%",
 
-          borderRight: "1px solid black",
+          borderRight: "10px solid black",
           minWidth: "200px",
           width: "350px",
           backgroundColor: "white",
