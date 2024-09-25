@@ -42,3 +42,15 @@
 .clickable:active {
   background-color: black;
 }
+
+input:required {
+  border-color: red;
+}
+
+input:required:valid {
+  border-color: rgb(52, 199, 89);
+}
+
+input:invalid {
+  border-color: red;
+}

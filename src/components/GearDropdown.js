@@ -17,6 +17,7 @@ import {
   onSnapshot,
   arrayUnion,
   arrayRemove,
+  deleteField,
 } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import CustomSelect from "./CustomSelect";
@@ -28,13 +29,16 @@ import Forkbag from "./Bags/Forkbag";
 import Seatpack from "./Bags/Seatpack";
 import Framebag from "./Bags/Framebag";
 import ModularModal from "./Modal";
-import { IoAddCircle, IoCheckmark } from "react-icons/io5";
-import { IoIosAdd } from "react-icons/io";
+import { IoAddCircle, IoCheckmark, IoTrash, IoTrashBin } from "react-icons/io5";
+import { IoIosAdd, IoMdTrash } from "react-icons/io";
 
 const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
   const [bisAdded, setIsAdded] = useState(false);
   const [bTaken, setIsTaken] = useState(false);
   const { user } = useAuth();
+
+  // Modal states
+  const [bDeleteModal, setDeleteModalVis] = useState(false);
 
   // We need to make sure this is 'added' if it's in the owning container
   useEffect(() => {
@@ -84,6 +88,31 @@ const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
       }
     }
     return false; // Item not found in any visual container
+  };
+
+  const handleRemoveItemFromInventory = async (unique_id) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          // Remove the item with the unique ID from the inventory
+          await updateDoc(userDocRef, {
+            [`inventory.${unique_id}`]: deleteField(), // This will remove the item with that unique ID
+          });
+
+          await handleRemoveItemFromContents(unique_id);
+
+          console.log("Item removed from inventory");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error removing item: ", error);
+      }
+    }
   };
 
   const handleAddItemToContents = async (itemID) => {
@@ -137,79 +166,125 @@ const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
     <div
       style={{
         display: "flex",
-        flexDirection: "row",
-        width: "99%",
-        minHeight: "48px",
+        justifyContent: "center",
         alignItems: "center",
-        overflow: "hidden",
-        backgroundColor: "white",
-        border: "0.1rem solid #ccc",
-        borderRadius: "0.4rem",
-        userSelect: "none",
-        WebkitUserSelect: "none",
-        cursor: bTaken ? "not-allowed" : "default",
-        opacity: bTaken ? "0.5" : "1",
+        gap: "8px",
       }}
     >
       <div
         style={{
-          backgroundColor: bisAdded ? "rgb(52, 199, 89)" : "black",
-          height: "100%",
-          width: "60px",
-          color: "white",
-          justifyContent: "center",
+          display: "flex",
+          flexDirection: "row",
+          width: "99%",
+          height: "48px",
+          minHeight: "48px",
           alignItems: "center",
-          display: "flex",
-          cursor: "pointer",
-          pointerEvents: bTaken ? "none" : "all",
-        }}
-        onClick={() => {
-          if (!bisAdded) {
-            handleAddItemToContents(item.id);
-          } else {
-            handleRemoveItemFromContents(item.id);
-          }
-        }}
-      >
-        {bisAdded ? <IoCheckmark size={30} /> : <IoIosAdd size={40} />}
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexGrow: 1, // This makes the item take the remaining space
-          padding: "0 10px",
           overflow: "hidden",
+          backgroundColor: "white",
+          border: "0.1rem solid #ccc",
+          borderRadius: "0.4rem",
+          userSelect: "none",
+          WebkitUserSelect: "none",
+          cursor: bTaken ? "not-allowed" : "pointer",
+          opacity: bTaken ? "0.5" : "1",
         }}
       >
         <div
           style={{
-            flex: "1",
+            backgroundColor: bisAdded ? "rgb(52, 199, 89)" : "black",
+            height: "100%",
+            minWidth: "48px",
+            color: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+            cursor: "pointer",
+            pointerEvents: bTaken ? "none" : "all",
+          }}
+          onClick={() => {
+            if (!bisAdded) {
+              handleAddItemToContents(item.id);
+            } else {
+              handleRemoveItemFromContents(item.id);
+            }
+          }}
+        >
+          {bisAdded ? <IoCheckmark size={30} /> : <IoIosAdd size={40} />}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexGrow: 1, // This makes the item take the remaining space
+            padding: "0 10px",
             overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
+            backgroundColor: "white",
+            width: "100%",
+            height: "100%",
+
+            alignItems: "center",
           }}
         >
-          {item.displayName}
-        </div>
-        <div
-          style={{
-            flex: "1",
-            textAlign: "center",
-          }}
-        >
-          {item.weight}
-        </div>
-        <div
-          style={{
-            flex: "1",
-            textAlign: "right",
-          }}
-        >
-          {item.volume}
+          <div
+            style={{
+              flex: "1",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {item.displayName}
+          </div>
+          <div
+            style={{
+              flex: "1",
+              textAlign: "center",
+            }}
+          >
+            {`${item.weight}kg`}
+          </div>
+          <div
+            style={{
+              flex: "1",
+              textAlign: "right",
+            }}
+          >
+            {`${item.volume}L`}
+          </div>
         </div>
       </div>
+      <IoMdTrash
+        className="button-icon"
+        size={40}
+        onClick={() => {
+          setDeleteModalVis(true);
+        }}
+      />
+      <ModularModal
+        bShow={bDeleteModal}
+        title={"Are you sure?"}
+        subtitle={"This will remove the item from your inventory."}
+      >
+        <div style={{ display: "flex", gap: "8px", width: "100%" }}>
+          <button
+            onClick={() => {
+              setDeleteModalVis(false);
+            }}
+          >
+            No
+          </button>
+          <button
+            style={{ backgroundColor: "red" }}
+            onClick={() => {
+              setDeleteModalVis(false);
+              handleRemoveItemFromInventory(item.id);
+            }}
+          >
+            Yes
+          </button>
+        </div>
+      </ModularModal>
     </div>
   );
 };
@@ -642,6 +717,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                     onChange={(e) => setItemWeight(e.target.value)}
                     placeholder={`Enter item weight (${"kg"})`}
                     step="any"
+                    required
                   />
                   <input
                     type="number"
@@ -649,19 +725,50 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                     onChange={(e) => setItemVolume(e.target.value)}
                     placeholder="Enter item volume (L)"
                     step="any"
+                    required
                   />
-                  <button
-                    onClick={() => {
-                      handleAddItemToInventory(
-                        itemName,
-                        itemWeight,
-                        itemVolume
-                      );
-                      setShowAddItemModal(false);
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      width: "100%",
+                      gap: "8px",
                     }}
                   >
-                    Submit
-                  </button>
+                    <button
+                      onClick={() => {
+                        setShowAddItemModal(false);
+                        setItemName("");
+                        setItemWeight("");
+                        setItemVolume("");
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      style={{ backgroundColor: "rgb(52, 199, 89)" }}
+                      onClick={() => {
+                        handleAddItemToInventory(
+                          itemName,
+                          itemWeight,
+                          itemVolume
+                        );
+                        setShowAddItemModal(false);
+
+                        setItemName("");
+                        setItemWeight("");
+                        setItemVolume("");
+                      }}
+                      disabled={
+                        itemName === "" ||
+                        isNaN(parseFloat(itemWeight)) || // Convert to number first, then check NaN
+                        isNaN(parseFloat(itemVolume)) // Same here
+                      }
+                    >
+                      Submit
+                    </button>
+                  </div>
                 </ModularModal>
               </div>
             </div>
