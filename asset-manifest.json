@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/packbike/static/css/main.3435a510.css",
-    "main.js": "/packbike/static/js/main.1504d9dc.js",
+    "main.css": "/packbike/static/css/main.1a7bb2fc.css",
+    "main.js": "/packbike/static/js/main.acd30752.js",
     "static/js/453.31aedef3.chunk.js": "/packbike/static/js/453.31aedef3.chunk.js",
     "static/media/gear-container_edit.PNG": "/packbike/static/media/gear-container_edit.9b96e3d1c8f33520aed7.PNG",
     "static/media/garage.PNG": "/packbike/static/media/garage.0734d37c37b82ec9ef5f.PNG",
@@ -14,12 +14,12 @@
     "static/media/framebag.svg": "/packbike/static/media/framebag.a9214cf8356ed9e1a25c959884b69e48.svg",
     "index.html": "/packbike/index.html",
     "static/media/roll.svg": "/packbike/static/media/roll.6281ddbe9611beb5bc1641d01a1a0564.svg",
-    "main.3435a510.css.map": "/packbike/static/css/main.3435a510.css.map",
-    "main.1504d9dc.js.map": "/packbike/static/js/main.1504d9dc.js.map",
+    "main.1a7bb2fc.css.map": "/packbike/static/css/main.1a7bb2fc.css.map",
+    "main.acd30752.js.map": "/packbike/static/js/main.acd30752.js.map",
     "453.31aedef3.chunk.js.map": "/packbike/static/js/453.31aedef3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3435a510.css",
-    "static/js/main.1504d9dc.js"
+    "static/css/main.1a7bb2fc.css",
+    "static/js/main.acd30752.js"
   ]
 }
