@@ -12,7 +12,12 @@ import Draggable from "react-draggable";
 // firestore stuffs
 import { firestore } from "./firebase";
 import { doc } from "firebase/firestore";
-import { updateDoc, onSnapshot, arrayUnion } from "firebase/firestore";
+import {
+  updateDoc,
+  onSnapshot,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import CustomSelect from "./CustomSelect";
 
@@ -23,8 +28,191 @@ import Forkbag from "./Bags/Forkbag";
 import Seatpack from "./Bags/Seatpack";
 import Framebag from "./Bags/Framebag";
 import ModularModal from "./Modal";
-import { IoAddCircle } from "react-icons/io5";
+import { IoAddCircle, IoCheckmark } from "react-icons/io5";
 import { IoIosAdd } from "react-icons/io";
+
+const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
+  const [bisAdded, setIsAdded] = useState(false);
+  const [bTaken, setIsTaken] = useState(false);
+  const { user } = useAuth();
+
+  // We need to make sure this is 'added' if it's in the owning container
+  useEffect(() => {
+    if (!user) return; // Exit if no user
+
+    const docRef = doc(firestore, "users", user.uid);
+
+    // Set up real-time listener
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        if (data.bicycles[selectedBike].visualContainers[containerQuerying]) {
+          const contentsArray =
+            data.bicycles[selectedBike].visualContainers[containerQuerying]
+              .contents || [];
+
+          if (contentsArray.includes(item.id)) {
+            setIsAdded(true);
+          } else {
+            setIsAdded(false);
+          }
+
+          setIsTaken(isItemInUse(data, item.id));
+        }
+      } else {
+        console.log("No such document!");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []); // only call on mount
+
+  const isItemInUse = (data, itemID) => {
+    // Iterate through each bicycle
+    for (const bike of Object.values(data.bicycles)) {
+      // Iterate through each visual container in the current bicycle
+      for (const container of Object.values(bike.visualContainers)) {
+        // Check if the contents array exists and includes the itemUuid
+        if (
+          container.id != containerQuerying &&
+          container.contents &&
+          container.contents.includes(itemID)
+        ) {
+          return true; // Item found
+        }
+      }
+    }
+    return false; // Item not found in any visual container
+  };
+
+  const handleAddItemToContents = async (itemID) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          await updateDoc(userDocRef, {
+            [`bicycles.${selectedBike}.visualContainers.${containerQuerying}.contents`]:
+              arrayUnion(itemID),
+          });
+
+          console.log("Updated items");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error adding item: ", error);
+      }
+    }
+  };
+
+  const handleRemoveItemFromContents = async (itemID) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      try {
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          // remove the item
+          await updateDoc(userDocRef, {
+            [`bicycles.${selectedBike}.visualContainers.${containerQuerying}.contents`]:
+              arrayRemove(itemID),
+          });
+
+          console.log("Removed item");
+        } else {
+          console.log("User document does not exist");
+        }
+      } catch (error) {
+        console.log("Error removing item: ", error);
+      }
+    }
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "99%",
+        minHeight: "48px",
+        alignItems: "center",
+        overflow: "hidden",
+        backgroundColor: "white",
+        border: "0.1rem solid #ccc",
+        borderRadius: "0.4rem",
+        userSelect: "none",
+        WebkitUserSelect: "none",
+        cursor: bTaken ? "not-allowed" : "default",
+        opacity: bTaken ? "0.5" : "1",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: bisAdded ? "rgb(52, 199, 89)" : "black",
+          height: "100%",
+          width: "60px",
+          color: "white",
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+          cursor: "pointer",
+          pointerEvents: bTaken ? "none" : "all",
+        }}
+        onClick={() => {
+          if (!bisAdded) {
+            handleAddItemToContents(item.id);
+          } else {
+            handleRemoveItemFromContents(item.id);
+          }
+        }}
+      >
+        {bisAdded ? <IoCheckmark size={30} /> : <IoIosAdd size={40} />}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexGrow: 1, // This makes the item take the remaining space
+          padding: "0 10px",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            flex: "1",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {item.displayName}
+        </div>
+        <div
+          style={{
+            flex: "1",
+            textAlign: "center",
+          }}
+        >
+          {item.weight}
+        </div>
+        <div
+          style={{
+            flex: "1",
+            textAlign: "right",
+          }}
+        >
+          {item.volume}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const { user } = useAuth();
@@ -136,12 +324,12 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
 
-        const inventoryArray = Object.entries(data.inventory || {}).map(
-          ([id, container]) => ({
+        const inventoryArray = Object.entries(data.inventory || {})
+          .map(([id, container]) => ({
             id,
             ...container,
-          })
-        );
+          }))
+          .sort((a, b) => a.id.localeCompare(b.id)); // Sort by displayName
 
         setAvailableInventory(inventoryArray);
 
@@ -149,15 +337,18 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
           const contentsArray =
             data.bicycles[selectedBike].visualContainers[id].contents || [];
 
-          const newArray = contentsArray.map((uuid) => {
-            // Access the corresponding object in data.inventory using the uuid
-            const item = data.inventory[uuid];
+          const newArray = contentsArray
+            .map((uuid) => {
+              // Access the corresponding object in data.inventory using the uuid
+              const item = data.inventory[uuid];
 
-            // Return the displayName if the item exists
-            return item ? item.displayName : null;
-          });
+              // Return an object with uuid and displayName if the item exists
+              return item ? { uuid, displayName: item.displayName } : null;
+            })
+            .filter((obj) => obj !== null) // Filter out any null values
+            .sort((a, b) => a.uuid.localeCompare(b.uuid)) // Sort by uuid
+            .map((obj) => obj.displayName); // Extract displayNames for the final array
 
-          console.log("beep:", newArray);
           setContents(newArray);
         }
       } else {
@@ -183,24 +374,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
           await updateDoc(userDocRef, {
             [`bicycles.${selectedBike}.visualContainers.${id}.position.x`]: x,
             [`bicycles.${selectedBike}.visualContainers.${id}.position.y`]: y,
-          });
-        }
-      } catch (error) {}
-    }
-  };
-
-  const onModalChange = async (newContainer, newColor) => {
-    if (user) {
-      const userDocRef = doc(firestore, "users", user.uid);
-
-      try {
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-          await updateDoc(userDocRef, {
-            [`bicycles.${selectedBike}.visualContainers.${id}.container_id`]:
-              newContainer,
-            [`bicycles.${selectedBike}.visualContainers.${id}.color`]: newColor,
           });
         }
       } catch (error) {}
@@ -275,32 +448,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
     }
   };
 
-  const handleAddItemToContents = async (itemID) => {
-    if (user) {
-      const userDocRef = doc(firestore, "users", user.uid);
-
-      try {
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-          // create a new item
-          if (true) {
-            await updateDoc(userDocRef, {
-              [`bicycles.${selectedBike}.visualContainers.${id}.contents`]:
-                arrayUnion(itemID),
-            });
-          }
-
-          console.log("Updated items");
-        } else {
-          console.log("User document does not exist");
-        }
-      } catch (error) {
-        console.log("Error adding item: ", error);
-      }
-    }
-  };
-
   if (bFetchingData == false) {
     return (
       <>
@@ -350,18 +497,14 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
           <div
             style={{
               display: "flex",
-              width: "100%",
+              width: "600px",
               flexDirection: "row",
               gap: "16px",
             }}
           >
-            <div
-              id="gear-dropdown_left-pane"
-              style={{ width: "8vw", height: "300px" }}
-            >
+            <div id="gear-dropdown_left-pane" style={{ width: "40%" }}>
               <div
                 style={{
-                  height: "max-content",
                   width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
@@ -383,6 +526,9 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                     margin: "0px",
                     padding: "0px",
                     width: "100%",
+                    gap: "4px",
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
                   {contents.length > 0 ? (
@@ -392,17 +538,29 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                           style={{
                             display: "flex",
                             flexDirection: "row",
-                            width: "100%",
-                            height: "24px",
-                            justifyContent: "space-around",
+                            width: "99%",
+                            height: "48px",
+
                             alignItems: "center",
-                            paddingBlock: "10px",
+                            overflow: "hidden",
                             backgroundColor: "white",
                             border: "0.1rem solid #ccc",
                             borderRadius: "0.4rem",
+                            userSelect: "none",
+                            WebkitUserSelect: "none",
+                            cursor: "default",
                           }}
                         >
-                          <div>{item}</div>
+                          <div
+                            style={{
+                              paddingBlock: "10px",
+                              display: "flex",
+                              justifyContent: "space-around",
+                              width: "100%",
+                            }}
+                          >
+                            <div>{item}</div>
+                          </div>
                         </div>
                       );
                     })
@@ -415,7 +573,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
             <div
               id="gear-dropdown_right-pane"
               style={{
-                width: "16vw",
+                width: "60%",
                 minHeight: "100%",
               }}
             >
@@ -447,63 +605,22 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                     margin: "0px",
                     padding: "0px",
                     width: "100%",
-                    height: "300px",
+                    height: "fit-content",
+                    maxHeight: "300px",
                     overflowY: "auto",
                     display: "flex",
                     flexDirection: "column",
-                    gap: "6px",
+                    gap: "4px",
                   }}
                 >
-                  {availableInventory.map((item) => {
-                    return (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          width: "100%",
-                          minHeight: "48px",
-
-                          alignItems: "center",
-                          overflow: "hidden",
-                          backgroundColor: "white",
-                          border: "0.1rem solid #ccc",
-                          borderRadius: "0.4rem",
-                        }}
-                      >
-                        <div
-                          style={{
-                            backgroundColor: "black",
-                            height: "100%",
-                            width: "60px",
-                            color: "white",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            display: "flex",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => {
-                            handleAddItemToContents(item.id);
-                          }}
-                        >
-                          <IoIosAdd size={40} />
-                        </div>
-
-                        <div
-                          style={{
-                            paddingBlock: "10px",
-                            display: "flex",
-                            justifyContent: "space-around",
-                            width: "100%",
-                          }}
-                        >
-                          {" "}
-                          <div>{item.displayName}</div>
-                          <div>{item.weight}</div>
-                          <div>{item.volume}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {availableInventory.map((item) => (
+                    <InventoryItem
+                      key={item.id}
+                      item={item}
+                      selectedBike={selectedBike}
+                      containerQuerying={id}
+                    />
+                  ))}
                 </div>
                 <button onClick={() => setShowAddItemModal(true)}>
                   Create item
