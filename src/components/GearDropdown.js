@@ -585,6 +585,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
               width: "600px",
               flexDirection: "row",
               gap: "16px",
+              marginBottom: "8px",
             }}
           >
             <div id="gear-dropdown_left-pane" style={{ width: "40%" }}>
@@ -707,8 +708,16 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                     />
                   ))}
                 </div>
-                <button onClick={() => setShowAddItemModal(true)}>
-                  Create item
+                <button
+                  style={{
+                    backgroundColor: "white",
+                    color: "black",
+                    border: "0.1rem solid #000",
+                    marginBlockStart: "30px",
+                  }}
+                  onClick={() => setShowAddItemModal(true)}
+                >
+                  New item
                 </button>
                 <ModularModal
                   bShow={bShowAddItemModal}

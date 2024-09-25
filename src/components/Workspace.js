@@ -26,6 +26,7 @@ import { TbZoomInFilled, TbZoomOutFilled } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import ModularModal from "./Modal";
 import ButtonSwitch from "./ButtonSwitch";
+import { useChain, useSpring, useSpringRef, animated } from "@react-spring/web";
 
 // modal that shows bike info (gear weight, etc.)
 const BikeMetrics = ({ bikeName }) => {
@@ -404,7 +405,7 @@ const Workspace = () => {
   };
 
   return (
-    <div className={styles.Workspace}>
+    <animated.div className={styles.Workspace}>
       <ModularModal title={"PackBike Settings"} bShow={bShowConfigMenu}>
         <div
           style={{
@@ -748,7 +749,7 @@ const Workspace = () => {
           }}
         ></TbZoomInFilled>
       </div>
-    </div>
+    </animated.div>
   );
 };
 

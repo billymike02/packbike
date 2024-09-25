@@ -7,11 +7,11 @@ import { HashRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./components/firebase";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import MenuBar from "./components/MenuBar";
+
 import Workspace from "./components/Workspace";
 import Profile from "./components/Profile";
 import { onSnapshot } from "firebase/firestore";
-import GearManager from "./components/GearManager";
+
 import { firestore } from "./components/firebase";
 
 import ProtectedRoutes from "./components/ProtectedRoutes";
@@ -131,12 +131,7 @@ function App() {
                   index
                   element={<Navigate to="/app/layout/workspace" />}
                 />
-                <Route path="/app/layout/workspace" element={<Workspace />} />
-                <Route
-                  path="/app/layout/gear-manager"
-                  element={<GearManager />}
-                />
-                <Route path="/app/layout/profile" element={<Profile />} />
+                <Route path="/app/layout/workspace" element={<Workspace />} />{" "}
               </Route>
             </Route>
             <Route path="/login" element={<Login />} />

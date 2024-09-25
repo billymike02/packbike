@@ -243,7 +243,7 @@ const HomePage = () => {
                 textWrap: "nowrap",
               }}
             >
-              Open PackBike here
+              Launch PackBike
             </button>
           </div>
           <PageNavButton
