@@ -5,7 +5,7 @@ import bike from "../assets/images/bike.svg";
 import { useOutletContext } from "react-router-dom";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
-import { IoIosAdd, IoIosAddCircle } from "react-icons/io";
+import { IoIosAdd, IoIosAddCircle, IoMdSettings } from "react-icons/io";
 
 // firestore stuffs
 import { firestore } from "./firebase";
@@ -13,6 +13,7 @@ import { doc, deleteField } from "firebase/firestore";
 import { updateDoc, onSnapshot } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
+import { getAuth, signOut } from "firebase/auth";
 
 import { RxReset } from "react-icons/rx";
 import { IoCreateSharp } from "react-icons/io5";
@@ -24,6 +25,7 @@ import { AiFillFunnelPlot } from "react-icons/ai";
 import { TbZoomInFilled, TbZoomOutFilled } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import ModularModal from "./Modal";
+import ButtonSwitch from "./ButtonSwitch";
 
 // modal that shows bike info (gear weight, etc.)
 const BikeMetrics = ({ bikeName }) => {
@@ -152,6 +154,7 @@ const Workspace = () => {
   const [indexNewContainer, setIndexNewContainer] = useState(null);
   const [bShowingResetModal, setShowResetModal] = useState(false);
   const [bShowingRemoveBikeModal, setShowRemoveBikeModal] = useState(false);
+  const [units, setUnits] = useOutletContext();
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -203,6 +206,17 @@ const Workspace = () => {
     // Clean up subscription on component unmount
     return () => unsubscribe();
   }, [user, selectedBike]); // Depend on `user`, so it re-subscribes if `user` changes
+
+  const onUnitsChanged = async (value) => {
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      // Store additional user data in Firestore
+      await updateDoc(userDocRef, {
+        [`prefs.units`]: value,
+      });
+    }
+  };
 
   const handleAddBicycle = async (bikeName) => {
     if (user) {
@@ -374,23 +388,61 @@ const Workspace = () => {
     addVisualContainer(container.name, container.width, container.height, x, y);
   };
 
+  // additional modal states
+  const [bShowConfigMenu, setShowConfigMenu] = useState(false);
+  const auth = getAuth(); // Initialize the Firebase auth instance
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out");
+        // Optional: redirect to a login page or show a signed-out message
+      })
+      .catch((error) => {
+        console.error("Error signing out: ", error);
+      });
+  };
+
   return (
     <div className={styles.Workspace}>
+      <ModularModal title={"PackBike Settings"} bShow={bShowConfigMenu}>
+        <div
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <ButtonSwitch
+            leftOption="Lbs"
+            rightOption="Kg"
+            defaultSelection={units}
+            onChange={onUnitsChanged}
+          />
+        </div>
+        <div>
+          <h3>User: {user?.uid || "unset-username"}</h3>
+          <button onClick={handleSignOut} style={{ backgroundColor: "red" }}>
+            Sign Out
+          </button>
+          <button onClick={() => setShowConfigMenu(false)}>Close</button>
+        </div>
+      </ModularModal>
       <div
         id="Left-Pane"
         style={{
           zIndex: 10,
           height: "100%",
-
-          borderRight: "10px solid black",
           minWidth: "200px",
           width: "350px",
-          backgroundColor: "white",
+          backgroundColor: "#eee",
           overflow: "auto",
+          boxShadow: "0px 0px 30px #aaa",
         }}
       >
         <div className={styles.paneContainer}>
-          <h2 style={{ marginBlockStart: "0rem", width: "100%" }}>
+          <h2 style={{ marginBlock: "0px", width: "100%" }}>
             Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>
           </h2>
           <div
@@ -423,13 +475,13 @@ const Workspace = () => {
         <div
           className={styles.paneContainer}
           style={{
+            paddingTop: "0rem",
             pointerEvents: selectedBike ? "auto" : "none",
             transition: "all 0.2s",
-            opacity: loading ? "0%" : "100%",
-            filter: loading ? "blur(6px)" : "",
+            opacity: loading ? "0.5" : "1",
           }}
         >
-          <h2>
+          <h2 style={{ marginBlock: "10px" }}>
             Create <IoCreateSharp></IoCreateSharp>
           </h2>
           <div className={styles.containerList}>
@@ -470,20 +522,33 @@ const Workspace = () => {
             <RxReset size={20}></RxReset>
           </button>
 
-          {selectedBike && (
-            <button
-              style={{
-                backgroundColor: "red",
-                textTransform: "uppercase",
-              }}
-              onClick={() => {
-                setShowRemoveBikeModal(true);
-              }}
-            >
-              Delete Bike
-              <MdDelete size={25} />
-            </button>
-          )}
+          <button
+            style={{
+              backgroundColor: "red",
+              textTransform: "uppercase",
+              pointerEvents: selectedBike ? "all" : "none",
+            }}
+            onClick={() => {
+              setShowRemoveBikeModal(true);
+            }}
+          >
+            Delete Bike
+            <MdDelete size={25} />
+          </button>
+        </div>
+
+        <div className={styles.paneContainer}>
+          <button
+            style={{
+              color: "black",
+              backgroundColor: "#ccc",
+              textTransform: "uppercase",
+            }}
+            onClick={() => setShowConfigMenu(true)}
+          >
+            CONFIG
+            <IoMdSettings size={28} />
+          </button>
         </div>
       </div>
 

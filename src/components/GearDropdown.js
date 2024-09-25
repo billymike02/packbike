@@ -31,6 +31,7 @@ import Framebag from "./Bags/Framebag";
 import ModularModal from "./Modal";
 import { IoAddCircle, IoCheckmark, IoTrash, IoTrashBin } from "react-icons/io5";
 import { IoIosAdd, IoMdTrash } from "react-icons/io";
+import { useOutletContext } from "react-router-dom";
 
 const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
   const [bisAdded, setIsAdded] = useState(false);
@@ -349,7 +350,11 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
         setContainers(containersArray); // Set the array in state
 
         // Access the nested fields
-        const visualContainers = data?.bicycles[selectedBike].visualContainers;
+        if (!selectedBike) return;
+
+        const bikeData = data?.bicycles[selectedBike];
+
+        const visualContainers = bikeData?.visualContainers;
         const container = visualContainers?.[id];
 
         setBgColor(container?.color);
@@ -408,21 +413,24 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
 
         setAvailableInventory(inventoryArray);
 
-        if (data.bicycles[selectedBike].visualContainers[id]) {
+        if (!selectedBike || !data.bicycles || !data.bicycles[selectedBike])
+          return;
+
+        if (
+          data.bicycles[selectedBike].visualContainers &&
+          data.bicycles[selectedBike].visualContainers[id]
+        ) {
           const contentsArray =
             data.bicycles[selectedBike].visualContainers[id].contents || [];
 
           const newArray = contentsArray
             .map((uuid) => {
-              // Access the corresponding object in data.inventory using the uuid
               const item = data.inventory[uuid];
-
-              // Return an object with uuid and displayName if the item exists
               return item ? { uuid, displayName: item.displayName } : null;
             })
-            .filter((obj) => obj !== null) // Filter out any null values
-            .sort((a, b) => a.uuid.localeCompare(b.uuid)) // Sort by uuid
-            .map((obj) => obj.displayName); // Extract displayNames for the final array
+            .filter((obj) => obj !== null)
+            .sort((a, b) => a.uuid.localeCompare(b.uuid))
+            .map((obj) => obj.displayName);
 
           setContents(newArray);
         }
@@ -487,6 +495,8 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
       } catch (error) {}
     }
   };
+
+  const [units, setUnits] = useOutletContext();
 
   const handleAddItemToInventory = async (itemName, itemWeight, itemVolume) => {
     if (user) {
@@ -715,7 +725,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                     type="number"
                     value={itemWeight}
                     onChange={(e) => setItemWeight(e.target.value)}
-                    placeholder={`Enter item weight (${"kg"})`}
+                    placeholder={`Enter item weight (${units})`}
                     step="any"
                     required
                   />

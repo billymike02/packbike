@@ -8,6 +8,7 @@ const CustomSelect = ({
   defaultSelection = null, // default to null if no selection is passed
   expanded = false,
   emptyMessage = "No available options.",
+  textColor = "black",
 }) => {
   const [isOpen, setIsOpen] = useState(expanded);
   const [selectedOption, setSelectedOption] = useState(defaultSelection);
@@ -31,7 +32,11 @@ const CustomSelect = ({
 
   return (
     <div className="custom-select">
-      <div className="select-box" onClick={toggleDropdown}>
+      <div
+        className="select-box"
+        onClick={toggleDropdown}
+        style={{ color: textColor }}
+      >
         {selectedOption ? selectedOption : placeholderText}
       </div>
       {isOpen && (
@@ -42,6 +47,7 @@ const CustomSelect = ({
                 key={option.key || option.id || option.value || index} // Ensure a unique key
                 onClick={() => handleOptionClick(option)}
                 className="option"
+                style={{ color: "textColor" }}
               >
                 {option.label}
               </li>
