@@ -431,7 +431,7 @@ const Workspace = () => {
           />
         </div>
         <div>
-          <h3>User: {user?.uid || "unset-username"}</h3>
+          <h3>User: {auth.currentUser.email || "unset-username"}</h3>
           <button onClick={handleSignOut} style={{ backgroundColor: "red" }}>
             Sign Out
           </button>
@@ -452,7 +452,7 @@ const Workspace = () => {
           flexDirection: "column",
         }}
       >
-        <div className={styles.paneContainer}>
+        {/* <div className={styles.paneContainer}>
           <a
             style={{
               textTransform: "uppercase",
@@ -467,7 +467,7 @@ const Workspace = () => {
           >
             PackBike
           </a>
-        </div>
+        </div> */}
         <div className={styles.paneContainer}>
           <h2 style={{ marginBlock: "0px", width: "100%" }}>
             Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>

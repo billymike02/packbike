@@ -29,7 +29,13 @@ import Forkbag from "./Bags/Forkbag";
 import Seatpack from "./Bags/Seatpack";
 import Framebag from "./Bags/Framebag";
 import ModularModal from "./Modal";
-import { IoAddCircle, IoCheckmark, IoTrash, IoTrashBin } from "react-icons/io5";
+import {
+  IoAddCircle,
+  IoCheckmark,
+  IoRemoveCircle,
+  IoTrash,
+  IoTrashBin,
+} from "react-icons/io5";
 import { IoIosAdd, IoMdTrash } from "react-icons/io";
 import { useOutletContext } from "react-router-dom";
 
@@ -253,6 +259,14 @@ const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
           >
             {`${item.volume}L`}
           </div>
+          <div
+            style={{
+              flex: "1",
+              textAlign: "right",
+            }}
+          >
+            {`x${item.quantity}`}
+          </div>
         </div>
       </div>
       <IoMdTrash
@@ -296,12 +310,8 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: "200px", height: "200px" });
   const [bgColor, setBgColor] = useState("");
-  const [containers, setContainers] = useState([]);
-  const [inventoryItems, setInventoryItems] = useState([]);
   const [isGearModalOpen, setIsGearModalOpen] = useState(false);
   const [bFetchingData, setFetchingData] = useState(true);
-  const [containerDisplayName, setContainerDisplayName] = useState(null);
-  const [colorDisplayName, setColorDisplayName] = useState(null);
 
   // updated inventory states
   const [availableInventory, setAvailableInventory] = useState([]);
@@ -310,6 +320,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
   const [itemName, setItemName] = useState("");
   const [itemWeight, setItemWeight] = useState("");
   const [itemVolume, setItemVolume] = useState("");
+  const [itemQuantity, setItemQuantity] = useState(1);
 
   // modal states
   const [bShowAddItemModal, setShowAddItemModal] = useState(false);
@@ -340,16 +351,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
 
-        // Convert containers map to an array
-        const containersArray = Object.entries(data.containers || {}).map(
-          ([id, container]) => ({
-            id,
-            ...container,
-          })
-        );
-
-        setContainers(containersArray); // Set the array in state
-
         // Access the nested fields
         if (!selectedBike) return;
 
@@ -359,21 +360,6 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
         const container = visualContainers?.[id];
 
         setBgColor(container?.color);
-
-        // Assuming container_id is the value you are looking for
-        const searchId = container?.container_id; // or wherever you get this value
-
-        // Find the container that matches the searchId
-        const selectedContainer = containersArray.find(
-          (container) => container.id === searchId
-        );
-
-        console.log("searching for", searchId, "in", containersArray);
-
-        if (selectedContainer) {
-          console.log("found: ", selectedContainer.displayName);
-          setContainerDisplayName(selectedContainer.displayName || "");
-        }
 
         const containerWidth = container?.width;
         const containerHeight = container?.height;
@@ -499,7 +485,12 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
 
   const [units, setUnits] = useOutletContext();
 
-  const handleAddItemToInventory = async (itemName, itemWeight, itemVolume) => {
+  const handleAddItemToInventory = async (
+    itemName,
+    itemWeight,
+    itemVolume,
+    itemQuantity
+  ) => {
     if (user) {
       const userDocRef = doc(firestore, "users", user.uid);
 
@@ -515,6 +506,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
               displayName: itemName,
               weight: itemWeight,
               volume: itemVolume,
+              quantity: itemQuantity,
               id: unique_id,
             };
 
@@ -732,29 +724,89 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                     setShowAddItemModal(false);
                   }}
                 >
-                  <input
-                    type="text"
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
-                    placeholder="Enter item name"
-                    required
-                  />
-                  <input
-                    type="number"
-                    value={itemWeight}
-                    onChange={(e) => setItemWeight(e.target.value)}
-                    placeholder={`Enter item weight (${units})`}
-                    step="any"
-                    required
-                  />
-                  <input
-                    type="number"
-                    value={itemVolume}
-                    onChange={(e) => setItemVolume(e.target.value)}
-                    placeholder="Enter item volume (L)"
-                    step="any"
-                    required
-                  />
+                  <div style={{ width: "100%", display: "flex", gap: "8px" }}>
+                    <input
+                      type="text"
+                      value={itemName}
+                      onChange={(e) => setItemName(e.target.value)}
+                      placeholder="Enter item name"
+                      required
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      gap: "8px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      value={itemWeight}
+                      onChange={(e) => setItemWeight(e.target.value)}
+                      placeholder={`Enter item weight`}
+                      step="any"
+                      required
+                    />
+                  </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      gap: "8px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      value={itemVolume}
+                      onChange={(e) => setItemVolume(e.target.value)}
+                      placeholder="Enter item volume (L)"
+                      step="any"
+                      required
+                    />
+                  </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      gap: "20px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <IoRemoveCircle
+                      size={40}
+                      className="button-icon"
+                      onClick={() => {
+                        if (itemQuantity - 1 > 0) {
+                          setItemQuantity(itemQuantity - 1);
+                        }
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: "30px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        display: "flex",
+                      }}
+                    >
+                      <a style={{ fontSize: "2rem" }}>{itemQuantity}</a>
+                    </div>
+
+                    <IoAddCircle
+                      size={40}
+                      className="button-icon"
+                      onClick={() => {
+                        setItemQuantity(itemQuantity + 1);
+                      }}
+                    />
+                  </div>
 
                   <div
                     style={{
@@ -770,6 +822,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                         setItemName("");
                         setItemWeight("");
                         setItemVolume("");
+                        setItemQuantity(1);
                       }}
                     >
                       Cancel
@@ -780,13 +833,15 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                         handleAddItemToInventory(
                           itemName,
                           itemWeight,
-                          itemVolume
+                          itemVolume,
+                          itemQuantity
                         );
                         setShowAddItemModal(false);
 
                         setItemName("");
                         setItemWeight("");
                         setItemVolume("");
+                        setItemQuantity(1);
                       }}
                       disabled={
                         itemName === "" ||

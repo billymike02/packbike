@@ -21,6 +21,12 @@ h2 {
   gap: 6px;
 }
 
+/* set these rules to ensure a better feel on mobile */
+div {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 h3 {
   font-weight: 400;
   cursor: default;
