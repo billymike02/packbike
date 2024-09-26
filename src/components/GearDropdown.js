@@ -747,7 +747,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                       type="number"
                       value={itemWeight}
                       onChange={(e) => setItemWeight(e.target.value)}
-                      placeholder={`Enter item weight`}
+                      placeholder={`Enter item weight (${units})`}
                       step="any"
                       required
                     />
