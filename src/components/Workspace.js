@@ -5,7 +5,7 @@ import bike from "../assets/images/bike.svg";
 import { useOutletContext } from "react-router-dom";
 import styles from "./Workspace.module.css";
 import GearDropdown from "./GearDropdown";
-import { IoIosAdd, IoIosAddCircle, IoMdSettings } from "react-icons/io";
+import { IoIosAddCircle, IoMdSettings } from "react-icons/io";
 
 // firestore stuffs
 import { firestore } from "./firebase";
@@ -17,7 +17,7 @@ import { getAuth, signOut } from "firebase/auth";
 
 import { RxReset } from "react-icons/rx";
 import { IoCreateSharp } from "react-icons/io5";
-import { FaCircleInfo } from "react-icons/fa6";
+
 import { FaTools } from "react-icons/fa";
 import CustomSelect from "./CustomSelect";
 
@@ -26,7 +26,7 @@ import { TbZoomInFilled, TbZoomOutFilled } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import ModularModal from "./Modal";
 import ButtonSwitch from "./ButtonSwitch";
-import { useChain, useSpring, useSpringRef, animated } from "@react-spring/web";
+import { animated } from "@react-spring/web";
 
 // modal that shows bike info (gear weight, etc.)
 const BikeMetrics = ({ bikeName }) => {
@@ -145,17 +145,23 @@ const BikeMetrics = ({ bikeName }) => {
 
 const Workspace = () => {
   const [loading, setLoading] = useState(true);
+  const auth = getAuth(); // Initialize the Firebase auth instance
   const { user } = useAuth();
   const [bicycles, setBicycles] = useState([]);
   const [selectedBike, setSelectedBike] = useState(null);
   const [containerElements, setContainerElements] = useState([]);
-  const [showNewModal, setShowNewModal] = useState(false);
+
   const [figureScale, setFigureScale] = useState(1);
   const [trackingClick, setTrackingClick] = useState(false);
   const [indexNewContainer, setIndexNewContainer] = useState(null);
+
+  const [units, setUnits] = useOutletContext();
+
+  // Modal states
   const [bShowingResetModal, setShowResetModal] = useState(false);
   const [bShowingRemoveBikeModal, setShowRemoveBikeModal] = useState(false);
-  const [units, setUnits] = useOutletContext();
+  const [bShowNewModal, setShowNewModal] = useState(false);
+  const [bShowConfigMenu, setShowConfigMenu] = useState(false);
 
   useEffect(() => {
     if (!user) return; // Exit if no user
@@ -389,10 +395,6 @@ const Workspace = () => {
     addVisualContainer(container.name, container.width, container.height, x, y);
   };
 
-  // additional modal states
-  const [bShowConfigMenu, setShowConfigMenu] = useState(false);
-  const auth = getAuth(); // Initialize the Firebase auth instance
-
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -406,7 +408,13 @@ const Workspace = () => {
 
   return (
     <animated.div className={styles.Workspace}>
-      <ModularModal title={"PackBike Settings"} bShow={bShowConfigMenu}>
+      <ModularModal
+        title={"PackBike Settings"}
+        bShow={bShowConfigMenu}
+        onClose={() => {
+          setShowConfigMenu(false);
+        }}
+      >
         <div
           style={{
             width: "100%",
@@ -440,8 +448,26 @@ const Workspace = () => {
           backgroundColor: "#eee",
           overflow: "auto",
           boxShadow: "0px 0px 30px #aaa",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
+        <div className={styles.paneContainer}>
+          <a
+            style={{
+              textTransform: "uppercase",
+              fontSize: "3rem",
+              fontWeight: "700",
+              textDecoration: "underline",
+              textUnderlineOffset: "10px",
+              userSelect: "none",
+              WebkitUserSelect: "none",
+              cursor: "default",
+            }}
+          >
+            PackBike
+          </a>
+        </div>
         <div className={styles.paneContainer}>
           <h2 style={{ marginBlock: "0px", width: "100%" }}>
             Bicycle <AiFillFunnelPlot></AiFillFunnelPlot>
@@ -459,7 +485,7 @@ const Workspace = () => {
               onSelect={handleSelectionChange}
               placeholderText={"Select a bicycle"}
               defaultSelection={selectedBike}
-              emptyMessage="Add a bicycle with the button."
+              emptyMessage="No bicycles."
             />
             <IoIosAddCircle
               size={60}
@@ -501,10 +527,7 @@ const Workspace = () => {
               </button>
             ))}
           </div>
-          <h2>
-            Info <FaCircleInfo></FaCircleInfo>
-          </h2>
-          <BikeMetrics bikeName={selectedBike}></BikeMetrics>
+
           <h2>
             Tools <FaTools></FaTools>
           </h2>
@@ -538,7 +561,7 @@ const Workspace = () => {
           </button>
         </div>
 
-        <div className={styles.paneContainer}>
+        <div className={styles.paneContainer} style={{ marginTop: "auto" }}>
           <button
             style={{
               color: "black",
@@ -547,7 +570,7 @@ const Workspace = () => {
             }}
             onClick={() => setShowConfigMenu(true)}
           >
-            CONFIG
+            Config
             <IoMdSettings size={28} />
           </button>
         </div>
@@ -629,7 +652,13 @@ const Workspace = () => {
         </div>
       </div>
 
-      <ModularModal title="Add Bicycle" bShow={showNewModal}>
+      <ModularModal
+        title="Add Bicycle"
+        bShow={bShowNewModal}
+        onClose={() => {
+          setShowNewModal(false);
+        }}
+      >
         <input
           id="bicycleNameInput"
           placeholder="Name for your bicycle"
@@ -661,6 +690,7 @@ const Workspace = () => {
         title="Confirm Reset"
         subtitle="This will remove all gear on your bike."
         bShow={bShowingResetModal}
+        onClose={() => setShowResetModal(false)}
       >
         <div style={{ display: "flex", width: "100%", gap: "8px" }}>
           {" "}
@@ -681,6 +711,7 @@ const Workspace = () => {
         title="Are you sure?"
         subtitle="This will remove your bike from your account."
         bShow={bShowingRemoveBikeModal}
+        onClose={() => setShowRemoveBikeModal(false)}
       >
         <div style={{ display: "flex", width: "100%", gap: "8px" }}>
           {" "}

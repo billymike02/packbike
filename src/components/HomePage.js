@@ -13,16 +13,10 @@ import { useState, useEffect } from "react";
 import ModularModal from "./Modal";
 import { IoCodeSlash, IoShareOutline } from "react-icons/io5";
 import { MdInstallDesktop, MdMoreVert } from "react-icons/md";
-
 import PageNavButton from "./PageNavButton";
-import ModalImage from "./ViewableImage";
 
 // Image assets
 import WorkspaceImg from "../assets/images/workspace.PNG";
-import GarageImg from "../assets/images/garage.PNG";
-import GearContainerImg from "../assets/images/gear-container_edit.PNG";
-import GearManagerImg from "../assets/images/gear-manager.PNG";
-import ViewableImage from "./ViewableImage";
 
 const InfoBox = ({ src, title, description, width }) => {
   return (
@@ -40,7 +34,6 @@ const InfoBox = ({ src, title, description, width }) => {
         borderRadius: "1rem",
       }}
     >
-      <ViewableImage src={src} maxWidth={"20"}></ViewableImage>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <a style={{ fontSize: "40px", fontWeight: "600" }}>{title}</a>
         <p style={{ fontSize: "1.3rem", textWrap: "wrap" }}>{description}</p>
@@ -317,7 +310,11 @@ const HomePage = () => {
         />
       </div>
 
-      <ModularModal bShow={bShowInstallModal} title={"How to install"}>
+      <ModularModal
+        bShow={bShowInstallModal}
+        title={"How to install"}
+        onClose={() => setShowInstallModal(false)}
+      >
         <div
           style={{
             display: "flex",

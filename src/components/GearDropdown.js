@@ -264,6 +264,7 @@ const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
       />
       <ModularModal
         bShow={bDeleteModal}
+        onClose={() => setDeleteModalVis(false)}
         title={"Are you sure?"}
         subtitle={"This will remove the item from your inventory."}
       >
@@ -567,6 +568,7 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                   cursor: "pointer",
                   zIndex: "15",
                 }}
+                className="button-icon"
                 onClick={() => {
                   setIsGearModalOpen(true);
                 }}
@@ -578,7 +580,11 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
           </div>
         </Draggable>
 
-        <ModularModal title="Edit Gear Container" bShow={isGearModalOpen}>
+        <ModularModal
+          title="Edit Gear Container"
+          bShow={isGearModalOpen}
+          onClose={() => setIsGearModalOpen(false)}
+        >
           <div
             style={{
               display: "flex",
@@ -722,6 +728,9 @@ const GearDropdown = ({ parentScale, id, type, onDelete, selectedBike }) => {
                 <ModularModal
                   bShow={bShowAddItemModal}
                   title={"Add an item to your inventory"}
+                  onClose={() => {
+                    setShowAddItemModal(false);
+                  }}
                 >
                   <input
                     type="text"
