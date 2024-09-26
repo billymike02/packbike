@@ -225,6 +225,9 @@ const Creator = () => {
         // Add any other fields you need
         bicycles: {},
         username: name,
+        prefs: {
+          units: "Kg", // Setting prefs.units to "Kg"
+        },
       });
 
       console.log("User registered and data saved!");
