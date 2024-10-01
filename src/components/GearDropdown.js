@@ -44,6 +44,7 @@ const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
   const [bTaken, setIsTaken] = useState(false);
   const { user } = useAuth();
 
+  const [units, setUnits] = useOutletContext();
   // Modal states
   const [bDeleteModal, setDeleteModalVis] = useState(false);
 
@@ -249,7 +250,7 @@ const InventoryItem = ({ item, selectedBike, containerQuerying }) => {
               textAlign: "center",
             }}
           >
-            {`${item.weight}kg`}
+            {`${item.weight}${units}`}
           </div>
           <div
             style={{
